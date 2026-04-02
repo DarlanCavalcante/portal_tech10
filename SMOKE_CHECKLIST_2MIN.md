@@ -6,12 +6,23 @@ Este guia rápido permite que você configure um ambiente de "smoke test" isolad
 
 Use o script de bootstrap para jogar de uma vez os 3 secrets necessários no repositório do GitHub.
 
-Abra o terminal (Git Bash ou PowerShell) na raiz do projeto e execute:
+Abra o terminal na raiz do projeto e execute. 
+
+**Se estiver usando Git Bash ou Linux/Mac:**
 ```bash
 GITHUB_REPO="seu-org/seu-repo" \
 VERCEL_TOKEN="seu-token" \
 VERCEL_ORG_ID="sua-org-id" \
 VERCEL_PROJECT_ID_SMOKE="seu-project-id" \
+bash scripts/bootstrap-smoke-gh-secrets.sh
+```
+
+**Se estiver usando o PowerShell (Windows):**
+```powershell
+$env:GITHUB_REPO="seu-org/seu-repo"
+$env:VERCEL_TOKEN="seu-token"
+$env:VERCEL_ORG_ID="sua-org-id"
+$env:VERCEL_PROJECT_ID_SMOKE="seu-project-id"
 bash scripts/bootstrap-smoke-gh-secrets.sh
 ```
 
