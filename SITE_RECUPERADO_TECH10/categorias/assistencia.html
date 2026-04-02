@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistência Técnica em Informática - Santa Maria/RS - Tech10</title>
+    <meta name="description" content="Assistência técnica completa em informática em Santa Maria/RS. 20+ anos de experiência. Reparo de computadores, notebooks, celulares e muito mais.">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>Tech10</span>
+                </a>
+            </div>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="../index.html#home" class="nav-link">Início</a></li>
+                    <li><a href="../index.html#produtos" class="nav-link">Produtos</a></li>
+                    <li><a href="../index.html#servicos" class="nav-link">Serviços</a></li>
+                    <li><a href="../index.html#empresas" class="nav-link nav-link--accent">Empresas</a></li>
+                    <li><a href="../index.html#dicas" class="nav-link">Dicas</a></li>
+                    <li><a href="../index.html#sobre" class="nav-link">Sobre</a></li>
+                    <li><a href="../index.html#contato" class="nav-link">Contato</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <div class="cart-icon" id="cartIcon" style="cursor: pointer;" onclick="window.location.href='../carrinho.html'">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); color: white; padding: 100px 0 80px; margin-top: 70px;">
+        <div class="container">
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <div style="font-size: 80px; margin-bottom: 20px;">🔧</div>
+                <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 20px;">Assistência Técnica</h1>
+                <h2 style="font-size: 28px; font-weight: 400; margin-bottom: 30px; opacity: 0.95;">20+ Anos de Experiência em Santa Maria/RS</h2>
+                <p style="font-size: 18px; margin-bottom: 40px; line-height: 1.6;">
+                    Assistência técnica completa em informática. Reparo de computadores, notebooks, celulares e muito mais. 
+                    Qualidade, confiança e garantia em todos os serviços.
+                </p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20um%20orçamento%20para%20assistência%20técnica." 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       style="background: white; color: #1f2937; padding: 15px 40px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 18px; transition: all 0.3s;"
+                       onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.2)';"
+                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        💬 Solicitar Orçamento Grátis
+                    </a>
+                    <a href="../index.html#servicos" 
+                       style="background: transparent; color: white; padding: 15px 40px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 18px; border: 2px solid white; transition: all 0.3s;"
+                       onmouseover="this.style.background='rgba(255,255,255,0.1)';"
+                       onmouseout="this.style.background='transparent';">
+                        Ver Todos os Serviços
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Serviços Específicos -->
+    <section style="padding: 80px 0; background: #f9fafb;">
+        <div class="container">
+            <h2 class="section-title">Nossos Serviços de Assistência Técnica</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #1f2937;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">💻</div>
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Computadores</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ Reparo de notebooks</li>
+                        <li style="margin-bottom: 10px;">✅ Reparo de desktops</li>
+                        <li style="margin-bottom: 10px;">✅ Formatação</li>
+                        <li style="margin-bottom: 10px;">✅ Limpeza e manutenção</li>
+                        <li style="margin-bottom: 10px;">✅ Upgrade de hardware</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #1f2937;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">📱</div>
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Celulares</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ Reparo de iPhone</li>
+                        <li style="margin-bottom: 10px;">✅ Reparo de Android</li>
+                        <li style="margin-bottom: 10px;">✅ Troca de tela</li>
+                        <li style="margin-bottom: 10px;">✅ Troca de bateria</li>
+                        <li style="margin-bottom: 10px;">✅ Recuperação de dados</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #1f2937;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">🌐</div>
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Redes</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ Projetos de redes</li>
+                        <li style="margin-bottom: 10px;">✅ Instalação Wi-Fi</li>
+                        <li style="margin-bottom: 10px;">✅ Configuração de rede</li>
+                        <li style="margin-bottom: 10px;">✅ Manutenção de rede</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #1f2937;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">🛠️</div>
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Outros Serviços</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ Remoção de vírus</li>
+                        <li style="margin-bottom: 10px;">✅ Recuperação de dados</li>
+                        <li style="margin-bottom: 10px;">✅ Backup e restauração</li>
+                        <li style="margin-bottom: 10px;">✅ Consultoria em TI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Por Que Escolher Tech10 -->
+    <section style="padding: 80px 0; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+        <div class="container">
+            <h2 class="section-title">Por Que Escolher Tech10?</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                <div style="text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 64px; margin-bottom: 20px;">⭐</div>
+                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">20+ Anos de Experiência</h3>
+                    <p style="color: #666; line-height: 1.6;">Mais de duas décadas atendendo com excelência em Santa Maria/RS</p>
+                </div>
+                
+                <div style="text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 64px; margin-bottom: 20px;">🛡️</div>
+                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">90 Dias de Garantia</h3>
+                    <p style="color: #666; line-height: 1.6;">Garantia completa em todos os reparos e serviços</p>
+                </div>
+                
+                <div style="text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 64px; margin-bottom: 20px;">⚡</div>
+                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Reparo Rápido</h3>
+                    <p style="color: #666; line-height: 1.6;">Tempo médio de 2-4 horas. Seu equipamento pronto rapidamente</p>
+                </div>
+                
+                <div style="text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 64px; margin-bottom: 20px;">💯</div>
+                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">1000+ Clientes</h3>
+                    <p style="color: #666; line-height: 1.6;">Mais de mil clientes satisfeitos em Santa Maria/RS</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section style="padding: 80px 0; background: white;">
+        <div class="container">
+            <h2 class="section-title">Perguntas Frequentes</h2>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div style="background: #f9fafb; padding: 25px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #1f2937;">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1e3a8a;">Quais serviços vocês oferecem?</h3>
+                    <p style="color: #666; line-height: 1.6;">Oferecemos assistência técnica completa: reparo de computadores, notebooks, celulares, redes, formatação, limpeza, upgrade e muito mais.</p>
+                </div>
+                
+                <div style="background: #f9fafb; padding: 25px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #1f2937;">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1e3a8a;">Há garantia nos serviços?</h3>
+                    <p style="color: #666; line-height: 1.6;">Sim! Oferecemos 90 dias de garantia em todos os reparos e serviços realizados.</p>
+                </div>
+                
+                <div style="background: #f9fafb; padding: 25px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #1f2937;">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1e3a8a;">Vocês fazem atendimento a domicílio?</h3>
+                    <p style="color: #666; line-height: 1.6;">Sim! Oferecemos atendimento a domicílio para empresas e residências em Santa Maria/RS. Entre em contato para mais informações.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section style="padding: 80px 0; background: linear-gradient(135deg, #1f2937 0%, #111827 100%); color: white;">
+        <div class="container">
+            <div style="text-align: center; max-width: 700px; margin: 0 auto;">
+                <h2 style="font-size: 42px; font-weight: 700; margin-bottom: 20px;">Precisa de Assistência Técnica?</h2>
+                <p style="font-size: 20px; margin-bottom: 40px; opacity: 0.95;">
+                    Entre em contato agora e receba um orçamento grátis. 
+                    Atendimento rápido e profissional em Santa Maria/RS.
+                </p>
+                <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20um%20orçamento%20para%20assistência%20técnica." 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   style="background: white; color: #1f2937; padding: 20px 50px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 20px; display: inline-block; transition: all 0.3s;"
+                   onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.3)';"
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    💬 Solicitar Orçamento no WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-laptop-code"></i>
+                        <span>Tech10</span>
+                    </div>
+                    <p>Mais de 20 anos de experiência em tecnologia e informática em Santa Maria/RS.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="../index.html#home">Início</a></li>
+                        <li><a href="../index.html#servicos">Serviços</a></li>
+                        <li><a href="../index.html#sobre">Sobre</a></li>
+                        <li><a href="../index.html#contato">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Categorias</h4>
+                    <ul>
+                        <li><a href="apple.html">Apple</a></li>
+                        <li><a href="android.html">Android</a></li>
+                        <li><a href="notebooks.html">Notebooks</a></li>
+                        <li><a href="assistencia.html">Assistência</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Atendimento</h4>
+                    <ul>
+                        <li>Segunda a Sexta: 9h às 18h</li>
+                        <li>Tel: (55) 3317-0762</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Tech10 Informática e Tecnologia. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botão Voltar ao Topo -->
+    <button id="backToTop" class="back-to-top" title="Voltar ao topo">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="../js/script.js"></script>
+    <script>
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTop.style.display = window.pageYOffset > 300 ? 'block' : 'none';
+        });
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    </script>
+    <script src="../js/api-config.js"></script>
+    <script src="../js/api-adapter.js"></script>
+    <script src="../js/cart-vivacommerce.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var cart = window.medusaCart || window.cartVivaCommerce;
+            if (cart && cart.init) cart.init().catch(function(e){ console.error("Cart init:", e); });
+        });
+    </script>
+</body>
+</html>

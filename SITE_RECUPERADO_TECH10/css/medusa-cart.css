@@ -1,0 +1,102 @@
+/**
+ * Estilos para MedusaCart
+ * Tech10 E-commerce
+ */
+
+/* Animações de notificação */
+@keyframes medusa-slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes medusa-slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Ícone do carrinho */
+.cart-icon {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.cart-icon:hover {
+    background-color: rgba(37, 99, 235, 0.1);
+    transform: scale(1.05);
+}
+
+.cart-icon:active {
+    transform: scale(0.95);
+}
+
+.cart-icon i {
+    font-size: 20px;
+    color: #1f2937;
+}
+
+.cart-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Notificações */
+.medusa-notification {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.medusa-notification.success {
+    background: #10b981 !important;
+}
+
+.medusa-notification.error {
+    background: #ef4444 !important;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .medusa-notification {
+        right: 10px !important;
+        left: 10px !important;
+        max-width: calc(100% - 20px) !important;
+    }
+}

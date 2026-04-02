@@ -1,0 +1,45 @@
+=== PNGs NA PASTA SITE_RECUPERADO_TECH10 ===
+  13.78 MB | imagem\favico\conserto.png
+  13.78 MB | imagem\propaganda loja\conserto.png
+  7.7 MB | imagem\propaganda loja\posts2.png
+  7.65 MB | imagem\propaganda loja\postsseguran?a.png
+  7.65 MB | imagem\propaganda loja\postssegurana.png
+  3.61 MB | imagem\propaganda loja\manuteno.png
+  0.45 MB | imagem\favico\android-chrome-512x512.png 22-23-00-986.png
+  0.14 MB | imagem\logo\tech10-logo-azul-nova.png
+  0.12 MB | imagem\logo\tech10-logo-fundo-azul-nova2.png
+  0.11 MB | imagem\logo\tech10-logo-fundo-azul-nova.png
+  0.07 MB | imagem\logo\tech10-logo-transparente-footer.png
+  0.07 MB | imagem\favico\android-chrome-192x192.png 22-23-01-089.png
+  0.06 MB | imagem\favico\apple-touch-icon.png 22-23-01-110.png
+  0.04 MB | imagem\favico\android-chrome-512x512.png
+  0.04 MB | imagem\favico\MARCA_azul.png
+  0.04 MB | imagem\favico\MARCAMONO.png
+  0.04 MB | imagem\logo\tech10-logo-claro-nova.png
+  0.04 MB | imagem\favico\MARCAbranca.png
+  0.03 MB | imagem\logo\tech10-logo-fundo-azul.png
+  0.03 MB | imagem\logo\tech10-logo-azul.png
+  0.03 MB | imagem\logo\tech10-logo-claro.png
+  0.02 MB | imagem\favico\android-chrome-192x192.png 22-23-01-146.png
+  0.01 MB | imagem\logo\tech10-logo-compacto.png
+  0.01 MB | imagem\favico\android-chrome-192x192.png 22-23-00-945.png
+  0.01 MB | imagem\favico\apple-touch-icon.png 22-23-01-146.png
+  0.01 MB | imagem\favico\apple-touch-icon.png
+  0 MB | imagem\favico\favicon-32x32.png 22-23-01-090.png
+  0 MB | imagem\favico\favicon-32x32.png 22-23-01-107.png
+  0 MB | imagem\favico\favicon-16x16.png 22-23-00-951.png
+  0 MB | imagem\favico\favicon-32x32.png
+
+=== PNGs TECH10 EM OUTROS LOCAIS (Desktop_BKP) ===
+  0.03 MB | D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REDEVIVA\JORNADA DO CLIENTE\02_imagens\TECH10_logo_transparente-f9278e98-73c0-410f-98cc-223ccbc182da.png
+
+=== LOGOS TECH10 (todas) ===
+  147.6 KB | tech10-logo-azul-nova.png
+  31.9 KB | tech10-logo-azul.png
+  42.9 KB | tech10-logo-claro-nova.png
+  31.7 KB | tech10-logo-claro.png
+  9.7 KB | tech10-logo-compacto.png
+  116.2 KB | tech10-logo-fundo-azul-nova.png
+  127.1 KB | tech10-logo-fundo-azul-nova2.png
+  35 KB | tech10-logo-fundo-azul.png
+  74.3 KB | tech10-logo-transparente-footer.png

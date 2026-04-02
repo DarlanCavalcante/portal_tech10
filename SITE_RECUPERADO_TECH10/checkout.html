@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Tech10</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/medusa-cart.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .checkout-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .checkout-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+        .form-group label .required {
+            color: #ef4444;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        .cep-lookup {
+            display: flex;
+            gap: 10px;
+        }
+        .cep-lookup input {
+            flex: 1;
+        }
+        .btn-buscar-cep {
+            padding: 12px 20px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-buscar-cep:hover {
+            background: #059669;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1f2937;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-total {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563eb;
+            margin-top: 10px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        .btn-submit:hover {
+            background: #1d4ed8;
+        }
+        .btn-submit:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .cart-items-list {
+            margin-bottom: 20px;
+        }
+        .cart-item-summary {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .cart-item-summary:last-child {
+            border-bottom: none;
+        }
+        .cart-item-summary img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .cart-item-summary-info {
+            flex: 1;
+        }
+        .cart-item-summary-info h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .cart-item-summary-info p {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .checkout-steps-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            padding: 14px 20px;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 13px;
+            margin-bottom: 0;
+        }
+        .cs-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #9ca3af;
+        }
+        .cs-step.done { color: #10b981; }
+        .cs-step.active { color: #2563eb; }
+        .cs-step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .cs-step.done .cs-step-num { background: #10b981; color: #fff; border-color: #10b981; }
+        .cs-step.active .cs-step-num { background: #2563eb; color: #fff; border-color: #2563eb; }
+        .cs-sep { width: 40px; height: 2px; background: #e5e7eb; margin: 0 4px; }
+        .cs-sep.done { background: #10b981; }
+        @media(max-width:480px){ .cs-step-lbl { display: none; } }
+        .checkout-trust {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+            font-size: 12px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+        .checkout-trust span { display:flex;align-items:center;gap:5px; }
+        .checkout-trust i { color: #10b981; }
+    </style>
+</head>
+<body>
+    <!-- Barra de progresso -->
+    <div class="checkout-steps-bar">
+        <div class="cs-step done">
+            <div class="cs-step-num"><i class="fas fa-check" style="font-size:11px"></i></div>
+            <span class="cs-step-lbl">Carrinho</span>
+        </div>
+        <div class="cs-sep done"></div>
+        <div class="cs-step active">
+            <div class="cs-step-num">2</div>
+            <span class="cs-step-lbl">Seus Dados</span>
+        </div>
+        <div class="cs-sep"></div>
+        <div class="cs-step">
+            <div class="cs-step-num">3</div>
+            <span class="cs-step-lbl">Confirmação</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-shopping-bag"></i> Finalizar Compra</h1>
+            <p>Preencha os dados abaixo para concluir seu pedido</p>
+            <div class="checkout-trust">
+                <span><i class="fas fa-lock"></i> Conexão SSL Segura</span>
+                <span><i class="fas fa-shield-alt"></i> Dados Protegidos</span>
+                <span><i class="fas fa-undo"></i> 7 dias para devolução</span>
+            </div>
+        </div>
+
+        <div id="error-message" class="error" style="display: none;"></div>
+
+        <div id="checkout-content" class="checkout-grid">
+            <!-- Formulário -->
+            <div class="checkout-form">
+                <form id="checkout-form">
+                    <!-- Dados do Cliente -->
+                    <h2 class="section-title">Dados do Cliente</h2>
+                    <div class="form-group">
+                        <label>Nome Completo <span class="required">*</span></label>
+                        <input type="text" name="customer_name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" name="customer_email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone <span class="required">*</span></label>
+                            <input type="tel" name="customer_phone" placeholder="(55) 99999-9999" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>CPF (opcional)</label>
+                        <input type="text" name="customer_cpf" placeholder="000.000.000-00">
+                    </div>
+
+                    <!-- Endereço de Entrega -->
+                    <h2 class="section-title" style="margin-top: 30px;">Endereço de Entrega</h2>
+                    <div class="form-group">
+                        <label>CEP <span class="required">*</span></label>
+                        <div class="cep-lookup">
+                            <input type="text" name="zip_code" id="zip_code" placeholder="00000-000" required maxlength="9">
+                            <button type="button" class="btn-buscar-cep" onclick="buscarCEP()">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Rua <span class="required">*</span></label>
+                        <input type="text" name="street" id="street" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Número <span class="required">*</span></label>
+                            <input type="text" name="number" id="number" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Complemento</label>
+                            <input type="text" name="complement" id="complement" placeholder="Apto, Bloco, etc.">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Bairro <span class="required">*</span></label>
+                        <input type="text" name="neighborhood" id="neighborhood" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cidade <span class="required">*</span></label>
+                            <input type="text" name="city" id="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Estado <span class="required">*</span></label>
+                            <input type="text" name="state" id="state" required maxlength="2" placeholder="RS">
+                        </div>
+                    </div>
+
+                    <!-- Forma de Entrega -->
+                    <h2 class="section-title" style="margin-top: 30px;">Forma de Entrega</h2>
+                    <div class="form-group">
+                        <label>Como deseja receber? <span class="required">*</span></label>
+                        <div id="shipping-options" style="display: flex; flex-direction: column; gap: 15px;">
+                            <label style="display:flex;align-items:center;gap:12px;padding:14px;border:2px solid #2563eb;border-radius:8px;cursor:pointer;background:#eff6ff;">
+                                <input type="radio" name="shipping_method" value="standard" checked onchange="selectShipping('standard',0,false)">
+                                <div>
+                                    <strong>Entrega Padrão</strong>
+                                    <span style="margin-left:8px;color:#10b981;font-weight:600;">Grátis</span>
+                                    <p style="font-size:12px;color:#6b7280;margin:2px 0 0;">Combinado com o lojista</p>
+                                </div>
+                            </label>
+                            <label style="display:flex;align-items:center;gap:12px;padding:14px;border:2px solid #e5e7eb;border-radius:8px;cursor:pointer;">
+                                <input type="radio" name="shipping_method" value="pickup" onchange="selectShipping('pickup',0,true)">
+                                <div>
+                                    <strong>Retirada na Loja</strong>
+                                    <span style="margin-left:8px;color:#10b981;font-weight:600;">Grátis</span>
+                                    <p style="font-size:12px;color:#6b7280;margin:2px 0 0;">Av. Nossa Sra. Medianeira, Santa Maria/RS</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Método de Pagamento -->
+                    <h2 class="section-title" style="margin-top: 30px;">Método de Pagamento</h2>
+                    <div class="form-group">
+                        <label>Forma de Pagamento <span class="required">*</span></label>
+                        <select name="payment_method" required>
+                            <option value="pix">PIX (Pagamento Instantâneo)</option>
+                            <option value="credit_card">Cartão de Crédito</option>
+                            <option value="debit_card">Cartão de Débito</option>
+                            <option value="boleto">Boleto Bancário</option>
+                        </select>
+                    </div>
+
+                    <!-- Observações -->
+                    <div class="form-group">
+                        <label>Observações (opcional)</label>
+                        <textarea name="notes" rows="3" placeholder="Alguma observação sobre o pedido?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submit-btn">
+                        <i class="fas fa-lock"></i> Finalizar Pedido
+                    </button>
+                </form>
+            </div>
+
+            <!-- Resumo do Pedido -->
+            <div class="checkout-summary">
+                <h2 class="section-title">Resumo do Pedido</h2>
+                <div id="cart-summary">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Carregando...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api-config.js"></script>
+    <script src="js/api-adapter.js"></script>
+    <script>
+        const CART_KEY = 'vivacommerce_cart_id';
+        let cartId = localStorage.getItem(CART_KEY);
+        let cart = null;
+        let selectedShippingOption = { method: 'standard', cost: 0, is_free: true, zone: null };
+
+        function selectShipping(method, cost, isFree) {
+            selectedShippingOption = { method, cost, is_free: isFree, zone: null };
+            renderCartSummary();
+        }
+
+        function getStoreAPI() {
+            return (window.API_CONFIG && window.API_CONFIG.STORE_API) || '/api/store';
+        }
+
+        function formatPrice(amount) {
+            if (!amount && amount !== 0) return '0,00';
+            return (amount / 100).toFixed(2).replace('.', ',');
+        }
+
+        // Buscar CEP via ViaCEP
+        async function buscarCEP() {
+            const cepInput = document.getElementById('zip_code');
+            const cep = cepInput.value.replace(/\D/g, '');
+            if (cep.length !== 8) { alert('CEP deve ter 8 dígitos'); return; }
+            try {
+                const res = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
+                const data = await res.json();
+                if (data.erro) { alert('CEP não encontrado'); return; }
+                document.getElementById('street').value = data.logradouro || '';
+                document.getElementById('neighborhood').value = data.bairro || '';
+                document.getElementById('city').value = data.localidade || '';
+                document.getElementById('state').value = data.uf || '';
+                document.getElementById('number').focus();
+            } catch (err) {
+                console.error('Erro CEP:', err);
+                alert('Erro ao buscar CEP. Tente novamente.');
+            }
+        }
+
+        // Máscaras de input
+        document.getElementById('zip_code')?.addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 5) v = v.substring(0, 5) + '-' + v.substring(5, 8);
+            e.target.value = v;
+        });
+        document.querySelector('input[name="customer_phone"]')?.addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.substring(0, 11);
+            if (v.length > 10) v = '(' + v.substring(0,2) + ') ' + v.substring(2,7) + '-' + v.substring(7);
+            else if (v.length > 6) v = '(' + v.substring(0,2) + ') ' + v.substring(2,6) + '-' + v.substring(6);
+            else if (v.length > 2) v = '(' + v.substring(0,2) + ') ' + v.substring(2);
+            else if (v.length > 0) v = '(' + v;
+            e.target.value = v;
+        });
+        document.querySelector('input[name="customer_cpf"]')?.addEventListener('input', function(e) {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.substring(0, 11);
+            if (v.length > 9) v = v.substring(0,3) + '.' + v.substring(3,6) + '.' + v.substring(6,9) + '-' + v.substring(9);
+            else if (v.length > 6) v = v.substring(0,3) + '.' + v.substring(3,6) + '.' + v.substring(6);
+            else if (v.length > 3) v = v.substring(0,3) + '.' + v.substring(3);
+            e.target.value = v;
+        });
+
+        // Renderizar resumo do carrinho
+        function renderCartSummary() {
+            const summaryEl = document.getElementById('cart-summary');
+            if (!summaryEl) return;
+            if (!cart || !cart.items || cart.items.length === 0) {
+                summaryEl.innerHTML = '<div class="error"><p>Carrinho vazio. <a href="carrinho.html">Voltar</a></p></div>';
+                return;
+            }
+            const imgFallback = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect fill='%23e5e7eb' width='60' height='60'/%3E%3C/svg%3E";
+            const itemsHtml = cart.items.map(function(item) {
+                const thumb = item.thumbnail ||
+                    (item.variant && item.variant.product && item.variant.product.images && item.variant.product.images[0] && item.variant.product.images[0].url) ||
+                    imgFallback;
+                const itemSubtotal = (item.unit_price || 0) * (item.quantity || 1);
+                return `<div class="cart-item-summary">
+                    <img src="${thumb}" alt="${(item.title||'').replace(/"/g,'&quot;')}" onerror="this.src='${imgFallback}'">
+                    <div class="cart-item-summary-info">
+                        <h4>${item.title || 'Produto'}</h4>
+                        <p>Qtd: ${item.quantity} x R$ ${formatPrice(item.unit_price || 0)}</p>
+                    </div>
+                    <div style="font-weight:600;">R$ ${formatPrice(itemSubtotal)}</div>
+                </div>`;
+            }).join('');
+
+            const subtotal = cart.subtotal || cart.items.reduce(function(s,i){ return s + (i.unit_price||0)*(i.quantity||1); }, 0);
+            const shippingCost = selectedShippingOption ? selectedShippingOption.cost : 0;
+            const total = subtotal + shippingCost;
+
+            summaryEl.innerHTML = `
+                <div class="cart-items-list">${itemsHtml}</div>
+                <div class="summary-item"><span>Subtotal</span><span>R$ ${formatPrice(subtotal)}</span></div>
+                <div class="summary-item">
+                    <span>Frete</span>
+                    <span id="shipping-cost-display">${selectedShippingOption ? (selectedShippingOption.is_free ? 'Grátis' : 'R$ ' + formatPrice(shippingCost)) : 'R$ 0,00'}</span>
+                </div>
+                <div class="summary-item summary-total"><span>Total</span><span>R$ ${formatPrice(total)}</span></div>
+            `;
+        }
+
+        // Carregar carrinho para exibir no resumo
+        async function loadCartSummary() {
+            cartId = localStorage.getItem(CART_KEY);
+            const summaryEl = document.getElementById('cart-summary');
+            if (!cartId) {
+                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Carrinho não encontrado. <a href="index.html">Voltar para a loja</a></p></div>';
+                return;
+            }
+            try {
+                const res = await fetch(getStoreAPI() + '/carts/' + cartId);
+                if (!res.ok) throw new Error('Carrinho não encontrado');
+                const data = await res.json();
+                cart = data.cart;
+                if (!cart || !cart.items || cart.items.length === 0) {
+                    if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Carrinho vazio. <a href="index.html">Voltar para a loja</a></p></div>';
+                    return;
+                }
+                renderCartSummary();
+            } catch (err) {
+                console.error('[CHECKOUT] Erro ao carregar carrinho:', err);
+                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Erro ao carregar carrinho. <a href="carrinho.html">Voltar</a></p></div>';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Submeter formulário de checkout
+        document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submit-btn');
+            const errorDiv = document.getElementById('error-message');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+            if (errorDiv) errorDiv.style.display = 'none';
+
+            cartId = localStorage.getItem(CART_KEY);
+            if (!cartId) {
+                showError('Carrinho não encontrado. Adicione produtos ao carrinho primeiro.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar Pedido';
+                return;
+            }
+
+            const formData = new FormData(e.target);
+            const customerName = String(formData.get('customer_name') || '').trim();
+            const customerEmail = String(formData.get('customer_email') || '').trim();
+            const customerPhone = String(formData.get('customer_phone') || '').trim();
+            const nameParts = customerName.split(' ');
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+            const zipCode = String(formData.get('zip_code') || '').replace(/\D/g, '');
+            const paymentMethod = String(formData.get('payment_method') || 'pix');
+
+            // Payload no formato esperado pelo backend VivaCommerce
+            const checkoutPayload = {
+                email: customerEmail,
+                customer: { firstName, lastName, phone: customerPhone },
+                delivery_type: 'STANDARD',
+                shipping_address: {
+                    street: String(formData.get('street') || ''),
+                    number: String(formData.get('number') || ''),
+                    complement: String(formData.get('complement') || '') || undefined,
+                    neighborhood: String(formData.get('neighborhood') || ''),
+                    city: String(formData.get('city') || ''),
+                    state: String(formData.get('state') || ''),
+                    zipCode: zipCode
+                }
+            };
+
+            try {
+                const res = await fetch(getStoreAPI() + '/carts/' + cartId + '/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(checkoutPayload)
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || data.message || 'Erro ao processar pedido');
+
+                // Mapear resposta do backend para o formato da página de confirmação
+                const order = data.data || data.order || {};
+                const shippingCost = selectedShippingOption ? selectedShippingOption.cost : 0;
+                const lastOrder = {
+                    order_number: order.display_id || order.id || '',
+                    customer_name: customerName,
+                    customer_email: customerEmail,
+                    customer_phone: customerPhone,
+                    shipping_address: {
+                        street: checkoutPayload.shipping_address.street,
+                        number: checkoutPayload.shipping_address.number,
+                        complement: checkoutPayload.shipping_address.complement || '',
+                        neighborhood: checkoutPayload.shipping_address.neighborhood,
+                        city: checkoutPayload.shipping_address.city,
+                        state: checkoutPayload.shipping_address.state,
+                        zip_code: zipCode
+                    },
+                    subtotal: order.subtotal || 0,
+                    shipping_cost: shippingCost,
+                    total: order.total || 0,
+                    payment_method: paymentMethod,
+                    items: (order.items || []).map(function(item) {
+                        return {
+                            product_name: item.title || 'Produto',
+                            product_image: item.thumbnail || null,
+                            quantity: item.quantity || 1,
+                            unit_price: item.unit_price || 0,
+                            subtotal: (item.unit_price || 0) * (item.quantity || 1)
+                        };
+                    })
+                };
+
+                localStorage.setItem('last_order', JSON.stringify(lastOrder));
+                localStorage.removeItem(CART_KEY);
+                window.location.href = 'pedido-confirmado.html?order=' + (lastOrder.order_number || '');
+            } catch (err) {
+                console.error('[CHECKOUT] Erro ao finalizar:', err);
+                showError(err.message || 'Erro ao processar pedido. Tente novamente.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar Pedido';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() { loadCartSummary(); });
+    </script>
+</body>
+</html>

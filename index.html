@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech10 | Assistência Técnica Apple e PC em Santa Maria - RS</title>
+  <meta name="description" content="Assistência Técnica Premium em Santa Maria - RS. Especializados em Apple, Notebooks e Redes. Mais de 20 anos de experiência. Orçamento rápido pelo WhatsApp!">
+  <meta name="keywords" content="assistencia tecnica, conserto de notebook, santa maria rs, tech10, reparo de placa mae, especialista apple">
+  <!-- SEO Local Business Schema (O Segredo do Google) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Tech10 Informática e Tecnologia",
+    "image": "https://instagram.com/tech10info",
+    "url": "https://tech10.com.br",
+    "telephone": "+555533170762",
+    "priceRange": "$$",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "R. Acampamento, 255 - Galeria Village Center, Loja 110",
+      "addressLocality": "Santa Maria",
+      "addressRegion": "RS",
+      "postalCode": "97050-001",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -29.6918809,
+      "longitude": -53.809312
+    },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "09:00", "closes": "18:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "13:00" }
+    ],
+    "sameAs": [
+      "https://facebook.com/tech10info",
+      "https://instagram.com/tech10info"
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Cursor personalizado -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursor-follower"></div>
+
+  <!-- Partículas de fundo -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="loader-content">
+      <div class="loader-logo">
+        TECH<span class="loader-1">1</span><span class="loader-toggle-wrap"><span class="loader-toggle-pill"><span class="loader-toggle-dot"></span></span></span>
+      </div>
+      <div class="loader-bar"><div class="loader-progress"></div></div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <span class="logo-text">TECH</span><span class="logo-1">1</span><span class="logo-toggle" id="logo-toggle"><span class="toggle-pill"><span class="toggle-dot"></span></span></span>
+        <span class="logo-sub">INFORMÁTICA E TECNOLOGIA</span>
+      </a>
+      <!-- Status Badge -->
+      <div class="status-badge" id="status-badge">
+        <span class="status-dot"></span>
+        <span class="status-text">Verificando...</span>
+        <span class="status-time"></span>
+      </div>
+      <div class="nav-links" id="nav-links">
+        <a href="#hero" class="nav-link active">Início</a>
+        <a href="#servicos" class="nav-link">Serviços</a>
+        <a href="#planos" class="nav-link">Planos</a>
+        <a href="#dicas" class="nav-link">Dicas</a>
+        <a href="#sobre" class="nav-link">Sobre</a>
+        <a href="#contato" class="nav-link cta-btn">Orçamento Grátis</a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="hero" id="hero" style="position: relative; overflow: hidden; width: 100%;">
+    <video autoplay muted loop playsinline class="hero-bg-video">
+      <source src="imagem/video-bancada.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner-container" style="display: flex; align-items: center; justify-content: space-between; max-width: var(--container-max); margin: 0 auto; width: 100%; position: relative; z-index: 2; padding-top: 60px; padding-bottom: 20px;">
+      <div class="hero-content">
+      <div class="hero-badge" data-animate="fade-up">
+        <i class="fas fa-shield-check"></i> 20+ Anos de Experiência
+      </div>
+      <h1 class="hero-title" data-animate="fade-up">
+        Assistência Técnica<br>
+        <span class="gradient-text">Premium</span> em Tecnologia
+      </h1>
+      <p class="hero-subtitle" data-animate="fade-up">
+        Especialistas em Apple, Samsung e todas as marcas. Diagnóstico gratuito,
+        peças originais e garantia de 90 dias.
+      </p>
+      <div class="hero-actions" data-animate="fade-up">
+        <a href="#contato" class="btn btn-primary">
+          <i class="fab fa-whatsapp"></i> Solicitar Orçamento
+        </a>
+        <a href="#servicos" class="btn btn-ghost">
+          <i class="fas fa-arrow-down"></i> Ver Serviços
+        </a>
+      </div>
+      <div class="hero-stats" data-animate="fade-up">
+        <div class="stat">
+          <span class="stat-number" data-count="20">0</span><span class="stat-plus">+</span>
+          <span class="stat-label">Anos de Experiência</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-count="1000">0</span><span class="stat-plus">+</span>
+          <span class="stat-label">Clientes Satisfeitos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-count="90">0</span>
+          <span class="stat-label">Dias de Garantia</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual" style="position: relative; z-index: 2; flex: 0.7;">
+      <div class="hero-device-wrapper" id="hero-device-wrapper">
+        <div class="video-hero-wrapper" id="hero-video-wrapper">
+          <video src="imagem/video_hero.mp4" autoplay loop muted playsinline class="hero-video" id="hero-video"></video>
+        </div>
+      </div>
+    </div>
+    </div> <!-- fecha container flex box inner -->
+    <div class="hero-scroll-indicator">
+      <span>Role para descobrir</span>
+      <div class="scroll-arrow"><i class="fas fa-chevron-down"></i></div>
+    </div>
+  </section>
+
+
+  <!-- SERVIÇOS -->
+  <section class="services-section" id="servicos" style="position: relative; overflow: hidden;">
+    <video autoplay muted loop playsinline class="services-bg-video">
+      <source src="imagem/apple-bg.mp4" type="video/mp4">
+    </video>
+    <div class="services-overlay"></div>
+    <div class="container" style="position: relative; z-index: 2;">
+      <span class="section-tag"><i class="fas fa-cogs"></i> Nossos Serviços</span>
+      <h2 class="section-title">Soluções Completas em<br><span class="gradient-text">Tecnologia</span></h2>
+      <p class="section-desc">Assistência técnica especializada com 20+ anos de experiência</p>
+
+      <div class="services-grid">
+        <div class="service-card" data-animate="fade-up">
+          <div class="service-icon apple"><i class="fab fa-apple"></i></div>
+          <h3>Especialista Apple</h3>
+          <p>iPhone, iPad, MacBook e iMac. Peças originais garantidas e reparo em 2-4 horas.</p>
+          <div class="service-tags">
+            <span>iPhone</span><span>MacBook</span><span>iPad</span>
+          </div>
+          <div class="service-time"><i class="fas fa-clock"></i> 2-4 horas</div>
+        </div>
+
+        <div class="service-card" data-animate="fade-up">
+          <div class="service-icon android"><i class="fab fa-android"></i></div>
+          <h3>Reparo Android</h3>
+          <p>Samsung, Motorola, Xiaomi, LG. Troca de tela, bateria e desbloqueio.</p>
+          <div class="service-tags">
+            <span>Samsung</span><span>Motorola</span><span>Xiaomi</span>
+          </div>
+          <div class="service-time"><i class="fas fa-clock"></i> 1-3 horas</div>
+        </div>
+
+        <div class="service-card" data-animate="fade-up">
+          <div class="service-icon notebook"><i class="fas fa-laptop"></i></div>
+          <h3>Notebooks & PCs</h3>
+          <p>Formatação, upgrade, limpeza, reparo de hardware para todas as marcas.</p>
+          <div class="service-tags">
+            <span>Dell</span><span>HP</span><span>Lenovo</span>
+          </div>
+          <div class="service-time"><i class="fas fa-clock"></i> 2-6 horas</div>
+        </div>
+
+        <div class="service-card" data-animate="fade-up">
+          <div class="service-icon network"><i class="fas fa-network-wired"></i></div>
+          <h3>Redes & Infra</h3>
+          <p>Projetos de rede empresarial e residencial, com e sem fio, instalação completa.</p>
+          <div class="service-tags">
+            <span>Wi-Fi</span><span>CFTV</span><span>Cabeamento</span>
+          </div>
+          <div class="service-time"><i class="fas fa-clock"></i> Sob consulta</div>
+        </div>
+
+        <div class="service-card" data-animate="fade-up">
+          <div class="service-icon dev"><i class="fas fa-code"></i></div>
+          <h3>Desenvolvimento</h3>
+          <p>Sites, sistemas web e e-commerce. Do conceito à entrega com qualidade.</p>
+          <div class="service-tags">
+            <span>Web</span><span>E-commerce</span><span>Sistemas</span>
+          </div>
+          <div class="service-time"><i class="fas fa-clock"></i> Sob consulta</div>
+        </div>
+
+        <div class="service-card" data-animate="fade-up">
+          <div class="service-icon security"><i class="fas fa-shield-alt"></i></div>
+          <h3>Segurança Digital</h3>
+          <p>CFTV, backups, antivírus empresarial e consultoria de segurança da informação.</p>
+          <div class="service-tags">
+            <span>CFTV</span><span>Backup</span><span>Firewall</span>
+          </div>
+          <div class="service-time"><i class="fas fa-clock"></i> Sob consulta</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section class="plans-section" id="planos" style="position: relative; overflow: hidden;">
+    <video autoplay muted loop playsinline class="plans-bg-video">
+      <source src="imagem/video_empresa.mp4" type="video/mp4">
+    </video>
+    <div class="plans-overlay"></div>
+    <div class="container" style="position: relative; z-index: 2;">
+      <span class="section-tag"><i class="fas fa-crown"></i> Planos Empresariais</span>
+      <h2 class="section-title">Soluções de <span class="gradient-text">Manutenção</span><br>para sua Empresa</h2>
+      <p class="section-desc">Contratos que garantem zero paragens e tecnologia atualizada</p>
+
+      <div class="plans-grid">
+        <div class="plan-card" data-animate="fade-up">
+          <div class="plan-badge eco">Econômico</div>
+          <h3>Gestão de Ciclo</h3>
+          <p class="plan-subtitle">Ideal para pequenas empresas que buscam estabilidade e previsibilidade.</p>
+          <ul class="plan-features">
+            <li><i class="fas fa-check"></i> Gestão do parque informático</li>
+            <li><i class="fas fa-check"></i> Manutenção incluída</li>
+            <li><i class="fas fa-check"></i> Troca programada</li>
+            <li><i class="fas fa-check"></i> Mensalidade fixa</li>
+            <li><i class="fas fa-check"></i> Renovação a cada 3 anos</li>
+          </ul>
+          <a href="#contato" class="btn btn-outline">Solicitar Proposta</a>
+        </div>
+
+        <div class="plan-card featured" data-animate="fade-up">
+          <div class="plan-badge pop">Mais Popular</div>
+          <h3>Suporte Híbrido</h3>
+          <p class="plan-subtitle">O equilíbrio perfeito entre suporte ágil e modernização contínua de TI.</p>
+          <ul class="plan-features">
+            <li><i class="fas fa-check"></i> Manutenção de PCs e periféricos</li>
+            <li><i class="fas fa-check"></i> Suporte à rede</li>
+            <li><i class="fas fa-check"></i> Suporte técnico aos sistemas</li>
+            <li><i class="fas fa-check"></i> Horas de evolução mensais</li>
+            <li><i class="fas fa-check"></i> Melhorias contínuas</li>
+            <li><i class="fas fa-check"></i> Relatório mensal de saúde</li>
+          </ul>
+          <a href="#contato" class="btn btn-primary">Solicitar Proposta</a>
+        </div>
+
+        <div class="plan-card" data-animate="fade-up">
+          <div class="plan-badge prem">Premium</div>
+          <h3>Business Continuity</h3>
+          <p class="plan-subtitle">Operação blindada para empresas críticas que não podem ter paradas.</p>
+          <ul class="plan-features">
+            <li><i class="fas fa-check"></i> Monitorização remota 24/7</li>
+            <li><i class="fas fa-check"></i> Backups na nuvem</li>
+            <li><i class="fas fa-check"></i> Limpeza física semestral</li>
+            <li><i class="fas fa-check"></i> Equipamento de substituição</li>
+            <li><i class="fas fa-check"></i> Reparo em menos de 4 horas</li>
+            <li><i class="fas fa-check"></i> SLA garantido</li>
+          </ul>
+          <a href="#contato" class="btn btn-outline">Solicitar Proposta</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DICAS -->
+  <section class="tips-section" id="dicas">
+    <div class="container">
+      <span class="section-tag"><i class="fas fa-lightbulb"></i> Dicas do Especialista</span>
+      <h2 class="section-title">Cuide Melhor dos Seus<br><span class="gradient-text">Equipamentos</span></h2>
+
+      <div class="tips-carousel" id="tipsCarousel">
+        
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-especialista-evitar-aquecimento-notebook.webp" alt="Evitar aquecimento" loading="lazy">
+            <div class="tip-tag">Manutenção</div>
+          </div>
+          <div class="tip-content">
+            <h3>Evite Superaquecimento</h3>
+            <p>Nunca use seu notebook em cima da cama ou almofadas. Isso bloqueia as saídas de ar, causando lentidão térmica e queima de componentes internos.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 2 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-especialista-carregador-original.webp" alt="Carregador original" loading="lazy">
+            <div class="tip-tag security">Segurança</div>
+          </div>
+          <div class="tip-content">
+            <h3>Use Peças Originais</h3>
+            <p>Cabos secundários "baratos" degradam o ciclo elétrico da sua bateria, além de representar grande risco de incêndio ao longo da madrugada.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 3 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-limpeza-regular-manutencao.webp" alt="Limpeza regular" loading="lazy">
+            <div class="tip-tag performance">Proteção</div>
+          </div>
+          <div class="tip-content">
+            <h3>Limpeza Salva Chips</h3>
+            <p>Poda térmica: Poeira interna seca atua como cobertor nas placas lógicas. Realize limpezas anuais preventivas na Tech10 para evitar perdas totais.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 4 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-pc-notebook-molhou.webp" alt="PC Molhou" loading="lazy">
+            <div class="tip-tag security">Urgência</div>
+          </div>
+          <div class="tip-content">
+            <h3>Derrubou Água?</h3>
+            <p>Se o líquido cair no teclado, não tente ligar nem sacuda. Desligue da tomada, vire-o para baixo e traga imediatamente para secagem química celular.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 2 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-deolhona temperatura.webp" alt="De olho na temperatura" loading="lazy">
+            <div class="tip-tag performance">Sistema</div>
+          </div>
+          <div class="tip-content">
+            <h3>Monitore o Calor</h3>
+            <p>Se o equipamento estiver "soprando" alto ou quente ao toque, o processador está lutando para sobreviver. Troca de pasta térmica é indispensável.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 3 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-diminuir-aquecimento-computador-1.webp" alt="Diminuir aquecimento" loading="lazy">
+            <div class="tip-tag">Hardware</div>
+          </div>
+          <div class="tip-content">
+            <h3>Bases Refrigeradas</h3>
+            <p>Para quem exige muito da máquina, levantar o notebook na mesa ou usar cooler externo aumenta os FPS (desempenho) e diminui o travamento em 30%.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 2 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-eviteambientesquentes.webp" alt="Evite ambientes quentes" loading="lazy">
+            <div class="tip-tag security">Atenção</div>
+          </div>
+          <div class="tip-content">
+            <h3>Evite Deixar no Carro</h3>
+            <p>Baterias expostas ao sol num carro fechado podem inchar e estourar a tela ou tampa traseira em questão de poucos minutos. Proteja seu equipamento.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 2 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-leveparassistencia.webp" alt="Leve para assistência" loading="lazy">
+            <div class="tip-tag">Manutenção</div>
+          </div>
+          <div class="tip-content">
+            <h3>Falhas Misteriosas</h3>
+            <p>Fica desligando sozinho? Tela azul rara? Não espere a falha total acontecer. Venha fazer um check-up preventivo que é rápido e gratuíto.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 3 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-naofiqueparatras.webp" alt="Fique atualizado" loading="lazy">
+            <div class="tip-tag performance">Produtividade</div>
+          </div>
+          <div class="tip-content">
+            <h3>Atualize o SSD!</h3>
+            <p>Se a sua máquina for antiga, nem cogite descartá-la. Apenas instalar um SSD + Memória a deixará até 10x mais rápida que um PC Celeron de loja.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 4 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-ventilacaoadequada.webp" alt="Ventilação correta" loading="lazy">
+            <div class="tip-tag">Hardware</div>
+          </div>
+          <div class="tip-content">
+            <h3>Montagem Limpa</h3>
+            <p>Computadores Desktop precisam que todos os cabos sejam embutidos atrás do chassi, para que o fluxo de ar bata diretamente no chip gráfico e não neles.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 2 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-precisandodenovoequipamento.webp" alt="Novo equipamento" loading="lazy">
+            <div class="tip-tag performance">Soluções</div>
+          </div>
+          <div class="tip-content">
+            <h3>Precisando de PC?</h3>
+            <p>Evite gastar fortunas à toa! Nossos consultores montam sob medida uma configuração 100% equilibrada perfeitamente na medida para a sua necessidade.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 4 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+        <div class="tip-card tip-card-image" data-animate="fade-up">
+          <div class="tip-image-wrapper">
+            <img src="imagem/dica-proteja-seubem.webp" alt="Proteja seu bem" loading="lazy">
+            <div class="tip-tag security">Segurança</div>
+          </div>
+          <div class="tip-content">
+            <h3>Nobreaks São Vitais</h3>
+            <p>Oscilações elétricas queimam computadores durante temporais silenciosamente. Nós indicamos e instalamos nobreaks profissionais dimensionados.</p>
+            <div class="tip-meta"><span><i class="fas fa-clock"></i> 3 min</span><span class="tip-difficulty"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE COM PARALLAX E VIDEO -->
+  <section class="about-section" id="sobre" style="position: relative; overflow: hidden;">
+    <video autoplay muted loop playsinline class="about-bg-video">
+      <source src="imagem/video-bancada.mp4" type="video/mp4">
+    </video>
+    <div class="about-overlay"></div>
+    <div class="container" style="position: relative; z-index: 2;">
+      <div class="about-grid">
+        
+        <div class="about-photo-wrapper" data-animate="fade-right">
+           <div class="parallax-container" id="parallax-container">
+             <!-- As peças que flutuam em volta -->
+             <div class="floating-item float-1" data-speed="1.5"><i class="fas fa-microchip"></i></div>
+             <div class="floating-item float-2" data-speed="-1.2"><i class="fas fa-memory"></i></div>
+             <div class="floating-item float-3" data-speed="2.0"><i class="fas fa-cogs"></i></div>
+             <div class="floating-item float-4" data-speed="-1.8"><i class="fas fa-shield-alt"></i></div>
+             
+             <!-- A foto do especialista -->
+             <img src="imagem/especialista.jpg" alt="O Especialista" class="specialist-img" id="specialist-photo" loading="lazy">
+             <div class="parallax-glow"></div>
+           </div>
+        </div>
+
+        <div class="about-content" data-animate="fade-left">
+          <span class="section-tag"><i class="fas fa-store"></i> Sobre a Tech10</span>
+          <h2 class="section-title">Uma História de<br><span class="gradient-text">Paixão por Tecnologia</span></h2>
+          <p>A Tech10 Informática e Tecnologia é uma empresa consolidada em Santa Maria há 3 anos, fruto de um projeto construído com dedicação, conhecimento e paixão pela área da tecnologia.</p>
+          <p>Apesar de jovem em sua estrutura atual, a Tech10 carrega consigo mais de <strong>20 anos de experiência</strong> e atuação no setor, unindo tradição, inovação e compromisso com a qualidade.</p>
+          
+          <div class="about-highlights">
+            <div class="highlight">
+              <div class="highlight-number">20+</div>
+              <div class="highlight-text">Anos de Experiência</div>
+            </div>
+            <div class="highlight">
+              <div class="highlight-number">100%</div>
+              <div class="highlight-text">Compromisso</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section class="contact-section" id="contato">
+    <div class="container" style="text-align: center;">
+      <span class="section-tag" style="margin: 0 auto 20px;"><i class="fas fa-envelope"></i> Contato</span>
+      <h2 class="section-title">Fale com a <span class="gradient-text">Tech10</span></h2>
+      <p class="section-desc" style="margin-left: auto; margin-right: auto;">Estamos prontos para diagnosticar e resolver o seu problema.</p>
+
+      <div class="contact-grid">
+        <div class="contact-info" data-animate="fade-right">
+          <div class="contact-card">
+            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <h4>Visite a Loja</h4>
+              <p>R. Acampamento, 255 - Village Center, Loja 110<br>Centro, Santa Maria - RS</p>
+            </div>
+          </div>
+          <div class="contact-card" style="display: flex; gap: 16px; align-items: flex-start;">
+            <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div>
+                <h4 style="margin-bottom: 2px;">WhatsApp (Direto)</h4>
+                <p>(55) 97400-1960</p>
+              </div>
+              <div>
+                <h4 style="margin-bottom: 2px;">Telefone Fixo</h4>
+                <p>(55) 3317-0762</p>
+              </div>
+            </div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon"><i class="fas fa-clock"></i></div>
+            <div>
+              <h4>Horário</h4>
+              <p>Seg-Sex: 9h às 18h<br>Sáb: 9h às 13h</p>
+            </div>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <h4>E-mail</h4>
+              <p>tech10.infor@gmail.com</p>
+            </div>
+          </div>
+        </div>
+        <form class="contact-form" data-animate="fade-left" id="contact-form">
+          <div class="form-group">
+            <input type="text" id="form-name" placeholder=" " required>
+            <label for="form-name">Seu Nome</label>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="email" id="form-email" placeholder=" " required>
+              <label for="form-email">E-mail</label>
+            </div>
+            <div class="form-group">
+              <input type="tel" id="form-phone" placeholder=" " required>
+              <label for="form-phone">Telefone</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <select id="form-service" required>
+              <option value="" disabled selected>Selecione o serviço</option>
+              <option>Reparo iPhone/iPad</option>
+              <option>Reparo MacBook/iMac</option>
+              <option>Reparo Android</option>
+              <option>Notebook/PC</option>
+              <option>Redes e Infraestrutura</option>
+              <option>Desenvolvimento</option>
+              <option>Plano Empresarial</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <textarea id="form-message" rows="4" placeholder=" " required></textarea>
+            <label for="form-message">Descreva o problema</label>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">
+            <i class="fab fa-whatsapp"></i> Enviar via WhatsApp
+          </button>
+        </form>
+
+        <!-- COLUNA 3: MAPA E INSTA (LADO DIREITO) -->
+        <div class="location-info" data-animate="fade-left" style="display: flex; flex-direction: column; gap: 20px; height: 100%;">
+          <div class="youtube-wrapper" style="width: 100%; height: 50%; min-height: 250px; background: #fff; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+             <iframe src="https://www.instagram.com/p/DLQbX2CyQEF/embed" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true" style="border: none; background: white;"></iframe>
+          </div>
+          <div class="map-wrapper" style="width: 100%; height: 50%; min-height: 250px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3460.551609121703!2d-53.809312!3d-29.6918809!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9503cb5cb70e41cb%3A0xcad7fd31ccbbdd7d!2sGaleria%20Village%20Center!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPER CTA (SMOKE TEST) -->
+  <section class="cta-section" id="super-cta" data-animate="fade-up">
+    <div class="container text-center">
+      <h2 class="section-title">A estabilidade que o seu negócio precisa,<br>a uma <span class="gradient-text">mensagem</span> de distância.</h2>
+      <p class="section-desc mx-auto">Pare de perder horas produtivas com problemas de T.I. Solicite seu orçamento sem compromisso e veja como a Tech10 pode transformar a sua operação.</p>
+      <a href="#contato" class="btn btn-primary btn-cta">Falar com um Especialista Agora</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span>TECH</span><span class="footer-1">1</span><span class="footer-toggle"><span class="ftoggle-pill"><span class="ftoggle-dot"></span></span></span>
+          </div>
+          <p>Informática e Tecnologia. Mais de 20 anos transformando problemas em soluções.</p>
+          <div class="footer-social">
+            <a href="https://instagram.com/tech10info" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://facebook.com/tech10info" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="#contato" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Serviços</h4>
+          <a href="#">Reparo Apple</a>
+          <a href="#">Reparo Android</a>
+          <a href="#">Notebooks & PCs</a>
+          <a href="#">Redes</a>
+          <a href="#">Desenvolvimento</a>
+        </div>
+        <div class="footer-links">
+          <h4>Empresa</h4>
+          <a href="#sobre">Sobre</a>
+          <a href="#planos">Planos</a>
+          <a href="#dicas">Dicas</a>
+          <a href="#contato">Contato</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tech10 Informática e Tecnologia. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp Float -->
+  <a href="https://wa.me/5555974001960" class="whatsapp-float" aria-label="WhatsApp" id="whatsapp-btn" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+    <span class="wpp-tooltip">Fale conosco!</span>
+  </a>
+
+  <!-- MODAL DE IMAGEM -->
+  <div class="image-modal" id="imageModal">
+    <span class="close-modal" id="closeModal">&times;</span>
+    <img class="modal-content" id="modalImg" alt="Imagem ampliada">
+    <div id="modalCaption"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

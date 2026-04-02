@@ -1,0 +1,30 @@
+=== CATEGORIAS TECH10 ===
+  android.html (16691b)
+  apple.html (19212b)
+  desenvolvimento.html (18573b)
+  assistencia.html (17258b)
+  notebooks.html (17597b)
+  smartphones.html (16571b)
+
+=== TECH10_LOJA_COMPLETA (TUDO) ===
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\DOCUMENTACAO
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\admin
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\categorias
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\css
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\imagem-otimizada
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\imagem
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\js
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\logs
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\proxmox_templates
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\scripts
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\admin\css
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\admin\js
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\imagem-otimizada\favico
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\imagem-otimizada\imagens tecnologia
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\imagem-otimizada\propaganda loja
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\imagem\favico
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\imagem\imagens tecnologia
+  [DIR] D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\tech10_loja_completa\imagem\propaganda loja
+  [SEM C?DIGO FONTE]
+
+=== BUSCA POR 'quem somos' em TODOS os HTMLs do D: ===

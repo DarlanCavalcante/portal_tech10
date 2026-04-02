@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos — Tech10 Informática e Tecnologia</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/products-medusa.css">
+  <link rel="stylesheet" href="css/medusa-cart.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f5f7fa; color: #111; }
+
+    /* ── Header ── */
+    .pp-header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .pp-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #2563eb;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .pp-logo i { font-size: 24px; }
+    .pp-logo img { height: 36px; width: auto; object-fit: contain; }
+    .pp-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pp-search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .pp-search-input {
+      width: 260px;
+      padding: 9px 14px 9px 38px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 24px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+      background: #f9fafb;
+    }
+    .pp-search-input:focus { border-color: #2563eb; background: #fff; }
+    .pp-search-icon {
+      position: absolute;
+      left: 12px;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+    .pp-cart-btn {
+      position: relative;
+      text-decoration: none;
+      color: #374151;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      transition: background .15s;
+    }
+    .pp-cart-btn:hover { background: #eff6ff; color: #2563eb; }
+    .pp-cart-count {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+    .pp-back-link {
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .15s;
+    }
+    .pp-back-link:hover { color: #2563eb; }
+
+    /* ── Layout ── */
+    .pp-layout {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .pp-layout { grid-template-columns: 1fr; }
+      .pp-sidebar {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 280px;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        z-index: 500;
+        transition: left .28s cubic-bezier(.4,0,.2,1);
+        box-shadow: none;
+        overflow-y: auto;
+      }
+      .pp-sidebar.open {
+        left: 0;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.18);
+      }
+      .pp-sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 499;
+        transition: opacity .25s;
+      }
+      .pp-sidebar-overlay.visible { display: block; }
+    }
+    @media (min-width: 901px) {
+      .pp-sidebar-overlay { display: none !important; }
+    }
+
+    /* ── Sidebar de categorias ── */
+    .pp-sidebar {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 80px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+    }
+    .pp-sidebar-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 14px;
+    }
+    .pp-cat-list { list-style: none; }
+    .pp-cat-all {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      transition: background .15s, color .15s;
+      margin-bottom: 4px;
+    }
+    .pp-cat-all:hover, .pp-cat-all.active { background: #eff6ff; color: #2563eb; }
+
+    /* Pai */
+    .pp-cat-pai {
+      margin-bottom: 4px;
+    }
+    .pp-cat-pai-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+      text-align: left;
+      transition: background .15s;
+    }
+    .pp-cat-pai-btn:hover { background: #f3f4f6; }
+    .pp-cat-pai-btn .pp-cat-arrow {
+      margin-left: auto;
+      font-size: 10px;
+      color: #9ca3af;
+      transition: transform .2s;
+    }
+    .pp-cat-pai.open > .pp-cat-pai-btn .pp-cat-arrow { transform: rotate(90deg); }
+    .pp-cat-pai-icon { font-size: 16px; }
+
+    /* Filhos */
+    .pp-cat-filhos { display: none; padding-left: 12px; margin-top: 2px; }
+    .pp-cat-pai.open > .pp-cat-filhos { display: block; }
+
+    .pp-cat-filho {
+      margin-bottom: 2px;
+    }
+    .pp-cat-filho-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 7px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      text-align: left;
+      transition: background .15s, color .15s;
+    }
+    .pp-cat-filho-btn:hover,
+    .pp-cat-filho-btn.active { background: #eff6ff; color: #2563eb; }
+    .pp-cat-filho-btn .pp-cat-arrow {
+      margin-left: auto;
+      font-size: 10px;
+      color: #9ca3af;
+      transition: transform .2s;
+    }
+    .pp-cat-filho.open > .pp-cat-filho-btn .pp-cat-arrow { transform: rotate(90deg); }
+
+    /* Netos */
+    .pp-cat-netos { display: none; padding-left: 14px; margin-top: 2px; }
+    .pp-cat-filho.open > .pp-cat-netos { display: block; }
+    .pp-cat-neto-btn {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12.5px;
+      color: #6b7280;
+      text-align: left;
+      transition: background .15s, color .15s;
+      margin-bottom: 2px;
+    }
+    .pp-cat-neto-btn:hover,
+    .pp-cat-neto-btn.active { background: #eff6ff; color: #2563eb; font-weight: 600; }
+
+    .pp-cat-count {
+      margin-left: auto;
+      font-size: 11px;
+      color: #9ca3af;
+      background: #f3f4f6;
+      padding: 1px 7px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── Coluna principal ── */
+    .pp-main { }
+
+    /* Breadcrumb + Controles */
+    .pp-controls {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+    .pp-breadcrumb {
+      flex: 1;
+      font-size: 13px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .pp-breadcrumb span { color: #111827; font-weight: 600; }
+    .pp-result-count {
+      font-size: 13px;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+    .pp-sort-select {
+      padding: 7px 12px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+    }
+    .pp-mobile-filter-btn {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    @media (max-width: 900px) { .pp-mobile-filter-btn { display: flex; } }
+
+    /* Skeleton loader */
+    .pp-skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .pp-skeleton-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .pp-skeleton-img {
+      background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+      background-size: 200% 100%;
+      animation: pp-shimmer 1.4s infinite;
+      height: 210px;
+    }
+    .pp-skeleton-body { padding: 14px 16px; }
+    .pp-skeleton-line {
+      height: 14px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+      background-size: 200% 100%;
+      animation: pp-shimmer 1.4s infinite;
+      margin-bottom: 10px;
+    }
+    .pp-skeleton-line.short { width: 60%; }
+    .pp-skeleton-line.price { width: 40%; height: 20px; }
+    @keyframes pp-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Load more */
+    .pp-load-more {
+      text-align: center;
+      margin-top: 32px;
+    }
+    .pp-btn-load-more {
+      padding: 12px 32px;
+      background: #fff;
+      border: 2px solid #2563eb;
+      color: #2563eb;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .pp-btn-load-more:hover { background: #2563eb; color: #fff; }
+    .pp-btn-load-more:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* WhatsApp Float */
+    .pp-whatsapp-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      background: #25d366;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      text-decoration: none;
+      box-shadow: 0 4px 18px rgba(37,211,102,0.45);
+      z-index: 300;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .pp-whatsapp-float:hover {
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37,211,102,0.55);
+    }
+    .pp-whatsapp-float::after {
+      content: 'Fale conosco';
+      position: absolute;
+      right: 64px;
+      background: #1e293b;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+    .pp-whatsapp-float:hover::after { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="pp-header">
+    <a href="/tech10/" class="pp-logo">
+      <img src="imagem/logo/tech10-logo-fundo-azul.png" alt="Tech10" height="36">
+    </a>
+
+    <div class="pp-header-right">
+      <a href="/tech10/" class="pp-back-link">
+        <i class="fas fa-arrow-left"></i> Início
+      </a>
+      <div class="pp-search-wrap">
+        <i class="fas fa-search pp-search-icon"></i>
+        <input type="text" class="pp-search-input" id="pp-search" placeholder="Buscar produtos...">
+      </div>
+      <a href="/tech10/carrinho.html" class="pp-cart-btn" aria-label="Carrinho">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="pp-cart-count" id="pp-cart-count">0</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Layout principal -->
+  <div class="pp-layout">
+
+    <!-- Sidebar de categorias -->
+    <aside class="pp-sidebar" id="pp-sidebar">
+      <p class="pp-sidebar-title"><i class="fas fa-tag"></i> Categorias</p>
+      <ul class="pp-cat-list" id="pp-cat-list">
+        <li class="pp-cat-all active" id="pp-cat-all" data-handle="all">
+          <i class="fas fa-th-large" style="color:#2563eb"></i>
+          Todos os Produtos
+          <span class="pp-cat-count" id="pp-cat-all-count">–</span>
+        </li>
+      </ul>
+      <div id="pp-cat-loading" style="text-align:center;padding:20px;color:#9ca3af;font-size:13px;">
+        <i class="fas fa-spinner fa-spin"></i> Carregando categorias...
+      </div>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="pp-main">
+      <!-- Controles -->
+      <div class="pp-controls">
+        <button class="pp-mobile-filter-btn" id="pp-filter-toggle">
+          <i class="fas fa-filter"></i> Filtros
+        </button>
+        <div class="pp-breadcrumb">
+          Produtos <i class="fas fa-chevron-right" style="font-size:10px"></i>
+          <span id="pp-cat-label">Todos</span>
+        </div>
+        <span class="pp-result-count" id="pp-result-count"></span>
+        <select class="pp-sort-select" id="pp-sort">
+          <option value="recent">Mais recentes</option>
+          <option value="price-asc">Menor preço</option>
+          <option value="price-desc">Maior preço</option>
+          <option value="name">Nome A–Z</option>
+        </select>
+      </div>
+
+      <!-- Grid de produtos -->
+      <div id="produtosGrid" class="lp-grid">
+        <!-- Skeleton inicial -->
+        <div class="pp-skeleton-grid" id="pp-skeleton" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;">
+          <div class="pp-skeleton-card"><div class="pp-skeleton-img"></div><div class="pp-skeleton-body"><div class="pp-skeleton-line"></div><div class="pp-skeleton-line short"></div><div class="pp-skeleton-line price"></div></div></div>
+          <div class="pp-skeleton-card"><div class="pp-skeleton-img"></div><div class="pp-skeleton-body"><div class="pp-skeleton-line"></div><div class="pp-skeleton-line short"></div><div class="pp-skeleton-line price"></div></div></div>
+          <div class="pp-skeleton-card"><div class="pp-skeleton-img"></div><div class="pp-skeleton-body"><div class="pp-skeleton-line"></div><div class="pp-skeleton-line short"></div><div class="pp-skeleton-line price"></div></div></div>
+          <div class="pp-skeleton-card"><div class="pp-skeleton-img"></div><div class="pp-skeleton-body"><div class="pp-skeleton-line"></div><div class="pp-skeleton-line short"></div><div class="pp-skeleton-line price"></div></div></div>
+        </div>
+      </div>
+
+      <!-- Carregar mais -->
+      <div class="pp-load-more" id="pp-load-more" style="display:none">
+        <button class="pp-btn-load-more" id="pp-btn-load-more">
+          <i class="fas fa-plus-circle"></i> Carregar mais produtos
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Overlay mobile sidebar -->
+  <div class="pp-sidebar-overlay" id="pp-sidebar-overlay"></div>
+
+  <!-- WhatsApp flutuante -->
+  <a href="https://wa.me/55974001960?text=Olá!%20Tenho%20uma%20dúvida%20sobre%20produtos%20da%20Tech10." target="_blank" rel="noopener noreferrer" class="pp-whatsapp-float" aria-label="Fale conosco no WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- Scripts (mesma ordem de index.html) -->
+  <script src="js/api-config.js"></script>
+  <script src="js/empresa-config.js"></script>
+  <script src="js/api-adapter.js"></script>
+  <script src="js/cart-vivacommerce.js"></script>
+  <script src="js/load-products.js"></script>
+  <script src="js/product-modal.js"></script>
+  <script src="js/produtos-page.js"></script>
+
+</body>
+</html>

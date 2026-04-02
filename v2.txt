@@ -1,0 +1,70 @@
+--- D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_2.0 ---
+  51756b | MD5:5F3D292D | 2026-02-23 23:05 | D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_2.0\VIVACOMMERCE\storefront\public\tech10\index.html
+  1599b | MD5:C9C6DDF0 | 2026-02-23 23:05 | D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_2.0\VIVACOMMERCE\storefront\public\tech10\admin\index.html
+--- D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_3.0 ---
+  51756b | MD5:5F3D292D | 2026-02-23 23:05 | D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_3.0\VIVACOMMERCE\storefront\public\tech10\index.html
+  1599b | MD5:C9C6DDF0 | 2026-02-23 23:05 | D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_3.0\VIVACOMMERCE\storefront\public\tech10\admin\index.html
+--- D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_3.1_20260310 ---
+  [NENHUM index.html tech10]
+--- D:\Projetos_Arquivados_2026-03-19\Documents_BKP\PROJETO_SITE_LOJA_backup_20260309_2103 ---
+  51756b | MD5:5F3D292D | 2026-03-08 23:05 | D:\Projetos_Arquivados_2026-03-19\Documents_BKP\PROJETO_SITE_LOJA_backup_20260309_2103\storefront\public\tech10\index.html
+  1599b | MD5:C9C6DDF0 | 2026-03-08 23:05 | D:\Projetos_Arquivados_2026-03-19\Documents_BKP\PROJETO_SITE_LOJA_backup_20260309_2103\storefront\public\tech10\admin\index.html
+--- D:\Projetos_Arquivados_2026-03-19\Mac_Mesa_Antigos_2026-03-24\BACKUP_REVIVAH_COMPLETO_2026-03-22 ---
+  [NENHUM index.html tech10]
+
+=== TODAS AS PAGINAS HTML tech10 POR VERSAO ===
+--- D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_2.0 ---
+  home-shop.html (2356b) | 2026-02-21 00:18
+  carrinho.html (27273b) | 2026-02-23 23:05
+  checkout.html (28306b) | 2026-02-23 23:05
+  index.html (51756b) | 2026-02-23 23:05
+  pedido-confirmado.html (14602b) | 2026-02-23 23:05
+  produtos.html (16003b) | 2026-02-23 23:05
+  dashboard.html (38909b) | 2026-02-23 23:05
+  index.html (1599b) | 2026-02-23 23:05
+  login.html (6767b) | 2026-02-23 23:05
+  monitor.html (11634b) | 2026-02-23 23:05
+  android.html (16691b) | 2026-02-23 23:05
+  apple.html (19212b) | 2026-02-23 23:05
+  desenvolvimento.html (18573b) | 2026-02-23 23:05
+  assistencia.html (17258b) | 2026-02-23 23:05
+  notebooks.html (17597b) | 2026-02-23 23:05
+  smartphones.html (16571b) | 2026-02-23 23:05
+--- D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_3.0 ---
+  home-shop.html (2356b) | 2026-03-03 15:54
+  carrinho.html (27273b) | 2026-02-23 23:05
+  checkout.html (28306b) | 2026-02-23 23:05
+  index.html (51756b) | 2026-02-23 23:05
+  pedido-confirmado.html (14602b) | 2026-02-23 23:05
+  produtos.html (16003b) | 2026-02-23 23:05
+  dashboard.html (38909b) | 2026-02-23 23:05
+  index.html (1599b) | 2026-02-23 23:05
+  login.html (6767b) | 2026-02-23 23:05
+  monitor.html (11634b) | 2026-02-23 23:05
+  android.html (16691b) | 2026-02-23 23:05
+  apple.html (19212b) | 2026-02-23 23:05
+  desenvolvimento.html (18573b) | 2026-02-23 23:05
+  assistencia.html (17258b) | 2026-02-23 23:05
+  notebooks.html (17597b) | 2026-02-23 23:05
+  smartphones.html (16571b) | 2026-02-23 23:05
+--- D:\Projetos_Arquivados_2026-03-19\Desktop_BKP\REVIVAH_BACKUPS\by-version\REVIVAH_3.1_20260310 ---
+  home-shop.html (2356b) | 2026-03-09 21:03
+--- D:\Projetos_Arquivados_2026-03-19\Documents_BKP\PROJETO_SITE_LOJA_backup_20260309_2103 ---
+  carrinho.html (27273b) | 2026-03-08 23:05
+  checkout.html (28306b) | 2026-03-08 23:05
+  home-shop.html (2356b) | 2026-03-05 08:15
+  index.html (51756b) | 2026-03-08 23:05
+  pedido-confirmado.html (14602b) | 2026-03-08 23:05
+  produtos.html (16003b) | 2026-03-08 23:05
+  dashboard.html (38909b) | 2026-03-08 23:05
+  index.html (1599b) | 2026-03-08 23:05
+  login.html (6767b) | 2026-03-08 23:05
+  monitor.html (11634b) | 2026-03-08 23:05
+  android.html (16691b) | 2026-03-08 23:05
+  apple.html (19212b) | 2026-03-08 23:05
+  desenvolvimento.html (18573b) | 2026-03-08 23:05
+  assistencia.html (17258b) | 2026-03-08 23:05
+  notebooks.html (17597b) | 2026-03-08 23:05
+  smartphones.html (16571b) | 2026-03-08 23:05
+--- D:\Projetos_Arquivados_2026-03-19\Mac_Mesa_Antigos_2026-03-24\BACKUP_REVIVAH_COMPLETO_2026-03-22 ---
+  home-shop.html (2356b) | 2026-03-09 21:03

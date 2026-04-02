@@ -1,0 +1,24 @@
+
+Mode   Name               Length
+----   ----               ------
+d----- DOCUMENTACAO             
+d----- admin                    
+d----- categorias               
+d----- css                      
+d----- imagem-otimizada         
+d----- imagem                   
+d----- js                       
+d----- logs                     
+d----- proxmox_templates        
+d----- scripts                  
+d----- css                      
+d----- js                       
+d----- favico                   
+d----- imagens tecnologia       
+d----- propaganda loja          
+d----- favico                   
+d----- imagens tecnologia       
+d----- propaganda loja          
+
+
+

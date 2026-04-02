@@ -1,0 +1,4 @@
+D:\Projetos_Arquivados_2026-03-19\Documents_BKP\PROJETO_SITE_LOJA_backup_20260309_2103\loja_tech_site\js\api-adapter.js
+D:\Projetos_Arquivados_2026-03-19\Documents_BKP\PROJETO_SITE_LOJA_backup_20260309_2103\loja_tech_site\js\cart-vivacommerce.js
+D:\Projetos_Arquivados_2026-03-19\Documents_BKP\PROJETO_SITE_LOJA_backup_20260309_2103\loja_tech_site\js\api-config.js
+D:\Projetos_Arquivados_2026-03-19\Documents_BKP\PROJETO_SITE_LOJA_backup_20260309_2103\loja_tech_site\js\load-products.js

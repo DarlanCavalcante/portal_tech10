@@ -1,0 +1,568 @@
+/* Estilos para produtos do Medusa */
+.product-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.product-image {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+.product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+.product-overlay i {
+  color: white;
+  font-size: 24px;
+}
+
+.product-info {
+  padding: 15px;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.product-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+}
+
+.product-price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2563eb;
+  margin: 15px 0;
+}
+
+.btn-comprar {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-comprar:hover {
+  background: #1d4ed8;
+}
+
+.btn-comprar:active {
+  transform: scale(0.98);
+}
+
+/* Validação de Estoque */
+.product-stock {
+  font-size: 13px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.product-stock.in-stock {
+  color: #10b981;
+}
+
+.product-stock.out-of-stock {
+  color: #ef4444;
+}
+
+.product-stock i {
+  font-size: 14px;
+}
+
+.product-stock small {
+  color: #6b7280;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.product-card.out-of-stock {
+  opacity: 0.7;
+}
+
+.product-card.out-of-stock .product-image {
+  filter: grayscale(0.3);
+}
+
+.btn-comprar.out-of-stock {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-comprar.out-of-stock:hover {
+  background: #9ca3af;
+  transform: none;
+}
+
+.stock-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.out-of-stock-badge {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+}
+
+.low-stock-badge {
+  background: rgba(245, 158, 11, 0.9);
+  color: white;
+}
+
+.product-image {
+  position: relative;
+}
+
+/* Grid de produtos */
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+  .produtos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  
+  .product-image {
+    height: 150px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CARDS ESTILO MARKETPLACE (lp- prefix)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Grid */
+#produtosGrid,
+.lp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* Card */
+.lp-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+.lp-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 28px rgba(37,99,235,0.15);
+}
+.lp-card.out-of-stock {
+  opacity: 0.75;
+}
+.lp-card.out-of-stock .lp-card-img img {
+  filter: grayscale(0.3);
+}
+
+/* Imagem */
+.lp-card-img {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  overflow: hidden;
+  background: #f3f4f6;
+  flex-shrink: 0;
+}
+.lp-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+  transition: transform 0.3s;
+}
+.lp-card:hover .lp-card-img img {
+  transform: scale(1.06);
+}
+.lp-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(37,99,235,0.55);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.25s;
+  cursor: pointer;
+}
+.lp-card:hover .lp-card-overlay {
+  opacity: 1;
+}
+
+/* Badges */
+.lp-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 2;
+}
+.lp-badge-out {
+  background: rgba(239,68,68,0.9);
+  color: #fff;
+}
+.lp-badge-low {
+  background: rgba(245,158,11,0.9);
+  color: #fff;
+}
+
+/* Body do card */
+.lp-card-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.lp-card-cat {
+  font-size: 11px;
+  font-weight: 600;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.lp-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 6px;
+  line-height: 1.4;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.lp-card-title:hover {
+  color: #2563eb;
+}
+.lp-card-desc {
+  font-size: 12.5px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+.lp-card-price {
+  font-size: 22px;
+  font-weight: 800;
+  color: #2563eb;
+  margin: 6px 0 4px;
+}
+.lp-card-stock {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.lp-card-stock.in-stock { color: #10b981; }
+.lp-card-stock.out-of-stock { color: #ef4444; }
+
+/* Ações: qty + botão */
+.lp-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* Controle de Quantidade */
+.lp-qty-ctrl {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 40px;
+  flex-shrink: 0;
+}
+.lp-qty-btn {
+  width: 36px;
+  height: 40px;
+  background: #f9fafb;
+  border: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  user-select: none;
+}
+.lp-qty-btn:hover {
+  background: #e5e7eb;
+  color: #2563eb;
+}
+.lp-qty-val {
+  min-width: 32px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  padding: 0 4px;
+}
+
+/* Botão Adicionar */
+.lp-btn-add {
+  flex: 1;
+  height: 40px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.2s, transform 0.1s;
+  white-space: nowrap;
+}
+.lp-btn-add:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+.lp-btn-add:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.lp-btn-add.out-of-stock,
+.lp-btn-add:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Estado vazio */
+.lp-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #9ca3af;
+}
+.lp-empty i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+}
+.lp-empty p {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+.lp-empty-link {
+  color: #2563eb;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  #produtosGrid,
+  .lp-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+  .lp-card-img { height: 160px; }
+  .lp-card-price { font-size: 18px; }
+  .lp-btn-add { font-size: 12px; }
+  .lp-qty-btn { width: 30px; }
+}
+
+/* ── Animação fadeInUp para cards ── */
+@keyframes lp-fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.lp-card {
+  animation: lp-fadeInUp 0.4s ease both;
+}
+.lp-card:nth-child(1)  { animation-delay: 0.00s; }
+.lp-card:nth-child(2)  { animation-delay: 0.06s; }
+.lp-card:nth-child(3)  { animation-delay: 0.12s; }
+.lp-card:nth-child(4)  { animation-delay: 0.18s; }
+.lp-card:nth-child(5)  { animation-delay: 0.22s; }
+.lp-card:nth-child(6)  { animation-delay: 0.26s; }
+.lp-card:nth-child(n+7) { animation-delay: 0.30s; }
+
+/* ── WhatsApp flutuante (global, usado em index.html inline e produtos.html via classe) ── */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: #25d366;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(37,211,102,0.45);
+  z-index: 9998;
+  transition: transform .2s, box-shadow .2s;
+}
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 28px rgba(37,211,102,0.55);
+}
+
+/* ── Barra de progresso checkout ── */
+.checkout-steps-global {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 12px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+}
+.csg-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  color: #9ca3af;
+}
+.csg-step.active { color: #2563eb; }
+.csg-step.done { color: #10b981; }
+.csg-step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.csg-step.active .csg-step-num { background: #2563eb; color: #fff; border-color: #2563eb; }
+.csg-step.done  .csg-step-num  { background: #10b981; color: #fff; border-color: #10b981; }
+.csg-sep { width: 36px; height: 2px; background: #e5e7eb; margin: 0 4px; flex-shrink: 0; }
+.csg-sep.done { background: #10b981; }
+
+/* ── Selos de segurança ── */
+.trust-seals-global {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+.trust-seals-global span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #16a34a;
+}
+.trust-seals-global i { font-size: 15px; }
+
+/* ── Melhoria lp-card-title cursor ── */
+.lp-card-title { cursor: pointer; }
+.lp-card-title:hover { text-decoration: underline; }

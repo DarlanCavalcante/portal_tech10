@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revivah — Explore lojas por categoria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/home-shop.css">
+</head>
+<body>
+  <div class="rev-shop">
+    <header class="rev-header">
+      <a href="/" class="rev-logo">Revivah</a>
+      <nav class="rev-nav">
+        <a href="#lojas">Lojas</a>
+        <a href="#categorias">Categorias</a>
+      </nav>
+    </header>
+
+    <main class="rev-main">
+      <section class="rev-hero">
+        <h1 class="rev-hero-title">Explore o melhor do seu bairro</h1>
+        <p class="rev-hero-sub">Lojas selecionadas por categoria — deslize e descubra</p>
+      </section>
+
+      <section class="rev-categories" id="categorias">
+        <!-- Categorias geradas via JS -->
+      </section>
+    </main>
+
+    <!-- Modal carrossel -->
+    <div class="rev-modal" id="rev-modal" role="dialog" aria-modal="true" aria-labelledby="rev-modal-title" hidden>
+      <div class="rev-modal-backdrop" id="rev-modal-backdrop"></div>
+      <div class="rev-modal-panel">
+        <button class="rev-modal-close" id="rev-modal-close" aria-label="Fechar">&times;</button>
+        <h2 class="rev-modal-title" id="rev-modal-title">Categoria</h2>
+        <div class="rev-modal-carousel">
+          <button class="rev-carousel-btn rev-carousel-prev" aria-label="Anterior">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="rev-carousel-track" id="rev-carousel-track">
+            <!-- Lojas injetadas via JS -->
+          </div>
+          <button class="rev-carousel-btn rev-carousel-next" aria-label="Próximo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/home-shop.js"></script>
+</body>
+</html>

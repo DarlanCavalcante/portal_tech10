@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech10 Informática e Tecnologia - Santa Maria/RS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/products-medusa.css">
+    <link rel="stylesheet" href="css/medusa-cart.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tech10">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <a href="/tech10/" class="logo" aria-label="Tech10 - Página inicial">
+                <img src="imagem/logo/tech10-logo-fundo-azul.png" alt="Tech10 - Informática e Tecnologia" height="40">
+            </a>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="#home" class="nav-link">Início</a></li>
+                    <li><a href="/lojas/revivah-tech/shop" class="nav-link nav-link--highlight"><i class="fas fa-store nav-link-icon"></i>Loja</a></li>
+                    <li><a href="#produtos" class="nav-link">Destaques</a></li>
+                    <li><a href="#servicos" class="nav-link">Serviços</a></li>
+                    <li><a href="#empresas" class="nav-link nav-link--accent">Empresas</a></li>
+                    <li><a href="#dicas" class="nav-link">Dicas</a></li>
+                    <li><a href="#sobre" class="nav-link">Sobre</a></li>
+                    <li><a href="#contato" class="nav-link">Contato</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar produtos..." id="searchInput">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="cart-icon" id="cartIcon" style="cursor: pointer;" onclick="window.location.href='/tech10/carrinho.html'">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <!-- Video Background -->
+        <div class="hero-video">
+            <video autoplay muted loop playsinline>
+                <source src="./imagem/propaganda%20loja/video-animacaoloja-fundo2.mp4" type="video/mp4">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+        </div>
+        
+        <!-- Hero Overlay -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Hero Content -->
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Tecnologia que Conecta Seu Mundo</h1>
+                <p class="hero-subtitle">Especialistas em Apple, Samsung e desenvolvimento Full Stack. Qualidade e confiança há 20 anos em Santa Maria/RS</p>
+                <div class="hero-buttons">
+                    <a href="/lojas/revivah-tech/shop" class="btn btn-primary" style="text-decoration: none; display: inline-block;"><i class="fas fa-store" style="margin-right:6px"></i>Ver Loja Online</a>
+                    <a href="#servicos" class="btn btn-secondary" style="text-decoration: none; display: inline-block;">Nossos Serviços</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-icons">
+                    <i class="fas fa-laptop"></i>
+                    <i class="fas fa-mobile-alt"></i>
+                    <i class="fas fa-desktop"></i>
+                    <i class="fas fa-headphones"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categorias -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Categorias em Destaque</h2>
+            <div class="categories-grid">
+                <a href="categorias/apple.html" style="text-decoration: none; color: inherit;">
+                    <div class="category-card" style="border: 2px solid #f59e0b; cursor: pointer;">
+                        <i class="fab fa-apple" style="color: #000;"></i>
+                        <h3>Especialista Apple</h3>
+                        <p>iPhone, iPad, MacBook e iMac</p>
+                        <small style="color: #f59e0b; font-weight: 600;">ESPECIALIDADE</small>
+                    </div>
+                </a>
+                <a href="categorias/android.html" style="text-decoration: none; color: inherit;">
+                    <div class="category-card" style="border: 2px solid #1f2937; cursor: pointer;">
+                        <i class="fab fa-android" style="color: #10b981;"></i>
+                        <h3>Samsung & Android</h3>
+                        <p>Galaxy e demais marcas Android</p>
+                        <small style="color: #1f2937; font-weight: 600;">ESPECIALIDADE</small>
+                    </div>
+                </a>
+                <a href="categorias/desenvolvimento.html" style="text-decoration: none; color: inherit;">
+                    <div class="category-card" style="cursor: pointer;">
+                        <i class="fas fa-code"></i>
+                        <h3>Full Stack</h3>
+                        <p>Desenvolvimento profissional</p>
+                    </div>
+                </a>
+                <a href="/shop?store=revivah-tech&categorySlug=notebooks" style="text-decoration: none; color: inherit;">
+                    <div class="category-card" style="cursor: pointer;">
+                        <i class="fas fa-laptop"></i>
+                        <h3>Notebooks</h3>
+                        <p>Venda e assistência técnica</p>
+                    </div>
+                </a>
+                <a href="/shop?store=revivah-tech&categorySlug=smartphones" style="text-decoration: none; color: inherit;">
+                    <div class="category-card" style="cursor: pointer;">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>Smartphones</h3>
+                        <p>Reparo e manutenção</p>
+                    </div>
+                </a>
+                <a href="categorias/assistencia.html" style="text-decoration: none; color: inherit;">
+                    <div class="category-card" style="cursor: pointer;">
+                        <i class="fas fa-tools"></i>
+                        <h3>Assistência</h3>
+                        <p>20 anos de experiência</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Produtos em Destaque -->
+    <section id="produtos" class="produtos">
+        <div class="container">
+            <!-- Banner CTA loja online -->
+            <div class="cta-banner">
+                <div>
+                    <h2 class="cta-banner__title">Loja Online Aberta!</h2>
+                    <p class="cta-banner__desc">Todos os nossos produtos com estoque em tempo real, carrinho e pagamento seguro.</p>
+                </div>
+                <a href="/lojas/revivah-tech/shop" class="cta-banner__btn">
+                    <i class="fas fa-store"></i> Ver Catálogo Completo
+                </a>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title">Produtos em Destaque</h2>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="computadores">Computadores</button>
+                    <button class="filter-btn" data-filter="smartphones">Smartphones</button>
+                    <button class="filter-btn" data-filter="perifericos">Periféricos</button>
+                    <button class="filter-btn" data-filter="nobreaks-energia">Nobreaks</button>
+                </div>
+            </div>
+            
+            <div class="produtos-grid" id="produtosGrid">
+                <!-- Produtos carregados via API VivaCommerce -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Serviços -->
+    <section id="servicos" class="servicos">
+        <div class="container">
+            <div class="servicos-intro">
+                <h2 class="section-title">Nossos Serviços</h2>
+                <p>
+                    Assistência técnica especializada e desenvolvimento profissional. 
+                    <strong>20+ anos de experiência</strong> garantindo qualidade e confiança.
+                </p>
+            </div>
+            
+            <div class="servicos-grid">
+                <div class="servico-card servico-card--amber">
+                    <div class="servico-badge servico-badge--amber">MAIS POPULAR</div>
+                    <div class="servico-icon servico-icon--amber">🍎</div>
+                    <h3>Especialista Apple</h3>
+                    <p>
+                        Assistência técnica especializada para toda linha Apple com <strong>20 anos de experiência</strong>. 
+                        Reparos rápidos, peças originais e garantia de qualidade.
+                    </p>
+                    <ul>
+                        <li>✅ iPhone (todas as versões)</li>
+                        <li>✅ iPad e iPad Pro</li>
+                        <li>✅ MacBook e iMac</li>
+                        <li>✅ Peças originais garantidas</li>
+                        <li>✅ 90 dias de garantia</li>
+                    </ul>
+                    <div class="servico-stat">
+                        <div class="servico-stat__label">Tempo médio de reparo</div>
+                        <div class="servico-stat__value servico-stat__value--green">2-4 horas</div>
+                    </div>
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20um%20orçamento%20para%20assistência%20técnica%20Apple." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="servico-cta servico-cta--amber">
+                        💬 Solicitar Orçamento Grátis
+                    </a>
+                </div>
+                
+                <div class="servico-card servico-card--green">
+                    <div class="servico-badge servico-badge--green">ESPECIALIDADE</div>
+                    <div class="servico-icon servico-icon--green">📱</div>
+                    <h3>Reparo de Celulares</h3>
+                    <p>
+                        Reparo especializado em <strong>diversas marcas</strong>: Samsung, Motorola, Xiaomi, LG e mais. 
+                        Troca de tela, bateria, desbloqueio e muito mais.
+                    </p>
+                    <ul>
+                        <li>✅ Samsung Galaxy (S, Note, A)</li>
+                        <li>✅ Motorola, Xiaomi, LG</li>
+                        <li>✅ Todas as marcas Android</li>
+                        <li>✅ Troca de tela e bateria</li>
+                        <li>✅ Desbloqueio e software</li>
+                        <li>✅ Recuperação de dados</li>
+                    </ul>
+                    <div class="servico-stat">
+                        <div class="servico-stat__label">Tempo médio de reparo</div>
+                        <div class="servico-stat__value servico-stat__value--green">1-3 horas</div>
+                    </div>
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20um%20orçamento%20para%20reparo%20de%20celular." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="servico-cta servico-cta--green">
+                        💬 Solicitar Orçamento Grátis
+                    </a>
+                </div>
+                
+                <div class="servico-card servico-card--purple">
+                    <div class="servico-badge servico-badge--purple">COMPUTADORES</div>
+                    <div class="servico-icon servico-icon--purple">💻</div>
+                    <h3>Computadores e Notebooks</h3>
+                    <p>
+                        Reparo e manutenção de <strong>computadores e notebooks</strong> de todas as marcas. 
+                        Formatação, limpeza, upgrade e muito mais.
+                    </p>
+                    <ul>
+                        <li>✅ Notebooks (Dell, HP, Lenovo, etc.)</li>
+                        <li>✅ Computadores desktop</li>
+                        <li>✅ Formatação e instalação</li>
+                        <li>✅ Limpeza e manutenção</li>
+                        <li>✅ Upgrade de hardware</li>
+                        <li>✅ Recuperação de dados</li>
+                    </ul>
+                    <div class="servico-stat">
+                        <div class="servico-stat__label">Tempo médio de reparo</div>
+                        <div class="servico-stat__value servico-stat__value--purple">2-6 horas</div>
+                    </div>
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20um%20orçamento%20para%20reparo%20de%20computador/notebook." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="servico-cta servico-cta--purple">
+                        💬 Solicitar Orçamento Grátis
+                    </a>
+                </div>
+                
+                <div class="servico-card servico-card--cyan">
+                    <div class="servico-badge servico-badge--cyan">REDES</div>
+                    <div class="servico-icon servico-icon--cyan">🌐</div>
+                    <h3>Redes e Infraestrutura</h3>
+                    <p>
+                        Serviços de <strong>redes para empresas e residencial</strong>. 
+                        Projetos completos com e sem fio, instalação e manutenção.
+                    </p>
+                    <ul>
+                        <li>✅ Redes empresariais</li>
+                        <li>✅ Redes residenciais</li>
+                        <li>✅ Projetos de redes com fio</li>
+                        <li>✅ Projetos de redes sem fio (Wi-Fi)</li>
+                        <li>✅ Instalação e configuração</li>
+                        <li>✅ Manutenção e suporte</li>
+                    </ul>
+                    <div class="servico-stat">
+                        <div class="servico-stat__label">Atendimento</div>
+                        <div class="servico-stat__value servico-stat__value--cyan">Empresas e Residencial</div>
+                    </div>
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20um%20orçamento%20para%20projeto%20de%20rede." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="servico-cta servico-cta--cyan">
+                        💬 Solicitar Orçamento Grátis
+                    </a>
+                </div>
+                
+                <div class="servico-card servico-card--blue">
+                    <div class="servico-badge servico-badge--blue">DESENVOLVIMENTO</div>
+                    <div class="servico-icon servico-icon--blue">💻</div>
+                    <h3>Desenvolvimento Full Stack</h3>
+                    <p>
+                        Desenvolvimento profissional de sistemas e aplicações web. 
+                        Do conceito à entrega, com qualidade e prazo garantidos.
+                    </p>
+                    <ul>
+                        <li>✅ Sites e sistemas web</li>
+                        <li>✅ E-commerce personalizado</li>
+                        <li>✅ Aplicações mobile</li>
+                        <li>✅ Consultoria em TI</li>
+                        <li>✅ Manutenção e suporte</li>
+                    </ul>
+                    <div class="servico-stat">
+                        <div class="servico-stat__label">Tecnologias</div>
+                        <div class="servico-stat__value servico-stat__value--blue">React, Node.js, Next.js, TypeScript</div>
+                    </div>
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20um%20orçamento%20para%20desenvolvimento%20de%20sistema/site." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="servico-cta servico-cta--blue">
+                        💬 Solicitar Orçamento Grátis
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Seção "Por Que Escolher Nossos Serviços" -->
+            <div class="why-choose">
+                <h3>Por Que Escolher Nossos Serviços?</h3>
+                <div class="why-choose__grid">
+                    <div class="why-choose__item">
+                        <div class="why-choose__icon">⭐</div>
+                        <h4>20+ Anos de Experiência</h4>
+                        <p>Mais de duas décadas atendendo com excelência</p>
+                    </div>
+                    <div class="why-choose__item">
+                        <div class="why-choose__icon">🛡️</div>
+                        <h4>90 Dias de Garantia</h4>
+                        <p>Garantia em todos os reparos e serviços</p>
+                    </div>
+                    <div class="why-choose__item">
+                        <div class="why-choose__icon">⚡</div>
+                        <h4>Reparo Rápido</h4>
+                        <p>Tempo médio de 2-4 horas para reparos</p>
+                    </div>
+                    <div class="why-choose__item">
+                        <div class="why-choose__icon">💯</div>
+                        <h4>1000+ Clientes</h4>
+                        <p>Mais de mil clientes satisfeitos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Para Empresas -->
+    <section id="empresas" class="empresas">
+        <div class="container">
+            <div class="empresas-intro">
+                <h2 class="section-title">Soluções Empresariais em TI</h2>
+                <p>
+                    Garanta a <strong>continuidade do seu negócio</strong> com nossos contratos premium. 
+                    Zero paragens, suporte completo e tecnologia sempre atualizada.
+                </p>
+            </div>
+            
+            <div class="contratos-grid">
+                <div class="contrato-card">
+                    <div class="contrato-badge contrato-badge--amber">PREMIUM</div>
+                    <div class="contrato-icon">🛡️</div>
+                    <h3>Business Continuity</h3>
+                    <p><strong>Foco em Zero Paragens.</strong> Garanta que sua empresa nunca pare.</p>
+                    <ul>
+                        <li>✅ Monitorização remota 24/7</li>
+                        <li>✅ Backups automáticos na nuvem</li>
+                        <li>✅ Limpeza física semestral</li>
+                        <li>✅ <strong>Equipamento de substituição imediato</strong></li>
+                        <li>✅ Reparo em menos de 4 horas</li>
+                    </ul>
+                    <div class="contrato-quote contrato-quote--amber">
+                        <div class="contrato-quote__label">Argumento de Venda:</div>
+                        <div class="contrato-quote__text">"Um dia de paragem na sua empresa custa X. Este contrato custa muito menos que um dia de prejuízo."</div>
+                    </div>
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20contrato%20Business%20Continuity." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="contrato-cta contrato-cta--amber">
+                        💼 Solicitar Proposta
+                    </a>
+                </div>
+                
+                <div class="contrato-card">
+                    <div class="contrato-badge contrato-badge--blue">MAIS POPULAR</div>
+                    <div class="contrato-icon">🔄</div>
+                    <h3>Suporte Híbrido</h3>
+                    <p><strong>Hardware + Software.</strong> Um contrato único que cobre tudo.</p>
+                    <ul>
+                        <li>✅ Manutenção de PCs e periféricos</li>
+                        <li>✅ Suporte à rede</li>
+                        <li>✅ Suporte técnico aos sistemas</li>
+                        <li>✅ <strong>Horas de evolução mensais</strong></li>
+                        <li>✅ Melhorias contínuas (2-5h/mês)</li>
+                    </ul>
+                    <div class="contrato-quote contrato-quote--blue">
+                        <div class="contrato-quote__label">Argumento de Venda:</div>
+                        <div class="contrato-quote__text">"Tenha uma equipa de TI completa (suporte e programadores) por uma fração do custo de um funcionário interno."</div>
+                    </div>
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20contrato%20Suporte%20Híbrido." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="contrato-cta contrato-cta--blue">
+                        💼 Solicitar Proposta
+                    </a>
+                </div>
+                
+                <div class="contrato-card">
+                    <div class="contrato-badge contrato-badge--green">ECONÔMICO</div>
+                    <div class="contrato-icon">🔄</div>
+                    <h3>Gestão de Ciclo de Vida</h3>
+                    <p><strong>Hardware as a Service.</strong> Tecnologia sempre atualizada sem grandes investimentos.</p>
+                    <ul>
+                        <li>✅ Gestão completa do parque informático</li>
+                        <li>✅ Manutenção incluída</li>
+                        <li>✅ Troca programada de equipamentos</li>
+                        <li>✅ <strong>Mensalidade fixa</strong></li>
+                        <li>✅ Renovação automática a cada 3 anos</li>
+                    </ul>
+                    <div class="contrato-quote contrato-quote--green">
+                        <div class="contrato-quote__label">Argumento de Venda:</div>
+                        <div class="contrato-quote__text">"Mantenha a sua empresa sempre com tecnologia de ponta, sem nunca ter de fazer grandes investimentos iniciais e com suporte total incluído."</div>
+                    </div>
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20contrato%20Gestão%20de%20Ciclo%20de%20Vida." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="contrato-cta contrato-cta--green">
+                        💼 Solicitar Proposta
+                    </a>
+                </div>
+            </div>
+            
+            <div class="relatorio-saude">
+                <div class="relatorio-saude__header">
+                    <div class="relatorio-saude__icon">📊</div>
+                    <h3>Relatório de Saúde Mensal</h3>
+                    <p class="relatorio-saude__desc">Monitorização proativa da sua infraestrutura com relatórios mensais detalhados</p>
+                </div>
+                <div class="relatorio-saude__grid">
+                    <div class="relatorio-saude__item">
+                        <div class="relatorio-saude__item-icon">✅</div>
+                        <h4>Análise de Performance</h4>
+                        <p>Monitorização contínua do desempenho</p>
+                    </div>
+                    <div class="relatorio-saude__item">
+                        <div class="relatorio-saude__item-icon">🔔</div>
+                        <h4>Alertas Preventivos</h4>
+                        <p>Detecção de problemas antes que ocorram</p>
+                    </div>
+                    <div class="relatorio-saude__item">
+                        <div class="relatorio-saude__item-icon">💡</div>
+                        <h4>Recomendações</h4>
+                        <p>Sugestões de melhorias e otimizações</p>
+                    </div>
+                    <div class="relatorio-saude__item">
+                        <div class="relatorio-saude__item-icon">📈</div>
+                        <h4>Histórico</h4>
+                        <p>Registo completo de manutenções</p>
+                    </div>
+                </div>
+                <div class="relatorio-saude__cta">
+                    <a href="https://wa.me/55974001960?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20Relatório%20de%20Saúde%20Mensal." 
+                       target="_blank" rel="noopener noreferrer"
+                       class="relatorio-saude__btn">
+                        📊 Solicitar Demonstração
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dicas do Especialista -->
+    <section id="dicas" class="dicas-especialista">
+        <div class="container">
+            <h2 class="section-title">Dicas do Especialista</h2>
+            <p class="section-subtitle">Aprenda com nossos especialistas como cuidar melhor dos seus equipamentos</p>
+            
+            <div class="dicas-grid" id="dicasGrid">
+                <!-- Dicas serão carregadas via JavaScript -->
+            </div>
+            
+            <div class="dicas-navigation">
+                <button class="dica-nav-btn" id="prevDica">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="dicas-dots" id="dicasDots">
+                    <!-- Dots serão criados dinamicamente -->
+                </div>
+                <button class="dica-nav-btn" id="nextDica">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="sobre">
+        <div class="container">
+            <div class="sobre-content">
+                <div class="sobre-text">
+                    <h2 class="section-title">Sobre a Tech10 Informática e Tecnologia</h2>
+                    
+                    <p>A Tech10 Informática e Tecnologia é uma empresa consolidada em Santa Maria há 3 anos, fruto de um projeto construído com dedicação, conhecimento e paixão pela área da tecnologia. Apesar de jovem em sua estrutura atual, a Tech10 carrega consigo mais de 20 anos de experiência e atuação no setor, unindo tradição, inovação e compromisso com a qualidade.</p>
+                    
+                    <p>Nossa trajetória foi marcada por constante aprimoramento técnico e estrutural, até que o sonho de transformar todo esse know-how em uma loja completa se tornasse realidade. Hoje, a Tech10 representa a concretização de anos de aprendizado, desafios e conquistas — um espaço pensado para oferecer soluções modernas, confiáveis e personalizadas em tecnologia e informática.</p>
+                    
+                    <p>Mais do que uma loja, somos o resultado de uma história construída com propósito, dedicação e a certeza de que tecnologia e confiança caminham juntas.</p>
+                    
+                    <div class="stats">
+                        <div class="stat">
+                            <h3>20+</h3>
+                            <p>Anos de Experiência</p>
+                        </div>
+                        <div class="stat">
+                            <h3>3</h3>
+                            <p>Anos em Santa Maria</p>
+                        </div>
+                        <div class="stat">
+                            <h3>100%</h3>
+                            <p>Compromisso e Qualidade</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sobre-image">
+                    <div class="loja-gallery" id="lojaGallery">
+                        <div class="gallery-container">
+                            <div class="gallery-slide active">
+                                <img src="imagem/propaganda loja/foto-loja1.jpeg" alt="Tech10 Informática - Loja" loading="lazy">
+                                <div class="slide-caption">
+                                    <h4>Tech10 Informática</h4>
+                                    <p>Rua Dr. Bozano, 968 - Loja 8</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide">
+                                <img src="imagem/propaganda loja/foto-loja2.jpeg" alt="Tech10 Informática - Interior" loading="lazy">
+                                <div class="slide-caption">
+                                    <h4>20 Anos de Experiência</h4>
+                                    <p>Especialistas em Apple e Samsung</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-controls">
+                            <button class="gallery-btn prev-btn" onclick="changeSlide(-1)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div class="gallery-dots">
+                                <span class="dot active" onclick="currentSlide(1)"></span>
+                                <span class="dot" onclick="currentSlide(2)"></span>
+                            </div>
+                            <button class="gallery-btn next-btn" onclick="changeSlide(1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="contato">
+        <div class="container">
+            <h2 class="section-title">Entre em Contato</h2>
+            <div class="contato-content">
+                <div class="contato-info">
+                    <h3>Informações de Contato</h3>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Endereço</h4>
+                            <p data-info="endereco">Rua Dr. Bozano, 968 - Loja 8<br>Centro, Santa Maria - RS</p>
+                            
+                            <div class="location-section">
+                                <div class="mini-map-container">
+                                    <iframe 
+                                        id="miniMap"
+                                        class="mini-map"
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3456.123!2d-53.8067!3d-29.6868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjnCsDQxJzEyLjUiUyA1M8KwNDgnMjQuMSJX!5e0!3m2!1spt-BR!2sbr!4v1234567890!5m2!1spt-BR!2sbr"
+                                        allowfullscreen="" 
+                                        loading="lazy" 
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
+                                    <div class="map-overlay">
+                                        <div class="map-info">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>Tech10 Informática</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <a href="#" class="maps-button" id="comoChegar" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-directions"></i>
+                                    Ver Rota Completa
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Telefone</h4>
+                            <div class="contact-methods">
+                                <div class="phone-fixed">
+                                    <i class="fas fa-phone-alt"></i>
+                                    <span data-info="telefone">(55) 3317-0762</span>
+                                    <small>Fixo</small>
+                                </div>
+                                <div class="contact-divider">
+                                    <span>ou</span>
+                                </div>
+                                <div class="phone-whatsapp">
+                                    <a href="#" class="whatsapp-button" id="whatsappContato" target="_blank" rel="noopener noreferrer">
+                                        <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.787"/>
+                                        </svg>
+                                        WhatsApp
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p data-info="email">tech10.infor@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fab fa-instagram"></i>
+                        <div>
+                            <h4>Instagram</h4>
+                            <a href="https://www.instagram.com/tech10info/" class="instagram-link" target="_blank" rel="noopener noreferrer">
+                                @tech10info
+                            </a>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Horário de Funcionamento</h4>
+                            <p data-info="horarios">Segunda a Sexta: 8h às 18h<br>Sábado: 9h às 17h</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="contato-form" id="contatoForm">
+                    <h3>Envie uma Mensagem</h3>
+                    <div class="form-group">
+                        <input type="text" id="nome" placeholder="Seu Nome" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Seu Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="telefone" placeholder="Seu Telefone">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="mensagem" placeholder="Sua Mensagem" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="imagem/logo/tech10-logo-fundo-azul.png" alt="Tech10 - Informática e Tecnologia" height="36">
+                    </div>
+                    <p data-info="descricao">Mais de 20 anos de experiência em tecnologia e informática em Santa Maria/RS.</p>
+                    <div class="social-links">
+                        <a href="#" data-social="facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/tech10info/" data-social="instagram" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                        <a href="#" data-social="twitter" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                        <a href="#" data-social="whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#home">Início</a></li>
+                        <li><a href="#produtos">Produtos</a></li>
+                        <li><a href="#servicos">Serviços</a></li>
+                        <li><a href="#dicas">Dicas</a></li>
+                        <li><a href="#sobre">Sobre</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Categorias</h4>
+                    <ul>
+                        <li><a href="categorias/apple.html">Apple</a></li>
+                        <li><a href="categorias/android.html">Android</a></li>
+                        <li><a href="categorias/notebooks.html">Notebooks</a></li>
+                        <li><a href="categorias/smartphones.html">Smartphones</a></li>
+                        <li><a href="categorias/desenvolvimento.html">Desenvolvimento</a></li>
+                        <li><a href="categorias/assistencia.html">Assistência</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Atendimento</h4>
+                    <ul>
+                        <li data-info="horarios-semana">Segunda a Sexta: 8h às 18h</li>
+                        <li data-info="horarios-sabado">Sábado: 9h às 17h</li>
+                        <li data-info="horarios-domingo">Domingo: Fechado</li>
+                        <li>Suporte: <span data-info="telefone">(55) 3317-0762</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 <span data-info="nome">Tech10 Informática e Tecnologia</span>. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Detalhes do Produto -->
+    <div class="modal" id="productModal">
+        <div class="modal-content product-modal-content">
+            <span class="close" id="closeProductModal">&times;</span>
+            <div class="product-modal-body">
+                <div class="product-modal-image">
+                    <img id="modalProductImage" src="" alt="">
+                    <div class="product-modal-badge" id="modalProductBadge"></div>
+                </div>
+                <div class="product-modal-info">
+                    <h2 id="modalProductName"></h2>
+                    <div class="product-modal-category" id="modalProductCategory"></div>
+                    <div class="product-modal-rating" id="modalProductRating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>(4.5)</span>
+                    </div>
+                    <p class="product-modal-description" id="modalProductDescription"></p>
+                    
+                    <div class="product-modal-features" id="modalProductFeatures">
+                        <h3>Características</h3>
+                        <ul id="modalFeaturesList"></ul>
+                    </div>
+                    
+                    <div class="product-modal-price">
+                        <span class="price-old" id="modalOldPrice"></span>
+                        <span class="price-current" id="modalCurrentPrice"></span>
+                    </div>
+                    
+                    <div class="product-modal-stock" id="modalProductStock">
+                        <i class="fas fa-check-circle"></i> Em estoque
+                    </div>
+                    
+                    <div class="product-modal-actions">
+                        <button class="btn btn-primary btn-large" id="modalAddToCart">
+                            <i class="fas fa-shopping-cart"></i>
+                            Adicionar ao Carrinho
+                        </button>
+                        <button class="btn btn-outline btn-large" id="modalAddToFavorite">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carrinho Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Carrinho de Compras</h3>
+                <span class="close" id="closeCart">&times;</span>
+            </div>
+            <div class="modal-body" id="cartItems">
+                <!-- Itens do carrinho serão inseridos aqui -->
+            </div>
+            <div class="modal-footer">
+                <div class="cart-total" id="cartTotal">Total: R$ 0,00</div>
+                <button class="btn btn-primary" id="checkoutBtn">Finalizar Compra</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Flutuante WhatsApp -->
+    <a href="https://wa.me/55974001960?text=Olá!%20Vim%20pelo%20site%20da%20Tech10%20e%20gostaria%20de%20mais%20informações." id="whatsappFloat" class="whatsapp-float" target="_blank" rel="noopener noreferrer" title="Fale conosco no WhatsApp">
+        <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 01 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.787"/>
+        </svg>
+        <span class="whatsapp-text">Fale Conosco</span>
+    </a>
+
+    <!-- Botão Voltar ao Topo -->
+    <button id="backToTop" class="back-to-top" title="Voltar ao topo">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts auxiliares (defer para nao bloquear renderizacao) -->
+    <script src="js/modal-manager.js" defer></script>
+    <script src="js/api-client.js" defer></script>
+    <script src="js/empresa-config.js" defer></script>
+
+    <!-- VivaCommerce Tech10 — loja do seed (slug: revivah-tech) -->
+    <script src="js/api-config.js"></script>
+    <script src="js/api-adapter.js"></script>
+    <script src="js/cart-vivacommerce.js"></script>
+    <script src="js/load-products.js"></script>
+    <script src="js/product-modal.js" defer></script>
+
+    <script src="js/script.js"></script>
+    
+    <!-- Service Worker - Estratégia Mercado Livre -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            let refreshing = false;
+            
+            // Detectar quando novo Service Worker está esperando
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (refreshing) return;
+                refreshing = true;
+                console.log('🔄 Tech10: Novo Service Worker ativo, recarregando...');
+                window.location.reload();
+            });
+
+            // Registrar Service Worker (path relativo para funcionar em /tech10/)
+            navigator.serviceWorker.register('sw.js')
+                .then(registration => {
+                    console.log('✅ Tech10 SW registrado:', registration.scope);
+                    
+                    // Verificar atualizações a cada 60 segundos
+                    setInterval(() => {
+                        registration.update();
+                    }, 60000);
+                    
+                    // Quando há atualização esperando
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // Nova versão disponível
+                                mostrarNotificacaoAtualizacao(registration);
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('❌ Tech10 SW: Erro no registro:', error);
+                });
+
+            // Mostrar notificação de atualização
+            function mostrarNotificacaoAtualizacao(registration) {
+                // Criar elemento de notificação
+                const notification = document.createElement('div');
+                notification.id = 'sw-update-notification';
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+                    z-index: 10000;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    max-width: 300px;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                notification.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-sync-alt" style="font-size: 24px;"></i>
+                        <div>
+                            <strong style="display: block; font-size: 16px;">Nova Versão Disponível!</strong>
+                            <small style="opacity: 0.9;">Atualize para ver as melhorias</small>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="sw-update-btn" style="
+                            flex: 1;
+                            background: white;
+                            color: #667eea;
+                            border: none;
+                            padding: 10px;
+                            border-radius: 5px;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">
+                            Atualizar Agora
+                        </button>
+                        <button id="sw-dismiss-btn" style="
+                            background: rgba(255,255,255,0.2);
+                            color: white;
+                            border: none;
+                            padding: 10px;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        ">
+                            Depois
+                        </button>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Botão Atualizar
+                document.getElementById('sw-update-btn').addEventListener('click', () => {
+                    if (registration.waiting) {
+                        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                    }
+                });
+                
+                // Botão Dispensar
+                document.getElementById('sw-dismiss-btn').addEventListener('click', () => {
+                    notification.remove();
+                });
+            }
+        } else {
+            console.warn('⚠️ Service Worker não suportado neste navegador');
+        }
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar carrinho VivaCommerce
+            var cart = window.medusaCart || window.cartVivaCommerce;
+            if (cart && cart.init) cart.init().catch(function(e) { console.error('Cart init:', e); });
+            // Carregar produtos do tenant revivah-tech via MarketplaceAdapter
+            if (typeof loadProductsFromAPI === 'function' && typeof renderProductsFromAPI === 'function') {
+                loadProductsFromAPI().then(function(products) {
+                    renderProductsFromAPI(products, 'produtosGrid');
+                }).catch(function(e) { console.error('Load products:', e); });
+            }
+        });
+    </script>
+</body>
+</html>

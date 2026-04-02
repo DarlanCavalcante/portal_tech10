@@ -1,0 +1,105 @@
+
+Mode   Name                             Length
+----   ----                             ------
+d----- REVIVAH_1.0                            
+d----- REVIVAH_2.0                            
+d----- REVIVAH_3.0                            
+d----- REVIVAH_3.1_20260310                   
+d----- PROJETO_SITE_LOJA                      
+d----- VIVACOMMERCE                           
+-a---- README.md                        974   
+d----- docs                                   
+d----- loja_tech_site                         
+d----- storefront                             
+-a---- README.md                        591   
+d----- backend                                
+d----- docs                                   
+d----- painel-lojista                         
+d----- scripts                                
+d----- storefront                             
+d----- super-admin                            
+-a---- FLUXO_COMPLETO_TESTE_E_DEPLOY.md 6131  
+-a---- INFRA_PRODUCAO.md                7095  
+-a---- PLANO_FINALIZACAO_EXECUTADO.md   5645  
+-a---- INICIAR_TUDO.sh                  1681  
+-a---- README.md                        8847  
+-a---- ROTAS_E_AMBIENTE.md              1613  
+-a---- SMOKE_TEST.md                    5090  
+d----- PROJETO_SITE_LOJA                      
+d----- VIVACOMMERCE                           
+-a---- README.md                        973   
+d----- BACKUP_PENDRIBE_SAIDA                  
+d----- app-motorista                          
+d----- backend                                
+d----- docs                                   
+d----- loja_tech_site                         
+d----- painel-lojista                         
+d----- scripts                                
+d----- storefront                             
+d----- super-admin                            
+d----- tests                                  
+-a---- FIX_WORKTREE_ERRO.md             1352  
+-a---- FLUXO_COMPLETO_TESTE_E_DEPLOY.md 6131  
+-a---- INFRA_PRODUCAO.md                7095  
+-a---- PLANO_FINALIZACAO_EXECUTADO.md   5645  
+-a---- INICIAR_TUDO.sh                  3184  
+-a---- PROJECT_STATUS.md                4931  
+-a---- PROJETO_CENTRALIZADO.md          2358  
+-a---- ROTAS_E_AMBIENTE.md              1613  
+-a---- README.md                        1160  
+-a---- SETUP.md                         1567  
+-a---- SETUP_COMPLETO.sh                970   
+-a---- requirements-test-dark.txt       71    
+-a---- SMOKE_TEST.md                    5090  
+d----- app-motorista                          
+d----- backend                                
+d----- docs                                   
+d----- loja_tech_site                         
+d----- painel-lojista                         
+d----- scripts                                
+d----- storefront                             
+d----- super-admin                            
+d----- tests                                  
+-a---- FIX_WORKTREE_ERRO.md             1352  
+-a---- FLUXO_COMPLETO_TESTE_E_DEPLOY.md 6131  
+-a---- INFRA_PRODUCAO.md                7095  
+-a---- PLANO_FINALIZACAO_EXECUTADO.md   5645  
+-a---- INICIAR_TUDO.sh                  3184  
+-a---- PROJECT_STATUS.md                4931  
+-a---- PROJETO_CENTRALIZADO.md          2358  
+-a---- ROTAS_E_AMBIENTE.md              1613  
+-a---- README.md                        1160  
+-a---- SETUP.md                         1567  
+-a---- SETUP_COMPLETO.sh                970   
+-a---- requirements-test-dark.txt       71    
+-a---- SMOKE_TEST.md                    5090  
+d----- PROJETO_SITE_LOJA                      
+-a---- README.txt                       258   
+d----- BACKUP_PENDRIBE_SAIDA                  
+d----- app-motorista                          
+d----- backend                                
+d----- docs                                   
+d----- loja_tech_site                         
+d----- painel-lojista                         
+d----- scripts                                
+d----- storefront                             
+d----- super-admin                            
+d----- tests                                  
+-a---- FIX_WORKTREE_ERRO.md             1352  
+-a---- FLUXO_COMPLETO_TESTE_E_DEPLOY.md 6131  
+-a---- INFRA_PRODUCAO.md                7095  
+-a---- PLANO_FINALIZACAO_EXECUTADO.md   5645  
+-a---- INICIAR_TUDO.sh                  3184  
+-a---- PROJECT_STATUS.md                4931  
+-a---- PROJETO_CENTRALIZADO.md          2358  
+-a---- RESTAURACAO_COMPLETA.md          955   
+-a---- README.md                        1160  
+-a---- SMOKE_TEST.md                    5090  
+-a---- ROTAS_E_AMBIENTE.md              1613  
+-a---- SETUP.md                         1567  
+-a---- SETUP_COMPLETO.sh                970   
+-a---- docker-compose.full.yml          3388  
+-a---- requirements-test-dark.txt       71    
+
+
+

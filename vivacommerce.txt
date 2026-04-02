@@ -1,0 +1,13 @@
+
+Mode   Name                       Length
+----   ----                       ------
+d----- js                               
+-a---- INTEGRACAO_VIVACOMMERCE.md 2670  
+-a---- README.md                  862   
+-a---- api-adapter.js             7677  
+-a---- cart-vivacommerce.js       4010  
+-a---- api-config.js              860   
+-a---- load-products.js           4963  
+
+
+
