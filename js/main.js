@@ -8,14 +8,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // =================== LOADER ===================
   const loader = document.getElementById('loader');
+  const loaderPill = document.querySelector('.loader-toggle-pill');
 
-  // Initialize store status immediately (including loader toggle)
-  updateStoreStatus();
+  const isStoreOpen = updateStoreStatus();
 
+  // Força o pill do loader a começar vermelho (fechado)
+  if (loaderPill) {
+    loaderPill.classList.remove('open');
+    loaderPill.classList.add('closed');
+    
+    // Após 800ms, transiciona para verde SOMENTE SE a loja estiver aberta
+    setTimeout(() => {
+      if (isStoreOpen) {
+        loaderPill.classList.remove('closed');
+        loaderPill.classList.add('open');
+      }
+    }, 800);
+  }
+
+  // Esconde o loader quando terminar a transição (2.2s)
   setTimeout(() => {
     loader.classList.add('hidden');
     initAnimations();
-  }, 1800);
+  }, 2200);
 
   // Update every 30 seconds
   setInterval(updateStoreStatus, 30000);
@@ -82,8 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const state = isOpen ? 'open' : 'closed';
 
-    // Update all toggle pills
-    document.querySelectorAll('.toggle-pill, .loader-toggle-pill, .ftoggle-pill').forEach(pill => {
+    // Update all toggle pills (exceto o loader, que tem a animação fixa Red -> Green)
+    document.querySelectorAll('.toggle-pill, .ftoggle-pill').forEach(pill => {
       pill.classList.remove('open', 'closed');
       pill.classList.add(state);
     });
@@ -98,6 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (textEl) textEl.textContent = statusText;
       if (timeEl) timeEl.textContent = timeInfo;
     }
+    
+    return isOpen;
   }
 
   // =================== CUSTOM CURSOR ===================
@@ -287,10 +304,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Main timeline on load
     const tl = gsap.timeline({
-      delay: 0.5 // Start after initial hero text fade-up
+      delay: 0.5
     });
 
-    // Vídeo aparece com fade e sobe suavemente
     tl.fromTo(videoWrapper, 
       { scale: 0.9, opacity: 0, y: 40, filter: 'drop-shadow(0 0 0px rgba(255, 255, 255, 0))' },
       { duration: 1.5, scale: 1.0, opacity: 1, y: 0, filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.1))', ease: 'power3.out' }
@@ -305,6 +321,31 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: 'sine.inOut',
       delay: 2.0
     });
+
+    // =================== HERO VIDEO REEL ===================
+    const reels = document.querySelectorAll('.hero-reel');
+    if (reels.length <= 1) return;
+
+    let currentReel = 0;
+    const REEL_DURATION = 6000; // 6 segundos por vídeo
+
+    function nextReel() {
+      const prev = reels[currentReel];
+      currentReel = (currentReel + 1) % reels.length;
+      const next = reels[currentReel];
+
+      // Pausa o anterior
+      prev.classList.remove('active');
+      prev.pause();
+
+      // Inicia o próximo
+      next.currentTime = 0;
+      next.play();
+      next.classList.add('active');
+    }
+
+    // Inicia o carrossel
+    setInterval(nextReel, REEL_DURATION);
   }
 
   // =================== FORM HANDLING ===================
@@ -454,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
       
-      gsap.to('#specialist-photo', {
+      gsap.to('.about-slide.active', {
         x: x * 10,
         y: y * 10,
         rotationY: x * 5,
@@ -466,8 +507,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     parallaxContainer.addEventListener('mouseleave', () => {
       gsap.to('.floating-item', { x: 0, y: 0, rotation: 0, duration: 1 });
-      gsap.to('#specialist-photo', { x: 0, y: 0, rotationY: 0, rotationX: 0, duration: 1 });
+      gsap.to('.about-slide.active', { x: 0, y: 0, rotationY: 0, rotationX: 0, duration: 1 });
     });
+
+    // =================== ABOUT PHOTO REEL ===================
+    const aboutSlides = document.querySelectorAll('.about-slide');
+    if (aboutSlides.length > 1) {
+      let currentAbout = 0;
+      setInterval(() => {
+        aboutSlides[currentAbout].classList.remove('active');
+        currentAbout = (currentAbout + 1) % aboutSlides.length;
+        aboutSlides[currentAbout].classList.add('active');
+      }, 4000);
+    }
   }
 
   // =================== FAQ ACCORDION ===================
