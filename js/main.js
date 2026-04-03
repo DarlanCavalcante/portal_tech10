@@ -470,5 +470,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // =================== FAQ ACCORDION ===================
+  const faqItems = document.querySelectorAll('.faq-question');
+  faqItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const isActive = item.classList.contains('active');
+      // Fechar todos
+      faqItems.forEach(faq => {
+        faq.classList.remove('active');
+        if (faq.nextElementSibling) faq.nextElementSibling.style.maxHeight = null;
+      });
+      // Se não tava ativo, abre apenas esse
+      if (!isActive) {
+        item.classList.add('active');
+        if (item.nextElementSibling) {
+          item.nextElementSibling.style.maxHeight = item.nextElementSibling.scrollHeight + "px";
+        }
+      }
+    });
+  });
+
+  // =================== BEFORE/AFTER SLIDER ===================
+  const baSlider = document.getElementById('baSlider');
+  if (baSlider) {
+    const baBefore = document.getElementById('baBefore');
+    const baHandle = document.getElementById('baHandle');
+
+    let baIsDragging = false;
+
+    const slide = (x) => {
+      let width = baSlider.offsetWidth;
+      let percent = Math.max(0, Math.min(x / width * 100, 100));
+      baBefore.style.width = percent + "%";
+      baHandle.style.left = percent + "%";
+    };
+
+    baSlider.addEventListener('mousedown', () => baIsDragging = true);
+    window.addEventListener('mouseup', () => baIsDragging = false);
+    window.addEventListener('mousemove', (e) => {
+      if (!baIsDragging) return;
+      const rect = baSlider.getBoundingClientRect();
+      slide(e.clientX - rect.left);
+    });
+
+    // Mobile touch support
+    baSlider.addEventListener('touchstart', () => baIsDragging = true, {passive: true});
+    window.addEventListener('touchend', () => baIsDragging = false);
+    window.addEventListener('touchmove', (e) => {
+      if (!baIsDragging) return;
+      const rect = baSlider.getBoundingClientRect();
+      slide(e.touches[0].clientX - rect.left);
+    }, {passive: true});
+  }
+
 });
 

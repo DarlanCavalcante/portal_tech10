@@ -220,6 +220,77 @@
     </div>
   </section>
 
+  <!-- 
+    =========================================
+    [#] SESSÃO: PROCESSO (O MÉTODO TECH10)
+    =========================================
+    O que o usuário vê: Uma linha do tempo ou fluxo de 3 passos mostrando como trabalhamos.
+    O que essa função é internamente: Uma grid responsiva com cards ilustrando o fluxo de entrada, reparo e entrega. Preparado para linkar com API de tracking de Ordem de Serviço do seu SaaS futuro.
+    Ação esperada: Eliminar o "medo" do cliente, mostrando que temos laboratório profissional, rigor e que somos transparentes.
+  -->
+  <section class="process-section" id="processo">
+    <div class="container" style="text-align: center;">
+      <span class="section-tag"><i class="fas fa-microscope"></i> Nosso Método</span>
+      <h2 class="section-title">Engenharia de Reparo em <span class="gradient-text">3 Passos</span></h2>
+      <p class="section-desc" style="margin-left: auto; margin-right: auto;">Padrão de laboratório desde o momento em que você entrega o equipamento em nossas mãos.</p>
+
+      <div class="process-grid">
+        <div class="process-card" data-animate="fade-up">
+          <div class="process-step">01</div>
+          <div class="process-icon"><i class="fas fa-search-plus"></i></div>
+          <h3>Triagem Avançada</h3>
+          <p>O equipamento passa por microscopia para mapear o real problema. Emitimos um laudo técnico honesto e com imagens, sem achismos.</p>
+        </div>
+        
+        <div class="process-card" data-animate="fade-up" style="transition-delay: 0.1s;">
+          <div class="process-step">02</div>
+          <div class="process-icon"><i class="fas fa-screwdriver"></i></div>
+          <h3>Laboratório Nível 3</h3>
+          <p>Utilizamos maquinário focado em microeletrônica e peças homologadas. O reparo é minucioso e ocorre direto no componente danificado.</p>
+        </div>
+
+        <div class="process-card" data-animate="fade-up" style="transition-delay: 0.2s;">
+          <div class="process-step">03</div>
+          <div class="process-icon"><i class="fas fa-check-circle"></i></div>
+          <h3>Estresse e Entrega</h3>
+          <p>Realizamos estresse térmico e funcional contínuo antes da devolução. Você recebe seu ativo lacrado e com até 90 dias de garantia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 
+    =========================================
+    [#] SESSÃO: ANTES E DEPOIS (GATILHO VISUAL)
+    =========================================
+    O que o usuário vê: Uma imagem cortada ao meio com um controle deslizante. De um lado, equipamento destruído. Do outro, equipamento zero.
+    O que essa função é internamente: Um container interativo em HTML/CSS manipulado pelo main.js. Suporta toque mobile.
+    Ação esperada: Tangibilizar o resultado e provar a competência técnica. As pessoas compram o estado final.
+  -->
+  <section class="before-after-section" id="antes-depois" style="background: var(--bg-primary); padding: var(--section-padding);">
+    <div class="container" style="text-align: center;">
+      <span class="section-tag"><i class="fas fa-magic"></i> A Mágica Acontece</span>
+      <h2 class="section-title">Resultados que <span class="gradient-text">Falam por Si</span></h2>
+      <p class="section-desc" style="margin-left: auto; margin-right: auto;">Não apenas consertamos, nós restauramos. Deslize para ver o impacto do nosso laboratório.</p>
+
+      <div class="ba-slider" id="baSlider" data-animate="fade-up">
+        <!-- PONTO DE MUDANÇA: Pode substituir pelo caminho real das suas fotos -->
+        <div class="ba-img ba-after">
+          <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?fit=crop&w=1000&q=80" alt="MacBook Reparado" />
+          <span class="ba-label label-after">DEPOIS</span>
+        </div>
+        <div class="ba-img ba-before" id="baBefore">
+          <!-- Imagem ligeiramente ofuscada para simular 'danificada' até a troca da imagem original. -->
+          <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?fit=crop&w=1000&q=80" alt="MacBook Danificado" style="filter: grayscale(1) brightness(0.6);" />
+          <span class="ba-label label-before">ANTES</span>
+        </div>
+        <div class="ba-handle" id="baHandle">
+          <div class="ba-arrows"><i class="fas fa-chevron-left"></i><i class="fas fa-chevron-right"></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- PLANOS -->
   <section class="plans-section" id="planos" style="position: relative; overflow: hidden;">
     <video autoplay muted loop playsinline class="plans-bg-video">
@@ -476,6 +547,106 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- 
+    =========================================
+    [#] SESSÃO: DEPOIMENTOS (PROVA SOCIAL)
+    =========================================
+    O que o usuário vê: Uma estrutura com cards exibindo clientes felizes e avaliações 5 estrelas do Google.
+    O que essa função é internamente: Componente de "Social Proof" puramente HTML. Na integração do seu SaaS, ele pode receber um <div id="react-reviews-widget"> consumindo a API de Feedbacks.
+    Ação esperada: Gerar a principal faísca de confiança. Indícios positivos de terceiros engatilham alta intenção de compra.
+  -->
+  <section class="testimonials-section" id="depoimentos" style="position: relative; overflow: hidden; background: var(--bg-secondary); padding: var(--section-padding);">
+    <div class="container" style="text-align: center;">
+      <span class="section-tag"><i class="fas fa-star"></i> Prova Social</span>
+      <h2 class="section-title">O Que Nossos Parceiros <span class="gradient-text">Dizem Sobre Nós</span></h2>
+      <p class="section-desc" style="margin-left: auto; margin-right: auto;">Nossa qualidade não é promessa, é histórico documentado publicamente por quem usa.</p>
+
+      <div class="testimonials-grid">
+        <!-- Avaliação 1 -->
+        <div class="testimonial-card" data-animate="fade-up">
+          <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="testimonial-text">"Pensei que tinha perdido meu MacBook de trabalho após cair café. A equipe da Tech10 não só recuperou as lógicas como entregou no dia seguinte!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar"><i class="fas fa-user-tie"></i></div>
+            <div class="author-info" style="text-align: left;">
+              <h4>Júlio Machado</h4>
+              <span>Arquiteto Sênior</span>
+            </div>
+          </div>
+        </div>
+        <!-- Avaliação 2 -->
+        <div class="testimonial-card" data-animate="fade-up" style="transition-delay: 0.1s;">
+          <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="testimonial-text">"Fechamos uma rotina de manutenção com eles pra agência e os travamentos sumiram. São verdadeiros engenheiros de máquina!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar"><i class="fas fa-building"></i></div>
+            <div class="author-info" style="text-align: left;">
+              <h4>Roberta P. Silva</h4>
+              <span>CEO - Agência Criativa</span>
+            </div>
+          </div>
+        </div>
+        <!-- Avaliação 3 -->
+        <div class="testimonial-card" data-animate="fade-up" style="transition-delay: 0.2s;">
+          <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+          <p class="testimonial-text">"Diferente da assistência de bairro convencional. Ambiente cirúrgico, prazo devidamente cumprido e a tela do meu iPhone ficou absurda."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar"><i class="fas fa-user"></i></div>
+            <div class="author-info" style="text-align: left;">
+              <h4>Carlos Eduardo</h4>
+              <span>Empreendedor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 
+    =========================================
+    [#] SESSÃO: FAQ (QUEBRA DE OBJEÇÕES)
+    =========================================
+    O que o usuário vê: Uma lista sanfona (accordion) interativa.
+    O que essa função é internamente: Elementos expansíveis via JS/CSS. No seu SaaS futuro, este módulo pode baixar os textos diretamente do banco de dados CMS, virando um painel administrativo.
+    Ação esperada: Remover todas as inseguranças finais que impedem o cliente de clicar no botão principal de enviar WhatsApp.
+  -->
+  <section class="faq-section" id="faq" style="background: var(--bg-primary); padding: var(--section-padding);">
+    <div class="container">
+      <div style="text-align: center;">
+        <span class="section-tag"><i class="fas fa-question-circle"></i> Transparência</span>
+        <h2 class="section-title">Dúvidas <span class="gradient-text">Frequentes</span></h2>
+        <p class="section-desc" style="margin-left: auto; margin-right: auto;">Respostas rápidas e diretas ao ponto sobre o nosso método de trabalho e garantias.</p>
+      </div>
+
+      <div class="faq-accordion" data-animate="fade-up">
+        <div class="faq-item">
+          <button class="faq-question">Vou perder os dados do meu aparelho? <i class="fas fa-chevron-down"></i></button>
+          <div class="faq-answer">
+            <p>Em 95% dos reparos de hardware, a integridade dos seus dados é mantida intacta. Porém, por protocolo de laboratório, orientamos que mantenha sempre um backup em nuvem atualizado antes de entregar qualquer equipamento.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Vocês utilizam peças originais? <i class="fas fa-chevron-down"></i></button>
+          <div class="faq-answer">
+            <p>Sim. Trabalhamos exclusivamente com fornecedores homologados para garantir que telas, baterias e semicondutores entreguem a mesma performance e durabilidade altíssima da peça de fábrica.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Qual é o prazo médio de devolução? <i class="fas fa-chevron-down"></i></button>
+          <div class="faq-answer">
+            <p>A maioria dos reparos de nível 1 (Telas, Baterias, Upgrades) é realizada entre 2 a 4 horas. Intervenções em placas lógicas podem levar de 2 a 5 dias para rigorosos testes térmicos de segurança.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Tem garantia sobre o serviço? <i class="fas fa-chevron-down"></i></button>
+          <div class="faq-answer">
+            <p>Com certeza. Emitimos certificado de garantia de 90 dias sobre a peça substituída e sobre o serviço executado, atestando a confiança completa nos nossos especialistas.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
