@@ -575,5 +575,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }, {passive: true});
   }
 
+  // =================== ANTES E DEPOIS - SELEÇÃO ===================
+  const baSelectBtns = document.querySelectorAll('.ba-select-btn');
+  const baSliderArea = document.getElementById('baSlider');
+  const baStaticArea = document.getElementById('baStatic');
+  const baStaticImg = document.getElementById('baStaticImg');
+
+  if (baSelectBtns.length > 0 && baSliderArea && baStaticArea && baStaticImg) {
+    baSelectBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Atualiza botoes visualmente
+        baSelectBtns.forEach(b => {
+          b.classList.remove('btn-primary');
+          b.classList.add('btn-outline');
+        });
+        btn.classList.add('btn-primary');
+        btn.classList.remove('btn-outline');
+
+        const type = btn.getAttribute('data-type');
+        if (type === 'slider') {
+          baStaticArea.style.display = 'none';
+          baSliderArea.style.display = 'block';
+        } else if (type === 'static') {
+          const src = btn.getAttribute('data-src');
+          baStaticImg.src = src;
+          baSliderArea.style.display = 'none';
+          baStaticArea.style.display = 'block';
+          
+          // Efeito de fade
+          baStaticArea.style.opacity = '0';
+          setTimeout(() => {
+            baStaticArea.style.transition = 'opacity 0.5s ease';
+            baStaticArea.style.opacity = '1';
+          }, 50);
+        }
+      });
+    });
+  }
+
 });
 
