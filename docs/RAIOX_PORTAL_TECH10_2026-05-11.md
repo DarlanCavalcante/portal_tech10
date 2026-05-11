@@ -123,7 +123,15 @@ Essa evidência sugere que a experiência pública de loja/tenant pode estar, ho
 Ao mesmo tempo, a checagem de domínio e deployment mostrou:
 
 - `vivacommerce.com.br` está associado ao projeto certo, mas com DNS mal configurado na Vercel;
-- o deployment `.vercel.app` respondeu `401 Unauthorized`, o que sugere proteção/autenticação ativa no acesso público.
+- o deployment `.vercel.app` respondeu `401 Unauthorized`;
+- o corpo da resposta confirmou `Authentication Required` da própria Vercel;
+- as checagens externas de `https://vivacommerce.com.br` falharam por resolução de nome, reforçando que o DNS público ainda não está funcional.
+
+Também foi confirmado que, no escopo Vercel atual:
+
+- não apareceu um domínio público Tech10 separado já ativo;
+- não apareceu um alias próprio da Tech10 fora do projeto `vivacommerce`;
+- a experiência Tech10 pública conhecida depende hoje da plataforma `vivacommerce`, não de um host isolado do tenant.
 
 Portanto, o vínculo entre:
 
@@ -180,7 +188,8 @@ O problema real é governança técnica:
 - configuração espalhada;
 - hardcodes de tenant;
 - ausência de documentação canônica de variáveis;
-- falta de empacotamento profissional para multi-tenant.
+- falta de empacotamento profissional para multi-tenant;
+- bloqueio operacional de domínio e autenticação de borda na runtime canônica.
 
 ## 9. Próximo passo recomendado
 
@@ -189,4 +198,5 @@ O próximo passo certo é transformar a Tech10 em tenant-config canônico:
 1. centralizar variáveis e branding;
 2. eliminar paths fixos como `/tech10/`;
 3. padronizar slug, base URL e contatos por tenant;
-4. definir o contrato de integração com ERP, portal e loja.
+4. definir o contrato de integração com ERP, portal e loja;
+5. fechar o go-live operacional do `vivacommerce` com domínio íntegro e superfície pública validada.

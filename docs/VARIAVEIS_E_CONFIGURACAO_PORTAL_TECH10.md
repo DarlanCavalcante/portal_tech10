@@ -223,3 +223,56 @@ Essa camada já começa a substituir links hardcoded como:
 - `/lojas/revivah-tech/shop`
 - `/shop?store=revivah-tech...`
 - `https://wa.me/55974001960`
+
+## 11. Variáveis confirmadas na runtime canônica `VIVACOMMERCE/storefront`
+
+Além da configuração local do `portal_tech10`, a runtime canônica inspecionada em
+`VIVACOMMERCE/storefront` usa variáveis de ambiente que impactam diretamente o
+tenant Tech10 em produção:
+
+- `NEXT_PUBLIC_PLATFORM_DOMAIN`
+  - domínio-base da plataforma multi-tenant;
+  - fallback encontrado: `vivacommerce.com.br`.
+
+- `NEXT_PUBLIC_API_URL`
+  - URL pública do backend para cliente/browser.
+
+- `BACKEND_INTERNAL_URL`
+  - URL interna do backend para SSR e rotas server-side.
+
+- `NEXT_PUBLIC_PAINEL_URL`
+  - URL do painel usada em convites, aceitação e redirecionamentos.
+
+- `NEXT_PUBLIC_WS_URL`
+  - endpoint de websocket/tempo real.
+
+- `NEXT_PUBLIC_VAPID_PUBLIC_KEY`
+  - chave pública de notificações push.
+
+- `NEXT_PUBLIC_DEFAULT_STORE_ID`
+  - store id padrão usado por componentes de banners/tema quando necessário.
+
+- `NEXT_PUBLIC_PLATFORM_NAME`
+  - nome da plataforma exposto em algumas UIs.
+
+- `NEXT_PUBLIC_SENTRY_DSN`
+  - observabilidade frontend, quando habilitada.
+
+- `NEXT_PUBLIC_SITE_URL`
+  - base usada por `robots` e `sitemap`;
+  - precisa ser tratada com atenção para não publicar metadados globais errados na
+    experiência do tenant.
+
+## 12. Leitura operacional atual
+
+Hoje, a configuração do tenant Tech10 depende de duas camadas:
+
+1. configuração local saneada no `portal_tech10`;
+2. variáveis de ambiente da runtime canônica `VIVACOMMERCE/storefront`.
+
+Isso significa que a ida para produção não depende só de HTML/JS local. Ela depende
+também de:
+
+- domínio íntegro;
+- borda pública liberada ou conscientemente protegida;
+- variáveis corretas na runtime canônica.

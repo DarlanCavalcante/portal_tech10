@@ -97,7 +97,9 @@ Confirmações adicionais de plataforma:
 Achados operacionais:
 
 - `vivacommerce.com.br` está vinculado ao projeto correto, mas o DNS está mal configurado na Vercel
-- o deployment `.vercel.app` respondeu `401 Unauthorized` na inspeção HTTP automatizada, indicando proteção/autenticação ativa na borda
+- o deployment `.vercel.app` respondeu `401 Unauthorized` na inspeção HTTP automatizada
+- o corpo retornado confirmou `Authentication Required`, ou seja: a proteção é da própria Vercel e não um erro funcional da aplicação
+- não foi encontrado um domínio Tech10 isolado já ativo no escopo Vercel atual
 
 ## 5. Conclusão de ownership
 
@@ -152,3 +154,4 @@ Passos imediatos de produção mais prováveis:
    - `/tech10`
    - `/lojas/revivah-tech`
    - `/lojas/revivah-tech/shop`
+4. só depois disso promover a experiência Tech10 como tenant oficialmente publicável.
