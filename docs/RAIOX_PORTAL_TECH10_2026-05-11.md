@@ -123,6 +123,30 @@ Ao mesmo tempo, uma checagem por `curl` em `https://vivacommerce.com.br/...` nã
 
 ainda precisa de confirmação operacional antes de qualquer publicação forte.
 
+## 6.2. Relação com os outros repositórios Tech10
+
+Também foi confirmado que existem outros repositórios no ecossistema:
+
+- `tech10-informatica`
+- `VIVACOMMERCE`
+
+O achado mais importante foi:
+
+- o projeto Vercel `vivacommerce` aponta para `Root Directory: storefront`
+- o monorepo `VIVACOMMERCE` contém:
+  - `storefront/` com rotas tenant reais
+  - `loja_tech_site/` com integração estática da Tech10
+  - documentação explícita de inventário e tenant architecture
+
+Isso muda a leitura de canonicidade:
+
+- `portal_tech10` é uma base útil e rica;
+- mas o runtime multi-tenant mais provável de produção está em `VIVACOMMERCE/storefront`.
+
+Ver documento complementar:
+
+- `OWNERSHIP_E_PUBLICACAO_TENANT_TECH10.md`
+
 ## 7. Fronteira obrigatória
 
 Este raio-x assume explicitamente:

@@ -175,3 +175,16 @@ Criar uma camada `tenant-config` dentro do `SITE_RECUPERADO_TECH10` e migrar:
 - links `/lojas/revivah-tech/shop`
 
 para leitura centralizada de tenant.
+
+## 8. Andamento desta diretriz
+
+A primeira etapa já foi iniciada em `2026-05-11` com:
+
+- criação de `SITE_RECUPERADO_TECH10/js/tenant-config.js`
+- adaptação de `api-config.js`
+- adaptação de `empresa-config.js`
+- inclusão do `tenant-config.js` nas páginas principais
+
+Pendência principal:
+
+- migrar links e CTAs ainda hardcoded no HTML para helpers/rotas centralizadas.

@@ -1,46 +1,51 @@
 // Configurações da Empresa - Tech10 Informática
+const tenantConfig = typeof window !== 'undefined' ? window.TENANT_CONFIG || {} : {};
+const tenantCompany = tenantConfig.company || {};
+const tenantStats = tenantConfig.stats || {};
+const tenantSeo = tenantConfig.seo || {};
+
 const empresaConfig = {
     // INFORMAÇÕES BÁSICAS
-    nome: "Tech10 Informática", // Nome da empresa
-    slogan: "20 Anos de Experiência em Tecnologia", // Slogan da empresa
-    descricao: "Especialistas em equipamentos Apple, Samsung e desenvolvimento Full Stack há 20 anos.", // Descrição breve
+    nome: tenantCompany.name || "Tech10 Informática", // Nome da empresa
+    slogan: tenantCompany.slogan || "20 Anos de Experiência em Tecnologia", // Slogan da empresa
+    descricao: tenantCompany.description || "Especialistas em equipamentos Apple, Samsung e desenvolvimento Full Stack há 20 anos.", // Descrição breve
     
     // CONTATO
-    telefone: "(55) 3317-0762", // Telefone fixo
-    whatsapp: "55974001960", // WhatsApp (formato: 55 + DDD + número)
-    email: "tech10.infor@gmail.com", // Email da empresa
+    telefone: tenantCompany.phone || "(55) 3317-0762", // Telefone fixo
+    whatsapp: tenantCompany.whatsapp || "55974001960", // WhatsApp (formato: 55 + DDD + número)
+    email: tenantCompany.email || "tech10.infor@gmail.com", // Email da empresa
     
     // ENDEREÇO
     endereco: {
-        rua: "Rua Doutor Bozano, 968 - Loja 8", // Endereço da loja
-        bairro: "Centro", // Assumindo centro (pode ajustar se necessário)
-        cidade: "Santa Maria", // Assumindo Santa Maria pelo DDD 55
-        estado: "RS", // Rio Grande do Sul
-        cep: "97015-001" // CEP estimado (pode ajustar)
+        rua: tenantCompany.address?.street || "Rua Doutor Bozano, 968 - Loja 8", // Endereço da loja
+        bairro: tenantCompany.address?.neighborhood || "Centro", // Assumindo centro (pode ajustar se necessário)
+        cidade: tenantCompany.address?.city || "Santa Maria", // Assumindo Santa Maria pelo DDD 55
+        estado: tenantCompany.address?.state || "RS", // Rio Grande do Sul
+        cep: tenantCompany.address?.zip || "97015-001" // CEP estimado (pode ajustar)
     },
     
     // HORÁRIOS
     horarios: {
-        semana: "Segunda a Sexta: 9h às 18h", // Horário informado
-        sabado: "Sábado: Fechado", // Não informado, assumindo fechado
-        domingo: "Domingo: Fechado" // Fechado aos domingos
+        semana: tenantCompany.hours?.weekdays || "Segunda a Sexta: 9h às 18h", // Horário informado
+        sabado: tenantCompany.hours?.saturday || "Sábado: Fechado", // Não informado, assumindo fechado
+        domingo: tenantCompany.hours?.sunday || "Domingo: Fechado" // Fechado aos domingos
     },
     
     // REDES SOCIAIS
     social: {
-        facebook: "https://www.facebook.com/share/19wtZjc61F/", // Facebook da Tech10
-        instagram: "https://www.instagram.com/tech10info/", // Instagram da Tech10
+        facebook: tenantCompany.facebook || "https://www.facebook.com/share/19wtZjc61F/", // Facebook da Tech10
+        instagram: tenantCompany.instagram || "https://www.instagram.com/tech10info/", // Instagram da Tech10
         twitter: "", // Não informado
-        whatsappLink: "https://wa.me/55974001960", // Link do WhatsApp
+        whatsappLink: `https://wa.me/${tenantCompany.whatsapp || "55974001960"}`, // Link do WhatsApp
         tiktok: "", // Não informado
         youtube: "" // Não informado
     },
     
     // ESTATÍSTICAS (para seção "Sobre")
     stats: {
-        anosExperiencia: "20+", // 20 anos de experiência
-        clientesSatisfeitos: "1000+", // Mais de 1000 clientes
-        produtosDisponiveis: "500+" // Produtos disponíveis (estimativa)
+        anosExperiencia: tenantStats.yearsExperience || "20+", // 20 anos de experiência
+        clientesSatisfeitos: tenantStats.happyClients || "1000+", // Mais de 1000 clientes
+        produtosDisponiveis: tenantStats.productsAvailable || "500+" // Produtos disponíveis (estimativa)
     },
     
     // SOBRE A EMPRESA
@@ -51,8 +56,8 @@ const empresaConfig = {
     
     // SEO
     seo: {
-        titulo: "Tech10 Informática - 20 Anos de Experiência em Tecnologia", // Título da página
-        descricao: "Tech10 Informática em Santa Maria/RS. Especialistas em Apple, Samsung e desenvolvimento Full Stack há 20 anos. Assistência técnica e vendas com qualidade garantida!" // Descrição para SEO
+        titulo: tenantSeo.title || "Tech10 Informática - 20 Anos de Experiência em Tecnologia", // Título da página
+        descricao: tenantSeo.description || "Tech10 Informática em Santa Maria/RS. Especialistas em Apple, Samsung e desenvolvimento Full Stack há 20 anos. Assistência técnica e vendas com qualidade garantida!" // Descrição para SEO
     }
 };
 

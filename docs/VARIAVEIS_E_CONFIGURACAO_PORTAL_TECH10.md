@@ -8,6 +8,10 @@ Este documento registra as variáveis, constantes e hardcodes relevantes do proj
 
 ## 1. Configuração de API
 
+Camada central nova:
+
+- `SITE_RECUPERADO_TECH10/js/tenant-config.js`
+
 Arquivo principal:
 
 - `SITE_RECUPERADO_TECH10/js/api-config.js`
@@ -39,6 +43,10 @@ Chaves atuais:
   - derivado: `${ACTIVE_URL}/health`
 
 ## 2. Configuração de tenant/empresa
+
+Camada central nova:
+
+- `SITE_RECUPERADO_TECH10/js/tenant-config.js`
 
 Arquivo principal:
 
@@ -190,3 +198,16 @@ Antes de mexer em layout profundo, o projeto deve ganhar uma camada única de co
 - slug espalhado em `api-config.js` e HTML;
 - paths fixos como `/tech10/`;
 - contatos e assets hardcoded.
+
+## 10. Progresso já aplicado
+
+Nesta rodada, o projeto recebeu a primeira camada real de centralização:
+
+- `SITE_RECUPERADO_TECH10/js/tenant-config.js`
+
+E os arquivos abaixo passaram a consumir essa camada:
+
+- `SITE_RECUPERADO_TECH10/js/api-config.js`
+- `SITE_RECUPERADO_TECH10/js/empresa-config.js`
+
+Além disso, as páginas principais passaram a carregar `tenant-config.js` antes da configuração dependente.
