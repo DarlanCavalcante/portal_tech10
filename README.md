@@ -150,6 +150,16 @@ Arraste a pasta do projeto para [app.netlify.com/drop](https://app.netlify.com/d
 
 ---
 
+## 📚 Documentação Canônica
+
+Para a leitura atualizada do estado técnico deste projeto e da trilha de evolução por tenant, consulte:
+
+- [docs/RAIOX_PORTAL_TECH10_2026-05-11.md](docs/RAIOX_PORTAL_TECH10_2026-05-11.md)
+- [docs/VARIAVEIS_E_CONFIGURACAO_PORTAL_TECH10.md](docs/VARIAVEIS_E_CONFIGURACAO_PORTAL_TECH10.md)
+- [docs/ARQUITETURA_TENANT_SITE_PORTAL_LOJA.md](docs/ARQUITETURA_TENANT_SITE_PORTAL_LOJA.md)
+
+---
+
 ## 🔧 Funcionalidades Técnicas
 
 ### Status Aberto/Fechado em Tempo Real
