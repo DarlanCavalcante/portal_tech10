@@ -86,6 +86,19 @@ Sinais fortes:
 - o monorepo `VIVACOMMERCE` contém documentação explícita sobre tenant architecture e inventário do original vs atual
 - a rota `storefront/app/tech10/page.tsx` usa slug `revivah-tech`
 
+Confirmações adicionais de plataforma:
+
+- deployment Vercel pronto: `dpl_Acevj2BYpeVupGXoXEFzjKZakjsd`
+- aliases do deployment:
+  - `https://vivacommerce.com.br`
+  - `https://vivacommerce-darlancavalcantes-projects.vercel.app`
+  - `https://vivacommerce-git-main-darlancavalcantes-projects.vercel.app`
+
+Achados operacionais:
+
+- `vivacommerce.com.br` está vinculado ao projeto correto, mas o DNS está mal configurado na Vercel
+- o deployment `.vercel.app` respondeu `401 Unauthorized` na inspeção HTTP automatizada, indicando proteção/autenticação ativa na borda
+
 ## 5. Conclusão de ownership
 
 Hoje, a leitura mais segura é:
@@ -130,3 +143,12 @@ O próximo passo crítico é declarar canonicidade operacional:
 1. `portal_tech10` continua como trilha de saneamento/documentação;
 2. a publicação real deve apontar para `VIVACOMMERCE/storefront`;
 3. a configuração do tenant deve ser consolidada para não depender de hardcodes espalhados.
+
+Passos imediatos de produção mais prováveis:
+
+1. corrigir DNS de `vivacommerce.com.br` na Vercel;
+2. decidir se a proteção `401` do deployment deve permanecer ou ser flexibilizada para a superfície pública;
+3. validar qual rota pública final da Tech10 será oficial:
+   - `/tech10`
+   - `/lojas/revivah-tech`
+   - `/lojas/revivah-tech/shop`

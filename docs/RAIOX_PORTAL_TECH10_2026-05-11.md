@@ -112,16 +112,26 @@ Na Vercel da conta atual, foi confirmado um projeto separado:
 - projeto: `vivacommerce`
 - root directory: `storefront`
 - framework: `Next.js`
+- deployment inspecionado: `dpl_Acevj2BYpeVupGXoXEFzjKZakjsd`
+- aliases:
+  - `https://vivacommerce.com.br`
+  - `https://vivacommerce-darlancavalcantes-projects.vercel.app`
+  - `https://vivacommerce-git-main-darlancavalcantes-projects.vercel.app`
 
 Essa evidência sugere que a experiência pública de loja/tenant pode estar, hoje, sendo publicada por uma base de storefront separada da cópia estática/documental do `portal_tech10`.
 
-Ao mesmo tempo, uma checagem por `curl` em `https://vivacommerce.com.br/...` não resolveu DNS nesta sessão. Portanto, o vínculo entre:
+Ao mesmo tempo, a checagem de domínio e deployment mostrou:
+
+- `vivacommerce.com.br` está associado ao projeto certo, mas com DNS mal configurado na Vercel;
+- o deployment `.vercel.app` respondeu `401 Unauthorized`, o que sugere proteção/autenticação ativa no acesso público.
+
+Portanto, o vínculo entre:
 
 - código canônico;
 - host público ativo;
 - domínio final;
 
-ainda precisa de confirmação operacional antes de qualquer publicação forte.
+ainda exige saneamento operacional antes de qualquer publicação forte.
 
 ## 6.2. Relação com os outros repositórios Tech10
 
