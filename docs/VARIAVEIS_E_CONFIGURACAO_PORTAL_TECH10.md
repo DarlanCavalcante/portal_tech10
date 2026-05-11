@@ -211,3 +211,15 @@ E os arquivos abaixo passaram a consumir essa camada:
 - `SITE_RECUPERADO_TECH10/js/empresa-config.js`
 
 Além disso, as páginas principais passaram a carregar `tenant-config.js` antes da configuração dependente.
+
+Também foi criada uma camada de reescrita de rotas:
+
+- `SITE_RECUPERADO_TECH10/js/tenant-routes.js`
+
+Essa camada já começa a substituir links hardcoded como:
+
+- `/tech10/`
+- `/tech10/carrinho.html`
+- `/lojas/revivah-tech/shop`
+- `/shop?store=revivah-tech...`
+- `https://wa.me/55974001960`

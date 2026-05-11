@@ -181,10 +181,11 @@ para leitura centralizada de tenant.
 A primeira etapa já foi iniciada em `2026-05-11` com:
 
 - criação de `SITE_RECUPERADO_TECH10/js/tenant-config.js`
+- criação de `SITE_RECUPERADO_TECH10/js/tenant-routes.js`
 - adaptação de `api-config.js`
 - adaptação de `empresa-config.js`
 - inclusão do `tenant-config.js` nas páginas principais
 
 Pendência principal:
 
-- migrar links e CTAs ainda hardcoded no HTML para helpers/rotas centralizadas.
+- migrar o restante dos links e CTAs hardcoded para leitura exclusiva via helpers/rotas centralizadas.
