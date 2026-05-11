@@ -70,15 +70,20 @@ publicamente aberta e estável.
 
 Antes do go-live, precisa haver uma URL oficial única para a jornada pública:
 
-- `/tech10`
-- `/lojas/revivah-tech`
-- `/lojas/revivah-tech/shop`
+- `https://tech10.tech10cloud.com`
+- `https://tech10.tech10cloud.com/loja`
+- `https://tech10.tech10cloud.com/portal`
+- rotas legadas/runtime:
+  - `/tech10`
+  - `/lojas/revivah-tech`
+  - `/lojas/revivah-tech/shop`
 
 Recomendação prática:
 
-- usar `/tech10` como URL institucional de entrada do tenant;
-- deixar `/lojas/revivah-tech/shop` como rota operacional da loja;
-- manter `/lojas/revivah-tech` como rota de compatibilidade e fallback de tenant.
+- usar `https://tech10.tech10cloud.com` como entrada institucional do tenant;
+- usar `https://tech10.tech10cloud.com/loja` como URL pública de vendas;
+- reservar `https://tech10.tech10cloud.com/portal` como entrada pública para jornada de O.S., via redirect ou integração com o ERP;
+- manter `/tech10` e `/lojas/revivah-tech/*` como compatibilidade interna/runtime.
 
 ## Variáveis canônicas da publicação
 
@@ -129,8 +134,9 @@ que o pacote já está 100% tenant-agnostic.
 ## Próxima ordem recomendada
 
 1. Corrigir o DNS do projeto `vivacommerce`.
-2. Decidir se a borda pública continuará protegida com `401`.
-3. Escolher a URL oficial da Tech10.
+2. Ativar `tech10.tech10cloud.com` no backend do VivaCommerce como `customDomain`
+   da loja `revivah-tech`, com `verified + active`.
+3. Decidir se a borda pública continuará protegida com `401`.
 4. Migrar os hardcodes remanescentes do `portal_tech10` para configuração.
 5. Espelhar apenas o necessário na runtime canônica `VIVACOMMERCE/storefront`.
 6. Fazer um raio-x final de publicação com:

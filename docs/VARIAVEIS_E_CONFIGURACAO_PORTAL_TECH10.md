@@ -54,6 +54,11 @@ Arquivo principal:
 
 Campos atuais:
 
+- `tenant.publicDomain`
+- `tenant.publicOrigin`
+- `tenant.canonicalEntryUrl`
+- `tenant.canonicalStoreUrl`
+- `tenant.canonicalPortalUrl`
 - `nome`
 - `slogan`
 - `descricao`
@@ -223,6 +228,10 @@ Essa camada já começa a substituir links hardcoded como:
 - `/lojas/revivah-tech/shop`
 - `/shop?store=revivah-tech...`
 - `https://wa.me/55974001960`
+
+Também passou a registrar explicitamente o alvo público recomendado do tenant:
+
+- `tech10.tech10cloud.com`
 
 ## 11. Variáveis confirmadas na runtime canônica `VIVACOMMERCE/storefront`
 

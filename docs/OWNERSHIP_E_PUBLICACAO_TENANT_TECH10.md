@@ -93,6 +93,8 @@ Confirmações adicionais de plataforma:
   - `https://vivacommerce.com.br`
   - `https://vivacommerce-darlancavalcantes-projects.vercel.app`
   - `https://vivacommerce-git-main-darlancavalcantes-projects.vercel.app`
+- domínio Tech10 reservado no projeto em `2026-05-11`:
+  - `tech10.tech10cloud.com`
 
 Achados operacionais:
 
@@ -100,6 +102,7 @@ Achados operacionais:
 - o deployment `.vercel.app` respondeu `401 Unauthorized` na inspeção HTTP automatizada
 - o corpo retornado confirmou `Authentication Required`, ou seja: a proteção é da própria Vercel e não um erro funcional da aplicação
 - não foi encontrado um domínio Tech10 isolado já ativo no escopo Vercel atual
+- `tech10.tech10cloud.com` já foi anexado ao projeto `vivacommerce`, mas ainda depende de DNS e ativação no backend para funcionar como raiz da Tech10
 
 ## 5. Conclusão de ownership
 
