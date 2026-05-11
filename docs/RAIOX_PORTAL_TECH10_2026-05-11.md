@@ -132,6 +132,7 @@ Também foi confirmado que, no escopo Vercel atual:
 - não apareceu um domínio público Tech10 separado já ativo;
 - não apareceu um alias próprio da Tech10 fora do projeto `vivacommerce`;
 - a experiência Tech10 pública conhecida depende hoje da plataforma `vivacommerce`, não de um host isolado do tenant.
+- `vivacommerce.com.br` e `www.vivacommerce.com.br` não resolveram por DNS nas checagens diretas desta rodada.
 
 Portanto, o vínculo entre:
 

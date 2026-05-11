@@ -24,6 +24,7 @@ forma mais rápida possível, usando a runtime canônica já existente.
 
 - `vivacommerce.com.br` está associado ao projeto certo;
 - o DNS ainda não resolve publicamente;
+- `www.vivacommerce.com.br` também não resolve publicamente;
 - a Vercel recomendou explicitamente:
   - `A vivacommerce.com.br 76.76.21.21`
   - ou troca completa para `ns1.vercel-dns.com` e `ns2.vercel-dns.com`
@@ -32,6 +33,7 @@ forma mais rápida possível, usando a runtime canônica já existente.
 
 - os aliases `.vercel.app` responderam `401 Unauthorized`;
 - o corpo da resposta confirmou `Authentication Required` da Vercel;
+- a tentativa de gerar acesso autenticado programático à URL protegida não retornou share URL utilizável nesta sessão;
 - isso significa que a borda pública ainda está protegida.
 
 ### URL oficial do tenant
@@ -65,6 +67,7 @@ Recomendação:
    - `/tech10`
    - `/lojas/revivah-tech`
    - `/lojas/revivah-tech/shop`
+   - considerar `www.vivacommerce.com.br` apenas se ele também for configurado no DNS
 5. Conferir variáveis mínimas da runtime:
    - `NEXT_PUBLIC_PLATFORM_DOMAIN`
    - `NEXT_PUBLIC_API_URL`
