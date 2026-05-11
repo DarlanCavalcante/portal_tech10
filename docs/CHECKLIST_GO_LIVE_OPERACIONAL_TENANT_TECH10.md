@@ -15,14 +15,18 @@ Checklist para colocar no ar o runtime próprio da Tech10, usando
 
 ## Variáveis mínimas
 
-1. `TECH10_STORE_BACKEND_URL`
-2. `TECH10_ERP_PORTAL_BASE_URL`
-3. `TECH10_ERP_STATUS_BASE_URL`
+1. `TECH10_CATALOG_SOURCE`
+2. `TECH10_CATALOG_BACKEND_URL`
+3. `TECH10_CHECKOUT_MODE`
+4. `TECH10_ERP_PORTAL_BASE_URL`
+5. `TECH10_ERP_STATUS_BASE_URL`
 
 Opcional:
 
-4. `TECH10_STORE_BEARER_TOKEN`
-5. `TECH10_STORE_API_KEY`
+6. `TECH10_CHECKOUT_BACKEND_URL`
+7. `TECH10_STORE_BEARER_TOKEN`
+8. `TECH10_STORE_API_KEY`
+9. `TECH10_SUPPORT_WHATSAPP`
 
 ## Rotas que precisam responder
 
@@ -39,8 +43,9 @@ Opcional:
 
 1. home institucional abre sem erro
 2. catálogo carrega produtos via `/api/store/*`
-3. carrinho recebe item
-4. checkout abre com resumo do carrinho
+3. se `TECH10_CHECKOUT_MODE=store_backend`, carrinho recebe item
+4. se `TECH10_CHECKOUT_MODE=store_backend`, checkout abre com resumo do carrinho
+5. se `TECH10_CHECKOUT_MODE=quote_only`, botão da loja abre atendimento
 5. portal abre e redireciona corretamente para status/portal do ERP
 6. `/api/health?deep=1` retorna `ok` ou indica claramente o upstream que falhou
 
@@ -55,5 +60,5 @@ Opcional:
 
 ## Veredito
 
-Depois desta rodada, o go-live da Tech10 depende mais de deploy e DNS do que de
-reestruturação de código.
+Depois desta rodada, o go-live da Tech10 depende mais de deploy, DNS e da
+definição do backend do catálogo do que de reestruturação de código.

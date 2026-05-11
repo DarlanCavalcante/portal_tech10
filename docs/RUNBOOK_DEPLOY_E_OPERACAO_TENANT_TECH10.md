@@ -24,14 +24,21 @@ Data-base: `2026-05-11`
 
 ### `health = degraded`
 
-- verifique se `TECH10_STORE_BACKEND_URL` está configurada
-- verifique se o backend alvo responde `/health`
+- verifique se `TECH10_CATALOG_BACKEND_URL` está configurada
+- se `TECH10_CHECKOUT_MODE=store_backend`, valide também `TECH10_CHECKOUT_BACKEND_URL`
+- verifique se os backends alvo respondem `/health`
 
 ### Loja abre, mas sem catálogo
 
 - chamar `/api/store/...`
-- se receber `TECH10_STORE_BACKEND_URL_NOT_CONFIGURED`, a env do backend não foi definida
+- se receber `TECH10_CATALOG_BACKEND_NOT_CONFIGURED`, a env do catálogo não foi definida
 - se receber `TECH10_STORE_PROXY_ERROR`, investigar conectividade ou credencial
+
+### Loja navega, mas carrinho não entra
+
+- validar `TECH10_CHECKOUT_MODE`
+- se estiver em `quote_only`, o comportamento correto é abrir atendimento
+- se receber `TECH10_CHECKOUT_BACKEND_NOT_CONFIGURED`, cadastrar `TECH10_CHECKOUT_BACKEND_URL`
 
 ### Portal abre, mas não segue a O.S.
 

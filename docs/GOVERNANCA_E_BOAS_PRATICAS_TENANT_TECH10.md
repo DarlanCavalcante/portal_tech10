@@ -27,7 +27,7 @@ Não misturar este projeto com:
 
 ## Dívida técnica aceita por enquanto
 
-- nomes legados como `cart-vivacommerce.js`
+- aliases legados como `cartVivaCommerce`
 - chaves antigas de carrinho em `localStorage`
 - `admin/` estático
 

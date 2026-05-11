@@ -6,6 +6,34 @@
 (function (global) {
   'use strict';
 
+  function getRuntimeCommerce() {
+    var runtime = global.__tech10_runtime_config || {};
+    return runtime.commerce || { capabilities: { cart: true } };
+  }
+
+  function getSupportWhatsappUrl(product) {
+    var runtime = global.__tech10_runtime_config || {};
+    var support = runtime.support || {};
+    var tenantCompany = (global.TENANT_CONFIG && global.TENANT_CONFIG.company) || {};
+    var whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
+    if (!whatsapp) return '';
+
+    var title = product && product.title ? product.title : 'um produto da loja';
+    var price = product && product.variants && product.variants[0] && product.variants[0].prices && product.variants[0].prices[0]
+      ? product.variants[0].prices[0].amount
+      : 0;
+
+    var message = [
+      'Olá Tech10, tenho interesse neste produto:',
+      title,
+      price ? 'Preço exibido: R$ ' + formatPrice(price) : '',
+      '',
+      'Gostaria de confirmar disponibilidade e atendimento.'
+    ].filter(Boolean).join('\n');
+
+    return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Helpers internos
   // ─────────────────────────────────────────────────────────────────────────
@@ -73,6 +101,9 @@
     var search = options.search || null;
 
     var products = [];
+    if (adapter && adapter.getRuntimeConfig) {
+      global.__tech10_runtime_config = await adapter.getRuntimeConfig();
+    }
     if (adapter && adapter.getProducts) {
       products = await adapter.getProducts({ limit: limit, offset: offset, category_id: category, q: search });
     } else {
@@ -118,6 +149,8 @@
 
     var fallbackImg = (global.TENANT_CONFIG && global.TENANT_CONFIG.brand && global.TENANT_CONFIG.brand.fallbackProductImageUrl)
       || '/imagem/propaganda loja/tecnologia.jpeg';
+    var runtimeCommerce = getRuntimeCommerce();
+    var cartEnabled = !(runtimeCommerce.capabilities && runtimeCommerce.capabilities.cart === false);
 
     var html = products
       .filter(function (p) { return p && p.id && p.title; })
@@ -136,6 +169,10 @@
         var variantId = (variant && variant.id) ? variant.id : '';
         var maxQty = inventoryQty > 0 ? inventoryQty : 99;
         var pid = product.id;
+        var actionMode = cartEnabled ? 'cart' : 'quote';
+        var buttonLabel = cartEnabled
+          ? '<i class="fas fa-shopping-cart"></i> Adicionar'
+          : '<i class="fas fa-comments"></i> Pedir atendimento';
 
         return '<div class="lp-card ' + stockClass + '" data-product-id="' + pid + '" data-category="' + catSlug.replace(/"/g, '') + '" data-variant-id="' + variantId + '" data-max-qty="' + maxQty + '">' +
           '<div class="lp-card-img" onclick="window.__openProductModal && window.__openProductModal(\'' + pid + '\')" style="cursor:pointer">' +
@@ -159,8 +196,8 @@
                 '<span class="lp-qty-val">1</span>' +
                 '<button class="lp-qty-btn lp-qty-plus" type="button" aria-label="Aumentar quantidade">+</button>' +
               '</div>' +
-              '<button class="lp-btn-add ' + stockClass + '" type="button" data-pid="' + pid + '" data-vid="' + variantId + '" ' + (!isInStock ? 'disabled' : '') + '>' +
-                (isInStock ? '<i class="fas fa-shopping-cart"></i> Adicionar' : '<i class="fas fa-times-circle"></i> Indisponível') +
+              '<button class="lp-btn-add ' + stockClass + '" type="button" data-pid="' + pid + '" data-vid="' + variantId + '" data-action="' + actionMode + '" data-product-title="' + (product.title || '').replace(/"/g, '&quot;') + '" ' + (!isInStock ? 'disabled' : '') + '>' +
+                (isInStock ? buttonLabel : '<i class="fas fa-times-circle"></i> Indisponível') +
               '</button>' +
             '</div>' +
           '</div>' +
@@ -215,6 +252,10 @@
       if (target.classList.contains('lp-btn-add') || target.closest('.lp-btn-add')) {
         var btn = target.classList.contains('lp-btn-add') ? target : target.closest('.lp-btn-add');
         if (btn.disabled) return;
+        if (btn.dataset.action === 'quote') {
+          _requestQuote(btn.dataset.pid, btn);
+          return;
+        }
         var pid = btn.dataset.pid;
         var vid = btn.dataset.vid;
         var qty = getQty(pid);
@@ -222,6 +263,32 @@
         return;
       }
     });
+  }
+
+  function _requestQuote(productId, btn) {
+    var products = global.__tech10_products || [];
+    var product = products.find(function (item) {
+      return String(item.id) === String(productId);
+    });
+    var whatsappUrl = getSupportWhatsappUrl(product);
+
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Abrindo atendimento...';
+      btn.disabled = true;
+      setTimeout(function () {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-comments"></i> Pedir atendimento';
+      }, 1800);
+    }
+
+    if (whatsappUrl) {
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    if (typeof alert !== 'undefined') {
+      alert('Atendimento indisponível no momento. Tente novamente pelo WhatsApp da Tech10.');
+    }
   }
 
   async function _addToCart(variantId, productId, qty, btn) {
@@ -286,11 +353,11 @@
   global.renderProductsFromAPI = renderProducts;
 
   global.addToCartMedusa = async function (variantId, productId, buyNow) {
-    var cart = global.medusaCart || global.cartVivaCommerce;
+    var cart = global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce;
     if (cart && cart.addItem) {
       await cart.addItem(variantId, productId, 1, buyNow);
     } else {
-      console.warn('Carrinho não inicializado. Carregue medusa-cart.js ou cart-vivacommerce.js.');
+      console.warn('Carrinho não inicializado. Carregue cart-storefront.js.');
     }
   };
 

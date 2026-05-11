@@ -434,8 +434,9 @@
     <script src="js/api-config.js"></script>
     <script src="js/api-adapter.js"></script>
     <script>
-        const CART_KEY = 'vivacommerce_cart_id';
-        let cartId = localStorage.getItem(CART_KEY);
+        const CART_KEY = (window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id';
+        const LEGACY_CART_KEY = (window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id';
+        let cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
         let cart = null;
         let selectedShippingOption = { method: 'standard', cost: 0, is_free: true, zone: null };
 
@@ -538,7 +539,7 @@
 
         // Carregar carrinho para exibir no resumo
         async function loadCartSummary() {
-            cartId = localStorage.getItem(CART_KEY);
+            cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
             const summaryEl = document.getElementById('cart-summary');
             if (!cartId) {
                 if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Carrinho não encontrado. <a href="index.html">Voltar para a loja</a></p></div>';
@@ -578,7 +579,7 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
             if (errorDiv) errorDiv.style.display = 'none';
 
-            cartId = localStorage.getItem(CART_KEY);
+            cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
             if (!cartId) {
                 showError('Carrinho não encontrado. Adicione produtos ao carrinho primeiro.');
                 submitBtn.disabled = false;
@@ -655,6 +656,7 @@
 
                 localStorage.setItem('last_order', JSON.stringify(lastOrder));
                 localStorage.removeItem(CART_KEY);
+                localStorage.removeItem(LEGACY_CART_KEY);
                 window.location.href = 'pedido-confirmado.html?order=' + (lastOrder.order_number || '');
             } catch (err) {
                 console.error('[CHECKOUT] Erro ao finalizar:', err);

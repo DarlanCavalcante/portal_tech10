@@ -1,29 +1,35 @@
 /**
- * Compatibilidade legada do carrinho.
- * Mantido apenas para páginas antigas; o arquivo canônico é cart-storefront.js.
+ * Carrinho canônico do storefront Tech10.
+ * Mantém aliases legados temporários para preservar compatibilidade sem misturar ownership.
  */
 (function (global) {
   'use strict';
 
-  const CART_ID_KEY = 'tech10_storefront_cart_id';
+  const PRIMARY_CART_ID_KEY = 'tech10_storefront_cart_id';
   const LEGACY_CART_ID_KEY = 'vivacommerce_cart_id';
 
   function readCartId() {
-    return localStorage.getItem(CART_ID_KEY) || localStorage.getItem(LEGACY_CART_ID_KEY);
+    try {
+      return localStorage.getItem(PRIMARY_CART_ID_KEY) || localStorage.getItem(LEGACY_CART_ID_KEY);
+    } catch (_) {
+      return null;
+    }
   }
 
   function persistCartId(value) {
-    if (!value) {
-      localStorage.removeItem(CART_ID_KEY);
-      localStorage.removeItem(LEGACY_CART_ID_KEY);
-      return;
-    }
+    try {
+      if (!value) {
+        localStorage.removeItem(PRIMARY_CART_ID_KEY);
+        localStorage.removeItem(LEGACY_CART_ID_KEY);
+        return;
+      }
 
-    localStorage.setItem(CART_ID_KEY, value);
-    localStorage.setItem(LEGACY_CART_ID_KEY, value);
+      localStorage.setItem(PRIMARY_CART_ID_KEY, value);
+      localStorage.setItem(LEGACY_CART_ID_KEY, value);
+    } catch (_) {}
   }
 
-  class CartVivaCommerce {
+  class StorefrontCart {
     constructor() {
       this.adapter = global.MarketplaceAdapter;
       this.cartId = readCartId();
@@ -36,6 +42,7 @@
         console.warn('MarketplaceAdapter não encontrado. Carregue api-adapter.js antes.');
         return;
       }
+
       try {
         if (!this.cartId) {
           const { cart } = await this.adapter.createCart();
@@ -52,9 +59,10 @@
           }
           this.cart = cart;
         }
+
         await this.updateCartCount();
       } catch (err) {
-        console.error('CartVivaCommerce init:', err);
+        console.error('StorefrontCart init:', err);
       }
     }
 
@@ -111,13 +119,13 @@
     async updateCartCount() {
       try {
         const cart = await this.getCart();
-        const count = (cart && cart.items) ? cart.items.reduce((s, i) => s + (i.quantity || 0), 0) : 0;
+        const count = (cart && cart.items) ? cart.items.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0;
         if (this.cartCountElement) this.cartCountElement.textContent = count;
       } catch (_) {}
     }
 
     showNotification(message, type) {
-      if (typeof global.medusaCart !== 'undefined' && global.medusaCart.showNotification) {
+      if (typeof global.medusaCart !== 'undefined' && global.medusaCart !== this && global.medusaCart.showNotification) {
         global.medusaCart.showNotification(message, type);
         return;
       }
@@ -125,9 +133,11 @@
     }
   }
 
-  const cart = new CartVivaCommerce();
+  const cart = new StorefrontCart();
   if (typeof window !== 'undefined') {
-    window.medusaCart = window.medusaCart || cart;
+    window.storefrontCart = cart;
+    window.cartStorefront = cart;
     window.cartVivaCommerce = cart;
+    window.medusaCart = window.medusaCart || cart;
   }
 })(typeof window !== 'undefined' ? window : this);

@@ -1,21 +1,14 @@
-const DEFAULT_PORTAL_BASE_URL = 'https://sistema.tech10cloud.com/portal';
-const DEFAULT_STATUS_BASE_URL = 'https://sistema.tech10cloud.com/status';
+const {
+  buildCapabilityModel,
+  getRuntimeEnv,
+} = require('./runtime-env');
 
-function getEnv() {
-  const storeBackendUrl = process.env.TECH10_STORE_BACKEND_URL || process.env.STORE_BACKEND_URL || '';
-  return {
-    storeBackendUrl: storeBackendUrl ? storeBackendUrl.replace(/\/$/, '') : '',
-    portalBaseUrl: (process.env.TECH10_ERP_PORTAL_BASE_URL || DEFAULT_PORTAL_BASE_URL).replace(/\/$/, ''),
-    statusBaseUrl: (process.env.TECH10_ERP_STATUS_BASE_URL || DEFAULT_STATUS_BASE_URL).replace(/\/$/, ''),
-  };
-}
-
-async function runDeepCheck(storeBackendUrl) {
+async function runDeepCheck(label, targetUrl) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 5000);
 
   try {
-    const response = await fetch(`${storeBackendUrl}/health`, {
+    const response = await fetch(targetUrl, {
       method: 'GET',
       signal: controller.signal,
       headers: { accept: 'application/json' },
@@ -25,6 +18,7 @@ async function runDeepCheck(storeBackendUrl) {
     clearTimeout(timeout);
 
     return {
+      label,
       status: response.ok ? 'ok' : 'error',
       httpStatus: response.status,
       body: text.slice(0, 300),
@@ -32,6 +26,7 @@ async function runDeepCheck(storeBackendUrl) {
   } catch (error) {
     clearTimeout(timeout);
     return {
+      label,
       status: 'error',
       message: error instanceof Error ? error.message : 'Falha no deep check',
     };
@@ -39,27 +34,51 @@ async function runDeepCheck(storeBackendUrl) {
 }
 
 module.exports = async function handler(req, res) {
-  const env = getEnv();
+  const env = getRuntimeEnv();
+  const capabilities = buildCapabilityModel(env);
   const deep = req.query.deep === '1';
-  const upstream = deep && env.storeBackendUrl ? await runDeepCheck(env.storeBackendUrl) : null;
+  const deepChecks = [];
+
+  if (deep && env.healthTargets.catalog) {
+    deepChecks.push(runDeepCheck('catalog', env.healthTargets.catalog));
+  }
+
+  if (
+    deep &&
+    env.healthTargets.checkout &&
+    env.healthTargets.checkout !== env.healthTargets.catalog
+  ) {
+    deepChecks.push(runDeepCheck('checkout', env.healthTargets.checkout));
+  }
+
+  const upstream = deepChecks.length > 0 ? await Promise.all(deepChecks) : [];
 
   const checks = {
-    storeProxyConfigured: Boolean(env.storeBackendUrl),
+    catalogBackendConfigured: Boolean(env.catalogBackendUrl),
+    checkoutBackendConfigured: capabilities.checkout,
+    checkoutMode: env.checkoutMode,
+    catalogSource: env.catalogSource,
     portalBaseUrlConfigured: Boolean(env.portalBaseUrl),
     statusBaseUrlConfigured: Boolean(env.statusBaseUrl),
+    capabilities,
     upstream,
   };
 
-  const overallStatus =
-    !checks.storeProxyConfigured ? 'degraded'
-      : upstream && upstream.status !== 'ok' ? 'degraded'
-      : 'ok';
+  const criticalChecks = [
+    checks.catalogBackendConfigured,
+    checks.portalBaseUrlConfigured,
+    checks.statusBaseUrlConfigured,
+    env.checkoutMode === 'quote_only' || checks.checkoutBackendConfigured,
+  ];
+
+  const upstreamHasError = upstream.some((check) => check.status !== 'ok');
+  const overallStatus = criticalChecks.every(Boolean) && !upstreamHasError ? 'ok' : 'degraded';
 
   res.status(overallStatus === 'ok' ? 200 : 503).json({
     status: overallStatus,
     service: 'tech10-portal',
-    tenant: 'tech10',
-    mode: 'standalone',
+    tenant: env.tenantId,
+    mode: env.mode,
     timestamp: new Date().toISOString(),
     routes: {
       home: '/',
@@ -69,8 +88,14 @@ module.exports = async function handler(req, res) {
       orderSuccess: '/pedido-confirmado',
       portal: '/portal',
     },
+    commerce: {
+      catalogSource: env.catalogSource,
+      checkoutMode: env.checkoutMode,
+      capabilities,
+    },
     integrations: {
-      storeBackendUrl: env.storeBackendUrl,
+      catalogBackendUrl: env.catalogBackendUrl,
+      checkoutBackendUrl: capabilities.checkout ? env.checkoutBackendUrl : null,
       portalBaseUrl: env.portalBaseUrl,
       statusBaseUrl: env.statusBaseUrl,
     },

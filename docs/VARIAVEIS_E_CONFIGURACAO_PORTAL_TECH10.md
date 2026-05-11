@@ -55,6 +55,10 @@ contexto dos nomes legados ainda presentes no frontend.
   - valor atual: `tech10-standalone`
 - `store.slug`
   - valor atual: `revivah-tech`
+- `store.catalogSource`
+  - valor atual: `store_backend`
+- `store.checkoutMode`
+  - valor atual: `store_backend`
 - `store.baseUrl`
   - valor atual: `window.location.origin`
 - `store.apiBasePath`
@@ -79,21 +83,39 @@ contexto dos nomes legados ainda presentes no frontend.
 
 ### Obrigatórias
 
-- `TECH10_STORE_BACKEND_URL`
-  - backend alvo do proxy `/api/store/*`
+- `TECH10_CATALOG_SOURCE`
+  - `store_backend` ou `erp_stock`
+- `TECH10_CATALOG_BACKEND_URL`
+  - backend alvo das leituras do catálogo `/api/store/*`
+- `TECH10_CHECKOUT_MODE`
+  - `store_backend` ou `quote_only`
+- `TECH10_CHECKOUT_BACKEND_URL`
+  - backend alvo das operações de carrinho/checkout quando o modo é `store_backend`
+- `TECH10_ERP_PORTAL_BASE_URL`
+  - base do portal completo do ERP
+- `TECH10_ERP_STATUS_BASE_URL`
+  - base da consulta rápida da O.S.
 
 ### Opcionais
 
+- `TECH10_SUPPORT_WHATSAPP`
+  - canal de atendimento quando a loja opera em `quote_only`
 - `STORE_BACKEND_URL`
   - fallback compatível para o backend da loja
+- `TECH10_STORE_BACKEND_URL`
+  - fallback legado para catálogo + checkout
 - `TECH10_STORE_BEARER_TOKEN`
-  - adiciona header `Authorization: Bearer ...` no upstream
+  - fallback legado de bearer para catálogo + checkout
+- `TECH10_CATALOG_BEARER_TOKEN`
+  - bearer específico para o backend de catálogo
+- `TECH10_CHECKOUT_BEARER_TOKEN`
+  - bearer específico para o backend de checkout
 - `TECH10_STORE_API_KEY`
-  - adiciona header `x-api-key` no upstream
-- `TECH10_ERP_PORTAL_BASE_URL`
-  - substitui a URL padrão do portal completo
-- `TECH10_ERP_STATUS_BASE_URL`
-  - substitui a URL padrão da consulta rápida
+  - fallback legado de API key para catálogo + checkout
+- `TECH10_CATALOG_API_KEY`
+  - API key específica para o backend de catálogo
+- `TECH10_CHECKOUT_API_KEY`
+  - API key específica para o backend de checkout
 
 ## 4. Rotas públicas canônicas
 
@@ -115,9 +137,8 @@ contexto dos nomes legados ainda presentes no frontend.
 Ainda existem nomes como:
 
 - `VIVACOMMERCE_BASE_URL`
-- `cart-vivacommerce.js`
+- `cartVivaCommerce`
 - `vivacommerce_cart_id`
-- `vc_cart_id`
 
 Esses nomes foram mantidos por compatibilidade de transição e não representam
 vínculo oficial com outro projeto.
@@ -126,6 +147,6 @@ vínculo oficial com outro projeto.
 
 Depois do go-live inicial, a próxima limpeza técnica deve atacar:
 
-1. nomes legados de arquivos e chaves
+1. redução gradual dos aliases legados
 2. service worker / manifest
 3. `admin/` estático

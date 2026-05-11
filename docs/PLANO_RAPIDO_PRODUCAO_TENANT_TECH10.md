@@ -26,7 +26,9 @@ sem misturar com outros projetos.
    - sugestão: `tech10-portal`
    - root directory: `SITE_RECUPERADO_TECH10`
 2. configurar variáveis mínimas:
-   - `TECH10_STORE_BACKEND_URL`
+   - `TECH10_CATALOG_SOURCE`
+   - `TECH10_CATALOG_BACKEND_URL`
+   - `TECH10_CHECKOUT_MODE`
    - `TECH10_ERP_PORTAL_BASE_URL`
    - `TECH10_ERP_STATUS_BASE_URL`
 3. executar preview do projeto
@@ -52,7 +54,7 @@ sem misturar com outros projetos.
 
 ## Riscos ainda abertos
 
-- nomenclaturas legadas como `cart-vivacommerce.js`
+- aliases legados como `cartVivaCommerce`
 - coexistência de chaves de carrinho no `localStorage`
 - `admin/` ainda é legado estático e não deve ser tratado como painel pronto de produção
 - service worker e `manifest.json` ainda merecem rodada de saneamento depois do go-live inicial

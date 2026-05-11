@@ -163,13 +163,16 @@ function renderProducts(products, containerId = 'produtosGrid') {
       if (window.medusaCart) {
         await window.medusaCart.addItem(variantId, productId, 1, buyNow);
       } else if (window.MarketplaceAdapter) {
-        // Fallback via adapter VivaCommerce (sem URL legada Medusa)
+        // Fallback via adapter storefront
         console.warn('⚠️ MedusaCart não disponível, usando MarketplaceAdapter');
-        let cartId = localStorage.getItem('vc_cart_id');
+        let cartId = localStorage.getItem('tech10_storefront_cart_id') || localStorage.getItem('vc_cart_id');
         if (!cartId) {
           const created = await window.MarketplaceAdapter.createCart();
           cartId = created.cart?.id;
-          if (cartId) localStorage.setItem('vc_cart_id', cartId);
+          if (cartId) {
+            localStorage.setItem('tech10_storefront_cart_id', cartId);
+            localStorage.setItem('vc_cart_id', cartId);
+          }
         }
         if (cartId) {
           await window.MarketplaceAdapter.addLineItem(cartId, variantId, 1);

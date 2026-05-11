@@ -22,10 +22,10 @@ cd /Users/darlancavalcante/Documents/TECH/portal_tech10/SITE_RECUPERADO_TECH10
 node scripts/smoke-runtime.mjs
 ```
 
-## Smoke com backend configurado
+## Smoke com catálogo configurado
 
 ```bash
-EXPECT_STORE_BACKEND=1 SMOKE_BASE_URL=https://tech10.tech10cloud.com node scripts/smoke-runtime.mjs
+EXPECT_CATALOG_BACKEND=1 SMOKE_BASE_URL=https://tech10.tech10cloud.com node scripts/smoke-runtime.mjs
 ```
 
 ## Rotas validadas
@@ -37,3 +37,9 @@ EXPECT_STORE_BACKEND=1 SMOKE_BASE_URL=https://tech10.tech10cloud.com node script
 - `/portal`
 - `/api/runtime-config`
 - `/api/health`
+
+## Leitura operacional esperada
+
+- `commerce.catalogSource` indica de onde os produtos vêm
+- `commerce.checkoutMode` indica se a loja fecha pedido ou opera em atendimento
+- `commerce.capabilities.cart=false` é esperado quando o catálogo está em `quote_only`

@@ -1,7 +1,7 @@
 /**
  * Configuração centralizada da API — Tech10
  * Usa runtime standalone do tenant Tech10, com proxy same-origin em /api/store.
- * Carregue api-adapter.js antes de load-products e cart-vivacommerce.js.
+ * Carregue api-adapter.js antes de load-products e cart-storefront.js.
  */
 const tenantConfig = typeof window !== 'undefined' ? window.TENANT_CONFIG || {} : {};
 const tenantStore = tenantConfig.store || {};
@@ -19,9 +19,19 @@ const API_CONFIG = {
   SITE_BASE_PATH: tenantMeta.publicSiteBasePath || '/',
 
   RUNTIME_BASE_URL: runtimeOrigin,
+  STORE_RUNTIME_BASE_URL: runtimeOrigin,
 
-  // Alias legado mantido para compatibilidade temporária com scripts antigos.
+  // Alias legado mantido apenas para compatibilidade temporária com scripts antigos.
   VIVACOMMERCE_BASE_URL: runtimeOrigin,
+  LEGACY_STORE_BASE_URL: runtimeOrigin,
+
+  CATALOG_SOURCE: tenantStore.catalogSource || 'store_backend',
+
+  CHECKOUT_MODE: tenantStore.checkoutMode || 'store_backend',
+
+  CART_STORAGE_KEY: 'tech10_storefront_cart_id',
+
+  LEGACY_CART_STORAGE_KEY: 'vivacommerce_cart_id',
 
   get ACTIVE_URL() {
     return this.RUNTIME_BASE_URL;
@@ -45,6 +55,8 @@ if (typeof window !== 'undefined') {
   console.log('API Config Tech10:', {
     provider: API_CONFIG.provider,
     url: API_CONFIG.ACTIVE_URL,
-    storeSlug: API_CONFIG.TECH10_STORE_SLUG
+    storeSlug: API_CONFIG.TECH10_STORE_SLUG,
+    catalogSource: API_CONFIG.CATALOG_SOURCE,
+    checkoutMode: API_CONFIG.CHECKOUT_MODE
   });
 }

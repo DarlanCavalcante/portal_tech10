@@ -1,5 +1,6 @@
 const baseUrl = (process.env.SMOKE_BASE_URL || 'http://localhost:4111').replace(/\/$/, '');
-const expectStoreConfigured = process.env.EXPECT_STORE_BACKEND === '1';
+const expectStoreConfigured =
+  process.env.EXPECT_CATALOG_BACKEND === '1' || process.env.EXPECT_STORE_BACKEND === '1';
 
 const targets = [
   { path: '/', expectedStatus: 200, label: 'home' },
@@ -21,11 +22,14 @@ async function main() {
 
   const healthResponse = await fetch(`${baseUrl}/api/health`);
   const health = await healthResponse.json();
+  const runtimeConfigResponse = await fetch(`${baseUrl}/api/runtime-config`);
+  const runtimeConfig = await runtimeConfigResponse.json();
   console.log(JSON.stringify({
     ok: true,
     baseUrl,
     expectStoreConfigured,
     healthStatus: health.status,
+    commerce: runtimeConfig.commerce,
     integrations: health.integrations,
   }, null, 2));
 }

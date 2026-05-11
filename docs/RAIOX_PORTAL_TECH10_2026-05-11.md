@@ -69,7 +69,7 @@ Este raio-x assume explicitamente:
 
 ## 7. Riscos ainda abertos
 
-- nomes legados como `cart-vivacommerce.js`
+- aliases legados como `cartVivaCommerce`
 - múltiplas chaves de carrinho no `localStorage`
 - service worker e `manifest.json` ainda não passaram por rodada de limpeza final
 - `admin/` segue como legado estático

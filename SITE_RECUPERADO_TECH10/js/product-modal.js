@@ -1,7 +1,7 @@
 /**
  * product-modal.js — Modal completo de produto
  * Galeria de imagens, seletor de variante, especificações, quantidade, add-to-cart
- * Inclua APÓS: api-config.js, api-adapter.js, load-products.js, cart-vivacommerce.js
+ * Inclua APÓS: api-config.js, api-adapter.js, load-products.js, cart-storefront.js
  */
 (function (global) {
   'use strict';

@@ -1,39 +1,13 @@
-function getBackendUrl() {
-  const value = (
-    process.env.TECH10_STORE_BACKEND_URL ||
-    process.env.STORE_BACKEND_URL ||
-    ''
-  );
+const {
+  buildCapabilityModel,
+  buildStoreTargetUrl,
+  classifyStoreOperation,
+  getBackendForOperation,
+  getRuntimeEnv,
+  splitStorePath,
+} = require('./runtime-env');
 
-  return value ? value.replace(/\/$/, '') : '';
-}
-
-function buildTargetUrl(req) {
-  const rawPath = req.query.path;
-  const pathParts = Array.isArray(rawPath)
-    ? rawPath
-    : typeof rawPath === 'string' && rawPath.length > 0
-      ? rawPath.split('/').filter(Boolean)
-      : [];
-
-  const suffix = pathParts.length ? `/${pathParts.map(encodeURIComponent).join('/')}` : '';
-  const target = new URL(`${getBackendUrl()}/api/store${suffix}`);
-
-  Object.entries(req.query || {}).forEach(([key, value]) => {
-    if (key === 'path' || typeof value === 'undefined') return;
-
-    if (Array.isArray(value)) {
-      value.forEach((item) => target.searchParams.append(key, String(item)));
-      return;
-    }
-
-    target.searchParams.append(key, String(value));
-  });
-
-  return target;
-}
-
-function buildUpstreamHeaders(req) {
+function buildUpstreamHeaders(req, operation) {
   const headers = new Headers();
   const passthrough = [
     'accept',
@@ -49,15 +23,27 @@ function buildUpstreamHeaders(req) {
     if (value) headers.set(name, value);
   });
 
-  if (process.env.TECH10_STORE_BEARER_TOKEN) {
-    headers.set('authorization', `Bearer ${process.env.TECH10_STORE_BEARER_TOKEN}`);
+  const bearerToken =
+    operation === 'catalog'
+      ? process.env.TECH10_CATALOG_BEARER_TOKEN || process.env.TECH10_STORE_BEARER_TOKEN
+      : process.env.TECH10_CHECKOUT_BEARER_TOKEN || process.env.TECH10_STORE_BEARER_TOKEN;
+
+  const apiKey =
+    operation === 'catalog'
+      ? process.env.TECH10_CATALOG_API_KEY || process.env.TECH10_STORE_API_KEY
+      : process.env.TECH10_CHECKOUT_API_KEY || process.env.TECH10_STORE_API_KEY;
+
+  if (bearerToken) {
+    headers.set('authorization', `Bearer ${bearerToken}`);
   } else if (req.headers.authorization) {
     headers.set('authorization', req.headers.authorization);
   }
 
-  if (process.env.TECH10_STORE_API_KEY) {
-    headers.set('x-api-key', process.env.TECH10_STORE_API_KEY);
+  if (apiKey) {
+    headers.set('x-api-key', apiKey);
   }
+
+  headers.set('x-tech10-runtime', 'tech10-portal');
 
   return headers;
 }
@@ -75,22 +61,52 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const backendUrl = getBackendUrl();
-  if (!backendUrl) {
+  const env = getRuntimeEnv();
+  const capabilities = buildCapabilityModel(env);
+  const pathParts = splitStorePath(req.query.path);
+  const operation = classifyStoreOperation(req.method, pathParts);
+  const backendUrl = getBackendForOperation(env, operation);
+
+  if (operation === 'checkout' && env.checkoutMode === 'quote_only') {
     res.status(503).json({
       success: false,
-      error: 'TECH10_STORE_BACKEND_URL_NOT_CONFIGURED',
-      message: 'Configure TECH10_STORE_BACKEND_URL para ativar o catálogo e o carrinho da Tech10.',
+      error: 'TECH10_CHECKOUT_DISABLED',
+      message: 'O checkout está em modo quote_only. Publique o catálogo e conclua a venda por atendimento até o backend de pedidos entrar.',
+      checkoutMode: env.checkoutMode,
+      supportWhatsappUrl: env.supportWhatsappUrl,
     });
     return;
   }
 
-  const target = buildTargetUrl(req);
+  if (!backendUrl) {
+    const error =
+      operation === 'catalog'
+        ? 'TECH10_CATALOG_BACKEND_NOT_CONFIGURED'
+        : 'TECH10_CHECKOUT_BACKEND_NOT_CONFIGURED';
+
+    const envKey =
+      operation === 'catalog'
+        ? 'TECH10_CATALOG_BACKEND_URL'
+        : 'TECH10_CHECKOUT_BACKEND_URL';
+
+    res.status(503).json({
+      success: false,
+      error,
+      message: `Configure ${envKey} para ativar ${operation === 'catalog' ? 'o catálogo' : 'o checkout'} da Tech10.`,
+      operation,
+      catalogSource: env.catalogSource,
+      checkoutMode: env.checkoutMode,
+      capabilities,
+    });
+    return;
+  }
+
+  const target = buildStoreTargetUrl(backendUrl, pathParts, req.query);
 
   try {
     const upstream = await fetch(target, {
       method: req.method,
-      headers: buildUpstreamHeaders(req),
+      headers: buildUpstreamHeaders(req, operation),
       body: buildRequestBody(req),
       redirect: 'follow',
     });
@@ -109,6 +125,7 @@ module.exports = async function handler(req, res) {
       error: 'TECH10_STORE_PROXY_ERROR',
       message: error instanceof Error ? error.message : 'Falha ao conectar no backend da loja',
       backendUrl,
+      operation,
     });
   }
 };

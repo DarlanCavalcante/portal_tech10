@@ -9,11 +9,13 @@ const requiredFiles = [
   '.env.example',
   'api/health.js',
   'api/runtime-config.js',
+  'api/runtime-env.js',
   'api/store-proxy.js',
   'portal/index.html',
   'js/tenant-config.js',
   'js/tenant-routes.js',
   'js/portal-entry.js',
+  'js/cart-storefront.js',
   'README.md',
 ];
 
@@ -22,6 +24,8 @@ const requiredDocs = [
   'docs/RAIOX_PORTAL_TECH10_2026-05-11.md',
   'docs/VARIAVEIS_E_CONFIGURACAO_PORTAL_TECH10.md',
   'docs/CONTRATO_DE_AMBIENTE_TENANT_TECH10.md',
+  'docs/CONTRATO_CATALOGO_ESTOQUE_ERP_TENANT_TECH10.md',
+  'docs/RAIOX_MATURIDADE_RUNTIME_TENANT_TECH10_2026-05-11.md',
   'docs/RUNBOOK_DEPLOY_E_OPERACAO_TENANT_TECH10.md',
   'docs/GOVERNANCA_E_BOAS_PRATICAS_TENANT_TECH10.md',
   'docs/SMOKE_E_VALIDACAO_TENANT_TECH10.md',
@@ -29,7 +33,10 @@ const requiredDocs = [
 ];
 
 const requiredEnvKeys = [
-  'TECH10_STORE_BACKEND_URL',
+  'TECH10_CATALOG_SOURCE',
+  'TECH10_CATALOG_BACKEND_URL',
+  'TECH10_CHECKOUT_MODE',
+  'TECH10_CHECKOUT_BACKEND_URL',
   'TECH10_ERP_PORTAL_BASE_URL',
   'TECH10_ERP_STATUS_BASE_URL',
 ];
@@ -85,6 +92,8 @@ if (fs.existsSync(tenantConfigPath)) {
   assert(tenantConfig.includes("provider: 'tech10-standalone'"), 'tenant-config.js não está em modo tech10-standalone');
   assert(tenantConfig.includes("portalPath: '/portal'"), 'tenant-config.js não declara portalPath canônico');
   assert(tenantConfig.includes("apiBasePath: '/api/store'"), 'tenant-config.js não aponta para /api/store');
+  assert(tenantConfig.includes("catalogSource: 'store_backend'"), 'tenant-config.js não declara o catálogo canônico');
+  assert(tenantConfig.includes("checkoutMode: 'store_backend'"), 'tenant-config.js não declara o modo de checkout canônico');
 }
 
 if (failures.length > 0) {

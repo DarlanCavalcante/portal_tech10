@@ -1,12 +1,13 @@
-const DEFAULT_PORTAL_BASE_URL = 'https://sistema.tech10cloud.com/portal';
-const DEFAULT_STATUS_BASE_URL = 'https://sistema.tech10cloud.com/status';
+const { buildCapabilityModel, getRuntimeEnv } = require('./runtime-env');
 
 module.exports = function handler(req, res) {
-  const storeBackendUrl = process.env.TECH10_STORE_BACKEND_URL || process.env.STORE_BACKEND_URL || '';
+  const env = getRuntimeEnv();
+  const capabilities = buildCapabilityModel(env);
+
   res.status(200).json({
-    tenantId: 'tech10',
-    siteName: 'Tech10 Informática',
-    mode: 'standalone',
+    tenantId: env.tenantId,
+    siteName: env.siteName,
+    mode: env.mode,
     routes: {
       home: '/',
       store: '/loja',
@@ -15,14 +16,22 @@ module.exports = function handler(req, res) {
       orderSuccess: '/pedido-confirmado',
       portal: '/portal',
     },
+    commerce: {
+      catalogSource: env.catalogSource,
+      checkoutMode: env.checkoutMode,
+      capabilities,
+    },
     integrations: {
-      portalBaseUrl: (process.env.TECH10_ERP_PORTAL_BASE_URL || DEFAULT_PORTAL_BASE_URL).replace(/\/$/, ''),
-      statusBaseUrl: (process.env.TECH10_ERP_STATUS_BASE_URL || DEFAULT_STATUS_BASE_URL).replace(/\/$/, ''),
-      storeBackendUrl: storeBackendUrl ? storeBackendUrl.replace(/\/$/, '') : null,
-      storeBackendConfigured: Boolean(storeBackendUrl),
+      portalBaseUrl: env.portalBaseUrl,
+      statusBaseUrl: env.statusBaseUrl,
+      catalogBackendUrl: env.catalogBackendUrl || null,
+      checkoutBackendUrl: capabilities.checkout ? env.checkoutBackendUrl : null,
+      storeBackendUrl: env.catalogBackendUrl || null,
+      storeBackendConfigured: capabilities.browseCatalog,
     },
     support: {
-      whatsapp: '55974001960',
+      whatsapp: env.supportWhatsapp,
+      whatsappUrl: env.supportWhatsappUrl,
       email: 'tech10.infor@gmail.com',
     },
   });
