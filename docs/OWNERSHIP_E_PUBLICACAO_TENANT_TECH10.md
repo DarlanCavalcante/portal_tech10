@@ -4,14 +4,14 @@ Data de referência: `2026-05-11`
 
 ## Resumo executivo
 
-O ecossistema Tech10 hoje não está concentrado em um único repositório. Há pelo menos quatro peças com papéis diferentes:
+Por decisão operacional registrada nesta rodada, o `portal_tech10` deve seguir
+como projeto independente.
 
-1. `portal_tech10`
-2. `tech10-informatica`
-3. `VIVACOMMERCE/loja_tech_site`
-4. `VIVACOMMERCE/storefront`
+Isso significa:
 
-O papel correto de cada uma foi mapeado abaixo.
+- não tratar `VIVACOMMERCE` como runtime oficial deste projeto;
+- não manter domínio da Tech10 anexado ao projeto `vivacommerce`;
+- usar referências externas apenas como contexto histórico ou legado técnico.
 
 ## 1. portal_tech10
 
@@ -19,14 +19,13 @@ Repositório: `DarlanCavalcante/portal_tech10`
 
 Papel atual:
 
-- working copy rica e auditável;
-- snapshot funcional do site/loja Tech10;
-- contém a camada `SITE_RECUPERADO_TECH10/` com site, carrinho, checkout, pedido confirmado e admin;
-- bom candidato para documentação, saneamento e prototipação controlada.
+- working copy principal da Tech10;
+- snapshot funcional de site, catálogo, carrinho, checkout e admin;
+- base prioritária para saneamento, documentação e publicação futura.
 
 Leitura honesta:
 
-não há evidência de que este seja, sozinho, o host canônico de produção.
+é a base mais segura para continuar este trabalho sem misturar projetos.
 
 ## 2. tech10-informatica
 
@@ -34,127 +33,47 @@ Repositório: `DarlanCavalcante/tech10-informatica`
 
 Papel atual:
 
-- pacote estático de publicação do tenant Tech10;
-- documentação voltada a Cloudflare Pages, Docker e deploy direto;
-- árvore muito próxima da experiência estática do tenant.
+- pacote estático adjacente da Tech10;
+- alternativa real de publicação;
+- precisa ser comparado com o `portal_tech10` antes de qualquer decisão final.
 
-Sinal forte:
+## 3. Referências externas
 
-o projeto é descrito como `Loja Piloto REVIVAH Marketplace`.
+Existem artefatos históricos com nomenclaturas e adapters ligados a
+`VIVACOMMERCE`, incluindo:
 
-Leitura honesta:
+- `api-config.js`
+- `api-adapter.js`
+- `cart-vivacommerce.js`
+- slugs como `revivah-tech`
 
-parece ser um pacote de publicação/empacotamento do tenant, e não a origem arquitetural central do marketplace.
+Esses pontos devem ser lidos como:
 
-## 3. VIVACOMMERCE/loja_tech_site
+- legado técnico;
+- possível reaproveitamento antigo;
+- contexto útil para auditoria;
+- nunca como canonicidade automática de publicação.
 
-Repositório: `DarlanCavalcante/VIVACOMMERCE`
+## 4. Decisão aplicada nesta rodada
 
-Pasta: `loja_tech_site/`
+Nesta rodada, o vínculo operacional criado por hipótese foi desfeito:
 
-Papel atual:
-
-- camada estática de integração Tech10 com o backend VivaCommerce;
-- fonte canônica dos scripts JS de integração, segundo o próprio repositório;
-- contém:
-  - `api-config.js`
-  - `api-adapter.js`
-  - `load-products.js`
-  - `cart-vivacommerce.js`
-
-## 4. VIVACOMMERCE/storefront
-
-Repositório: `DarlanCavalcante/VIVACOMMERCE`
-
-Pasta: `storefront/`
-
-Papel atual:
-
-- runtime canônico multi-tenant do marketplace;
-- aplicação Next.js;
-- projeto apontado pela Vercel `vivacommerce`;
-- contém rotas reais:
-  - `/lojas/[slug]`
-  - `/lojas/[slug]/shop`
-  - `/lojas/[slug]/cart`
-  - `/lojas/[slug]/checkout`
-  - `/tech10`
-
-Sinais fortes:
-
-- o projeto Vercel `vivacommerce` usa `Root Directory: storefront`
-- o monorepo `VIVACOMMERCE` contém documentação explícita sobre tenant architecture e inventário do original vs atual
-- a rota `storefront/app/tech10/page.tsx` usa slug `revivah-tech`
-
-Confirmações adicionais de plataforma:
-
-- deployment Vercel pronto: `dpl_Acevj2BYpeVupGXoXEFzjKZakjsd`
-- aliases do deployment:
-  - `https://vivacommerce.com.br`
-  - `https://vivacommerce-darlancavalcantes-projects.vercel.app`
-  - `https://vivacommerce-git-main-darlancavalcantes-projects.vercel.app`
-- domínio Tech10 reservado no projeto em `2026-05-11`:
-  - `tech10.tech10cloud.com`
-
-Achados operacionais:
-
-- `vivacommerce.com.br` está vinculado ao projeto correto, mas o DNS está mal configurado na Vercel
-- o deployment `.vercel.app` respondeu `401 Unauthorized` na inspeção HTTP automatizada
-- o corpo retornado confirmou `Authentication Required`, ou seja: a proteção é da própria Vercel e não um erro funcional da aplicação
-- não foi encontrado um domínio Tech10 isolado já ativo no escopo Vercel atual
-- `tech10.tech10cloud.com` já foi anexado ao projeto `vivacommerce`, mas ainda depende de DNS e ativação no backend para funcionar como raiz da Tech10
+- o alias `tech10.tech10cloud.com` foi removido do projeto Vercel `vivacommerce`;
+- o `portal_tech10` voltou a ficar sem vínculo formal de domínio com esse projeto;
+- a documentação foi ajustada para refletir essa separação.
 
 ## 5. Conclusão de ownership
 
-Hoje, a leitura mais segura é:
+Hoje, a leitura operacional correta fica assim:
 
-- **runtime canônico multi-tenant:** `VIVACOMMERCE/storefront`
-- **integração estática Tech10 canônica:** `VIVACOMMERCE/loja_tech_site`
-- **snapshot/working copy rica:** `portal_tech10`
-- **pacote estático de publicação:** `tech10-informatica`
+- **base principal de trabalho:** `portal_tech10`
+- **base adjacente a comparar:** `tech10-informatica`
+- **referências externas:** apenas históricas, sem vínculo ativo de produção
 
-## 6. O que isso muda na estratégia
+## 6. Próximo passo recomendado
 
-Para colocar a experiência de tenant em produção com segurança, o caminho mais profissional não é reinventar tudo dentro do `portal_tech10`.
+O próximo passo crítico é declarar a base única de publicação:
 
-O caminho correto é:
-
-1. usar `portal_tech10` para saneamento, documentação e extração de componentes/fluxos;
-2. alinhar a configuração canônica do tenant com o monorepo `VIVACOMMERCE`;
-3. publicar a experiência real do tenant pelo runtime multi-tenant já existente;
-4. evitar divergência entre cópia estática e runtime canônico.
-
-## 7. Risco principal
-
-O maior risco hoje é o mesmo fluxo existir em múltiplos lugares:
-
-- `portal_tech10`
-- `tech10-informatica`
-- `VIVACOMMERCE/loja_tech_site`
-- `VIVACOMMERCE/storefront/public/tech10`
-- `VIVACOMMERCE/storefront/app/tech10`
-
-Sem governança, isso gera:
-
-- divergência de branding;
-- divergência de rotas;
-- bugs difíceis de rastrear;
-- dúvida sobre qual repositório publicar.
-
-## 8. Próximo passo recomendado
-
-O próximo passo crítico é declarar canonicidade operacional:
-
-1. `portal_tech10` continua como trilha de saneamento/documentação;
-2. a publicação real deve apontar para `VIVACOMMERCE/storefront`;
-3. a configuração do tenant deve ser consolidada para não depender de hardcodes espalhados.
-
-Passos imediatos de produção mais prováveis:
-
-1. corrigir DNS de `vivacommerce.com.br` na Vercel;
-2. decidir se a proteção `401` do deployment deve permanecer ou ser flexibilizada para a superfície pública;
-3. validar qual rota pública final da Tech10 será oficial:
-   - `/tech10`
-   - `/lojas/revivah-tech`
-   - `/lojas/revivah-tech/shop`
-4. só depois disso promover a experiência Tech10 como tenant oficialmente publicável.
+1. decidir entre `portal_tech10` e `tech10-informatica`;
+2. criar projeto próprio da Tech10 para deploy;
+3. só depois apontar `tech10.tech10cloud.com` para esse projeto próprio.

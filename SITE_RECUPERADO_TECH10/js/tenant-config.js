@@ -16,11 +16,6 @@
     tenant: {
       id: 'tech10',
       slug: 'revivah-tech',
-      publicDomain: 'tech10.tech10cloud.com',
-      publicOrigin: 'https://tech10.tech10cloud.com',
-      canonicalEntryUrl: 'https://tech10.tech10cloud.com',
-      canonicalStoreUrl: 'https://tech10.tech10cloud.com/loja',
-      canonicalPortalUrl: 'https://tech10.tech10cloud.com/portal',
       publicSiteBasePath: '/tech10',
       storefrontPath: '/lojas/revivah-tech/shop',
       categoryShopBasePath: '/shop?store=revivah-tech',

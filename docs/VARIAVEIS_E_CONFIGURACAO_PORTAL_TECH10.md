@@ -21,6 +21,8 @@ Chaves atuais:
 - `provider`
   - valor atual: `vivacommerce`
   - papel: seleciona o provider da camada de loja
+  - observação: hoje deve ser tratado como label legado/adaptador local, não como
+    prova de vínculo operacional ativo com outro projeto
 
 - `TECH10_STORE_SLUG`
   - valor atual: `revivah-tech`
@@ -54,11 +56,6 @@ Arquivo principal:
 
 Campos atuais:
 
-- `tenant.publicDomain`
-- `tenant.publicOrigin`
-- `tenant.canonicalEntryUrl`
-- `tenant.canonicalStoreUrl`
-- `tenant.canonicalPortalUrl`
 - `nome`
 - `slogan`
 - `descricao`
@@ -229,19 +226,13 @@ Essa camada já começa a substituir links hardcoded como:
 - `/shop?store=revivah-tech...`
 - `https://wa.me/55974001960`
 
-Também passou a registrar explicitamente o alvo público recomendado do tenant:
+## 11. Referências externas históricas
 
-- `tech10.tech10cloud.com`
-
-## 11. Variáveis confirmadas na runtime canônica `VIVACOMMERCE/storefront`
-
-Além da configuração local do `portal_tech10`, a runtime canônica inspecionada em
-`VIVACOMMERCE/storefront` usa variáveis de ambiente que impactam diretamente o
-tenant Tech10 em produção:
+Além da configuração local do `portal_tech10`, foram encontradas referências
+históricas a uma runtime externa com variáveis como:
 
 - `NEXT_PUBLIC_PLATFORM_DOMAIN`
-  - domínio-base da plataforma multi-tenant;
-  - fallback encontrado: `vivacommerce.com.br`.
+  - domínio-base de runtime externo investigado.
 
 - `NEXT_PUBLIC_API_URL`
   - URL pública do backend para cliente/browser.
@@ -268,20 +259,15 @@ tenant Tech10 em produção:
   - observabilidade frontend, quando habilitada.
 
 - `NEXT_PUBLIC_SITE_URL`
-  - base usada por `robots` e `sitemap`;
-  - precisa ser tratada com atenção para não publicar metadados globais errados na
-    experiência do tenant.
+  - base usada por `robots` e `sitemap`.
 
 ## 12. Leitura operacional atual
 
-Hoje, a configuração do tenant Tech10 depende de duas camadas:
+Hoje, a configuração do tenant Tech10 mostra:
 
 1. configuração local saneada no `portal_tech10`;
-2. variáveis de ambiente da runtime canônica `VIVACOMMERCE/storefront`.
+2. referências históricas externas que não devem ser promovidas automaticamente a
+   runtime oficial.
 
-Isso significa que a ida para produção não depende só de HTML/JS local. Ela depende
-também de:
-
-- domínio íntegro;
-- borda pública liberada ou conscientemente protegida;
-- variáveis corretas na runtime canônica.
+Por decisão operacional desta rodada, essas referências externas ficam tratadas
+como contexto técnico, não como vínculo de publicação.

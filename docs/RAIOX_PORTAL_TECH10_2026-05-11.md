@@ -105,7 +105,7 @@ Mas o storefront/site público deste repositório não está embutido no ERP com
 - `portal_tech10` é um projeto satélite de site/loja;
 - a integração ideal é por APIs e rotas canônicas, não por mistura de bases.
 
-## 6.1. Relação com a hospedagem atual
+## 6.1. Achados externos de hospedagem
 
 Na Vercel da conta atual, foi confirmado um projeto separado:
 
@@ -118,7 +118,8 @@ Na Vercel da conta atual, foi confirmado um projeto separado:
   - `https://vivacommerce-darlancavalcantes-projects.vercel.app`
   - `https://vivacommerce-git-main-darlancavalcantes-projects.vercel.app`
 
-Essa evidência sugere que a experiência pública de loja/tenant pode estar, hoje, sendo publicada por uma base de storefront separada da cópia estática/documental do `portal_tech10`.
+Essa evidência mostrou sobreposição histórica de contexto, mas não deve mais ser
+tratada como vínculo operacional deste projeto.
 
 Ao mesmo tempo, a checagem de domínio e deployment mostrou:
 
@@ -130,17 +131,14 @@ Ao mesmo tempo, a checagem de domínio e deployment mostrou:
 Também foi confirmado que, no escopo Vercel atual:
 
 - não apareceu um domínio público Tech10 separado já ativo;
-- não apareceu um alias próprio da Tech10 fora do projeto `vivacommerce`;
-- a experiência Tech10 pública conhecida depende hoje da plataforma `vivacommerce`, não de um host isolado do tenant.
+- não apareceu um host Tech10 já publicado em projeto próprio;
 - `vivacommerce.com.br` e `www.vivacommerce.com.br` não resolveram por DNS nas checagens diretas desta rodada.
 
-Portanto, o vínculo entre:
+Decisão aplicada nesta rodada:
 
-- código canônico;
-- host público ativo;
-- domínio final;
-
-ainda exige saneamento operacional antes de qualquer publicação forte.
+- o alias `tech10.tech10cloud.com` que chegou a ser criado por hipótese no projeto
+  `vivacommerce` foi removido;
+- a Tech10 volta a ser tratada como projeto independente para fins de publicação.
 
 ## 6.2. Relação com os outros repositórios Tech10
 
@@ -159,8 +157,9 @@ O achado mais importante foi:
 
 Isso muda a leitura de canonicidade:
 
-- `portal_tech10` é uma base útil e rica;
-- mas o runtime multi-tenant mais provável de produção está em `VIVACOMMERCE/storefront`.
+- `portal_tech10` continua como base útil e rica;
+- referências externas passam a valer apenas como contexto histórico;
+- a publicação correta deve sair de projeto próprio da Tech10.
 
 Ver documento complementar:
 
@@ -190,7 +189,7 @@ O problema real é governança técnica:
 - hardcodes de tenant;
 - ausência de documentação canônica de variáveis;
 - falta de empacotamento profissional para multi-tenant;
-- bloqueio operacional de domínio e autenticação de borda na runtime canônica.
+- necessidade de decidir a base única de publicação antes do deploy final.
 
 ## 9. Próximo passo recomendado
 
@@ -200,4 +199,4 @@ O próximo passo certo é transformar a Tech10 em tenant-config canônico:
 2. eliminar paths fixos como `/tech10/`;
 3. padronizar slug, base URL e contatos por tenant;
 4. definir o contrato de integração com ERP, portal e loja;
-5. fechar o go-live operacional do `vivacommerce` com domínio íntegro e superfície pública validada.
+5. escolher a base única da Tech10 e criar projeto próprio de publicação.
