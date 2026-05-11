@@ -199,7 +199,11 @@
         if (url && images.indexOf(url) === -1) images.push(url);
       });
     }
-    if (images.length === 0) images.push('/tech10/imagem/propaganda loja/tecnologia.jpeg');
+    if (images.length === 0) {
+      var fallbackImage = (window.TENANT_CONFIG && window.TENANT_CONFIG.brand && window.TENANT_CONFIG.brand.fallbackProductImageUrl)
+        || '/imagem/propaganda loja/tecnologia.jpeg';
+      images.push(fallbackImage);
+    }
 
     document.getElementById('pm-img-main').src = images[0];
     document.getElementById('pm-img-main').alt = product.title || 'Produto';
@@ -225,7 +229,8 @@
     var waBtn = document.getElementById('pm-whatsapp-btn');
     if (waBtn) {
       var waText = encodeURIComponent('Olá! Tenho interesse no produto: ' + (product.title || '') + '. Pode me ajudar?');
-      waBtn.href = 'https://wa.me/55974001960?text=' + waText;
+      var whatsappBase = (window.TenantRoutes && window.TenantRoutes.whatsappBase) || 'https://wa.me/55974001960';
+      waBtn.href = whatsappBase + '?text=' + waText;
     }
 
     // Variantes

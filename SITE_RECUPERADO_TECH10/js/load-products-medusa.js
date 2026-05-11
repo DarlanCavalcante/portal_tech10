@@ -175,7 +175,8 @@ function renderProducts(products, containerId = 'produtosGrid') {
           await window.MarketplaceAdapter.addLineItem(cartId, variantId, 1);
           showNotification('✅ Produto adicionado ao carrinho!');
           if (buyNow) {
-            setTimeout(() => { window.location.href = '/tech10/carrinho.html'; }, 1000);
+            const cartHref = (window.TenantRoutes && window.TenantRoutes.cart) || '/carrinho';
+            setTimeout(() => { window.location.href = cartHref; }, 1000);
           }
         }
       } else {

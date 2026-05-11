@@ -4,188 +4,72 @@ Data de referência: `2026-05-11`
 
 ## Objetivo
 
-Evoluir o `portal_tech10` de uma implementação fortemente acoplada à Tech10 para uma base profissional onde cada tenant possa ter:
+Ter um tenant publicável com fronteiras claras entre:
 
-- site institucional;
-- loja pública;
-- portal do cliente;
-- acompanhamento de O.S.;
-- integração com ERP.
+- site institucional
+- loja pública
+- portal do cliente
+- ERP operacional
 
-## 1. Separação correta de superfícies
+## Arquitetura aplicada na Tech10
 
-### Site institucional do tenant
+### Superfície pública do tenant
 
-Responsável por:
+- `/` -> site institucional
+- `/loja` -> catálogo/carrinho/checkout
+- `/portal` -> entrada pública da jornada de O.S.
 
-- marca;
-- serviços;
-- prova social;
-- contratos empresariais;
-- CTA comercial;
-- entrada para loja e portal.
+### Runtime do tenant
 
-### Loja pública do tenant
+- `vercel.json`
+- `/api/store/*`
+- `/api/health`
+- `/api/runtime-config`
 
-Responsável por:
+### ERP
 
-- catálogo;
-- categorias;
-- carrinho;
-- checkout;
-- pedido confirmado.
+Permanece como sistema operacional externo a este repositório, acessado por
+contrato explícito de URL para:
 
-### Portal do cliente
+- portal completo
+- status da O.S.
 
-Responsável por:
+## Modelo de tenant atual
 
-- acompanhar O.S.;
-- aprovar ou recusar orçamento;
-- consultar status;
-- autenticação leve por código ou magic link.
+Hoje o contrato mínimo já existe em `js/tenant-config.js`, com:
 
-### ERP interno
+- identidade do tenant
+- branding
+- contato
+- rotas públicas
+- integração da loja
+- integração do portal
 
-Responsável por:
+## Estado de maturidade
 
-- operação;
-- atendimento;
-- O.S.;
-- estoque;
-- financeiro;
-- PDV interno.
+### Resolvido nesta rodada
 
-## 2. Modelo recomendado de tenant
+- base única definida: `SITE_RECUPERADO_TECH10/`
+- runtime standalone criado
+- rotas limpas criadas
+- vínculo operacional com projetos externos removido
 
-Cada tenant deve ter um manifesto/configuração central, por exemplo:
+### Ainda evolutivo
 
-```json
-{
-  "slug": "revivah-tech",
-  "brand": {
-    "name": "Tech10 Informática",
-    "tagline": "20 anos de experiência em tecnologia",
-    "logoUrl": "/assets/tenants/revivah-tech/logo.svg",
-    "primaryColor": "#2563eb",
-    "accentColor": "#10b981"
-  },
-  "contact": {
-    "phone": "(55) 3317-0762",
-    "whatsapp": "55974001960",
-    "email": "tech10.infor@gmail.com"
-  },
-  "address": {
-    "street": "Rua Doutor Bozano, 968 - Loja 8",
-    "city": "Santa Maria",
-    "state": "RS",
-    "zip": "97015-001"
-  },
-  "store": {
-    "provider": "vivacommerce",
-    "storeSlug": "revivah-tech"
-  },
-  "routes": {
-    "siteHome": "/lojas/revivah-tech",
-    "shopHome": "/lojas/revivah-tech/shop",
-    "cart": "/lojas/revivah-tech/cart",
-    "checkout": "/lojas/revivah-tech/checkout"
-  }
-}
-```
+- nomes legados em arquivos e storage
+- service worker e manifest
+- admin estático
 
-## 3. Sinais de que o projeto já está perto disso
-
-O código atual já mostra a direção certa:
-
-- loja por `slug`;
-- rotas `/lojas/{slug}`;
-- página agregadora de lojas;
-- configuração de empresa separada;
-- adapter de API isolado.
-
-Isso reduz muito o esforço de transformação para um modelo multi-tenant real.
-
-## 4. Lacunas atuais
-
-Hoje ainda faltam:
-
-- centralização única de config;
-- eliminação de hardcodes `Tech10`;
-- eliminação de paths fixos `/tech10/`;
-- convenção única de carrinho;
-- empacotamento de deploy profissional;
-- documentação canônica de produção/HML;
-- contrato explícito entre loja pública e portal do ERP.
-
-## 5. Caminho recomendado
-
-### Fase 1
-
-Transformar a Tech10 em tenant configurável:
-
-- uma única fonte de verdade para branding;
-- uma única fonte de verdade para store slug;
-- uma única fonte de verdade para rotas.
-
-### Fase 2
-
-Normalizar rotas:
-
-- `/{tenantSlug}` ou `/lojas/{tenantSlug}`
-- `/lojas/{tenantSlug}/shop`
-- `/lojas/{tenantSlug}/cart`
-- `/lojas/{tenantSlug}/checkout`
-
-### Fase 3
-
-Conectar o tenant ao ERP sem misturar repositórios:
-
-- CTA `Acompanhar minha O.S.`
-- CTA `Entrar no portal`
-- URL de status público
-- URL de portal por O.S.
-
-### Fase 4
-
-Adicionar onboarding profissional de tenant:
-
-- brand kit;
-- contatos;
-- horários;
-- domínio;
-- slug;
-- provider de loja;
-- políticas de checkout.
-
-## 6. Fronteira obrigatória desta trilha
+## Fronteira obrigatória
 
 Esta arquitetura não deve:
 
-- tocar no `redevivah.com.br`;
-- misturar com `redevivah-storefront`;
-- acoplar diretamente o ERP a um projeto externo comercial sem contrato claro.
+- tocar em `redevivah.com.br`
+- misturar com `vivacommerce`
+- confundir storefront público com ERP
 
-## 7. Próximo passo técnico mais importante
+## Próximo passo natural
 
-Criar uma camada `tenant-config` dentro do `SITE_RECUPERADO_TECH10` e migrar:
-
-- `empresa-config.js`
-- `api-config.js`
-- links `/tech10/`
-- links `/lojas/revivah-tech/shop`
-
-para leitura centralizada de tenant.
-
-## 8. Andamento desta diretriz
-
-A primeira etapa já foi iniciada em `2026-05-11` com:
-
-- criação de `SITE_RECUPERADO_TECH10/js/tenant-config.js`
-- criação de `SITE_RECUPERADO_TECH10/js/tenant-routes.js`
-- adaptação de `api-config.js`
-- adaptação de `empresa-config.js`
-- inclusão do `tenant-config.js` nas páginas principais
-
-Pendência principal:
-
-- migrar o restante dos links e CTAs hardcoded para leitura exclusiva via helpers/rotas centralizadas.
+1. criar projeto de deploy próprio da Tech10
+2. anexar `tech10.tech10cloud.com`
+3. validar a experiência ponta a ponta

@@ -1,18 +1,31 @@
 # Docs do Portal Tech10
 
-Este diretório consolida a documentação operacional e arquitetural do projeto `portal_tech10`, com foco em:
+Este diretório consolida a documentação operacional e arquitetural do projeto
+`portal_tech10`, agora com foco no runtime standalone da Tech10 em
+`SITE_RECUPERADO_TECH10/`.
 
-- estado real do projeto em `2026-05-11`;
-- variáveis, hardcodes e pontos de configuração;
-- caminho recomendado para evoluir o portal/site/loja para modo multi-tenant;
-- fronteiras claras entre este projeto, o ERP e outros projetos externos.
+Leitura sugerida:
 
-Documentos principais:
+1. `DECISAO_ARQUITETURAL_PUBLICACAO_STANDALONE_TECH10.md`
+2. `RAIOX_PORTAL_TECH10_2026-05-11.md`
+3. `VARIAVEIS_E_CONFIGURACAO_PORTAL_TECH10.md`
+4. `PLANO_RAPIDO_PRODUCAO_TENANT_TECH10.md`
+5. `CHECKLIST_GO_LIVE_OPERACIONAL_TENANT_TECH10.md`
+6. `CONTRATO_DE_AMBIENTE_TENANT_TECH10.md`
+7. `RUNBOOK_DEPLOY_E_OPERACAO_TENANT_TECH10.md`
+8. `SMOKE_E_VALIDACAO_TENANT_TECH10.md`
 
+Documentos canônicos:
+
+- `DECISAO_ARQUITETURAL_PUBLICACAO_STANDALONE_TECH10.md`
 - `RAIOX_PORTAL_TECH10_2026-05-11.md`
 - `VARIAVEIS_E_CONFIGURACAO_PORTAL_TECH10.md`
+- `CONTRATO_DE_AMBIENTE_TENANT_TECH10.md`
 - `ARQUITETURA_TENANT_SITE_PORTAL_LOJA.md`
 - `OWNERSHIP_E_PUBLICACAO_TENANT_TECH10.md`
 - `PLANO_RAPIDO_PRODUCAO_TENANT_TECH10.md`
 - `CHECKLIST_GO_LIVE_OPERACIONAL_TENANT_TECH10.md`
-- `DECISAO_ARQUITETURAL_PUBLICACAO_STANDALONE_TECH10.md`
+- `RUNBOOK_DEPLOY_E_OPERACAO_TENANT_TECH10.md`
+- `GOVERNANCA_E_BOAS_PRATICAS_TENANT_TECH10.md`
+- `SMOKE_E_VALIDACAO_TENANT_TECH10.md`
+- `adr/ADR-001-RUNTIME-STANDALONE-TECH10.md`

@@ -1,13 +1,16 @@
 /**
- * API Adapter — VivaCommerce / Tech10
- * Usa rotas por tenant para puxar apenas produtos/categorias da loja do seed (tech10-informatica).
+ * API Adapter — Store proxy / Tech10
+ * Usa rotas same-origin do runtime standalone para acessar produtos/categorias.
  */
 (function (global) {
   'use strict';
 
   function getBaseUrl() {
     const config = global.API_CONFIG || {};
-    if (config.provider === 'vivacommerce' && config.VIVACOMMERCE_BASE_URL) {
+    if (config.RUNTIME_BASE_URL) {
+      return config.RUNTIME_BASE_URL.replace(/\/$/, '');
+    }
+    if (config.VIVACOMMERCE_BASE_URL) {
       return config.VIVACOMMERCE_BASE_URL.replace(/\/$/, '');
     }
     return (config.ACTIVE_URL || 'http://localhost:3000').replace(/\/$/, '');

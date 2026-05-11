@@ -4,72 +4,68 @@ Data-base: `2026-05-11`
 
 ## Decisão
 
-A Tech10 deve ser publicada em projeto próprio, sem depender operacionalmente de
-`vivacommerce` ou outro runtime externo não autorizado.
+A Tech10 deve publicar em runtime próprio, usando como base canônica:
 
-## Por quê
+- repositório: `portal_tech10`
+- diretório de deploy: `SITE_RECUPERADO_TECH10/`
 
-- o usuário confirmou que `vivacommerce` é outro projeto;
-- misturar runtime externo com o tenant Tech10 aumenta risco de publicação errada;
-- o `portal_tech10` já tem massa crítica suficiente para virar projeto próprio;
-- a forma profissional é integrar por contrato explícito, não por acoplamento implícito.
+Sem dependência operacional de:
 
-## Forma correta de resolver
+- `vivacommerce`
+- `redevivah-storefront`
+- qualquer outro runtime externo não autorizado
 
-### Fase 1. Canonicalizar a base
+## O que foi decidido de forma prática
 
-Escolher uma base única entre:
+1. a base única da Tech10 passa a ser `SITE_RECUPERADO_TECH10/`
+2. o runtime canônico agora é standalone, com:
+   - `vercel.json`
+   - `/api/store/*`
+   - `/api/health`
+   - `/api/runtime-config`
+   - `/portal`
+3. o `portal_tech10` deixa de depender de domínio ou alias anexado a outro projeto
+4. o ERP continua integrado por contrato explícito, via URLs de portal/status
 
-- `portal_tech10`
-- `tech10-informatica`
+## Por que essa é a forma correta
 
-Recomendação atual:
+- preserva o material já pronto do tenant
+- evita mistura de ownership com projetos externos
+- cria uma fronteira clara entre:
+  - site/loja Tech10
+  - backend de catálogo
+  - portal/O.S. do ERP
+- permite trocar backend da loja no futuro sem reescrever a superfície pública
 
-- usar `portal_tech10` como base principal;
-- tratar `tech10-informatica` como referência adjacente para comparação e eventual
-  migração de assets.
+## Arquitetura resultante
 
-### Fase 2. Criar runtime próprio da Tech10
+### Superfície pública do tenant
 
-Em vez de depender de projeto externo, criar um projeto de deploy próprio da
-Tech10, por exemplo:
+- `/` -> institucional
+- `/loja` -> catálogo
+- `/carrinho`
+- `/checkout`
+- `/pedido-confirmado`
+- `/portal`
 
-- nome de projeto Vercel: `tech10-portal`
-- domínio alvo: `tech10.tech10cloud.com`
+### Superfície técnica do runtime
 
-### Fase 3. Manter integração explícita
+- `/api/store/*` -> proxy same-origin para backend da loja
+- `/api/health` -> health do runtime Tech10
+- `/api/runtime-config` -> config pública de integração
 
-Separar claramente:
+### Integração explícita com ERP
 
-- site institucional;
-- camada de loja;
-- entrada do portal/O.S.;
-- adapters de API.
-
-Se houver backend de loja, ele deve ser plugável por configuração, nunca imposto
-por vínculo indireto de domínio.
-
-## Recomendação técnica prática
-
-### Curto prazo
-
-Publicar o `SITE_RECUPERADO_TECH10/` como base da Tech10 em projeto próprio.
-
-### Médio prazo
-
-Evoluir para um runtime mais limpo e escalável com:
-
-- `tenant-config.js` como fonte única de branding e rotas;
-- adapters bem definidos para catálogo/carrinho/checkout;
-- `/portal` apontando por contrato para o ERP;
-- remoção progressiva dos hardcodes restantes.
+- `TECH10_ERP_PORTAL_BASE_URL`
+- `TECH10_ERP_STATUS_BASE_URL`
 
 ## Veredito
 
-Não precisamos criar um runtime totalmente novo antes de publicar.
+A Tech10 não precisa de outro projeto para avançar.
 
-O caminho mais profissional agora é:
+O caminho profissional e escalável agora é:
 
-1. usar o que já está pronto no `portal_tech10`;
-2. publicar em projeto próprio;
-3. extrair a arquitetura escalável por tenant em seguida.
+1. subir `SITE_RECUPERADO_TECH10/` em projeto próprio
+2. configurar variáveis de deploy
+3. anexar `tech10.tech10cloud.com`
+4. rodar smoke de site + vendas + portal

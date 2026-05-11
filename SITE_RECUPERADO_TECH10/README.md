@@ -1,29 +1,99 @@
-# Tech10 — loja (dados do seed)
+# Tech10 Standalone Runtime
 
-Template completo da loja Tech10, servido em `/tech10/` pelo storefront. **Produtos e categorias vêm da loja do seed** (slug `tech10-informatica`).
+Data-base: `2026-05-11`
 
-## Configuração
+## O que esta pasta é
 
-- **api-config.js:** `TECH10_STORE_SLUG: 'tech10-informatica'` — loja criada no seed.
-- **api-adapter.js:** Usa `/api/store/tenant/tech10-informatica/products` e `/api/store/tenant/tech10-informatica/categories`.
-- Ordem dos scripts no HTML: `api-config.js` → `api-adapter.js` → `cart-vivacommerce.js` → `load-products.js`.
+`SITE_RECUPERADO_TECH10/` agora é a **base canônica de publicação** da Tech10
+dentro do repositório `portal_tech10`.
 
-## Seed
+Ela contém:
 
-A loja **Tech10 Informática** e o usuário lojista são criados em:
+- home institucional;
+- loja pública;
+- carrinho;
+- checkout;
+- pedido confirmado;
+- páginas por categoria;
+- admin estático legado;
+- entrada pública do portal do cliente;
+- runtime serverless mínimo para proxy de loja e health check.
 
-- `backend/scripts/seed-complete-system.ts` (trecho “6. LOJA DE TESTE (Tech10 Informatica)”).
+## Rotas públicas canônicas
 
-Execute o seed para ter produtos e categorias na Tech10:
+- `/` -> home institucional
+- `/loja` -> catálogo
+- `/carrinho` -> carrinho
+- `/checkout` -> checkout
+- `/pedido-confirmado` -> confirmação de pedido
+- `/portal` -> entrada pública do portal/O.S.
+
+## Rotas serverless
+
+- `/api/store/*` -> proxy same-origin para backend da loja
+- `/api/health` -> health do runtime do tenant
+- `/api/runtime-config` -> config pública de integração do tenant
+
+## Arquivos principais
+
+- `vercel.json`
+- `api/store-proxy.js`
+- `api/health.js`
+- `api/runtime-config.js`
+- `portal/index.html`
+- `js/portal-entry.js`
+- `js/tenant-config.js`
+- `js/tenant-routes.js`
+- `js/api-config.js`
+- `js/api-adapter.js`
+
+## Variáveis esperadas no deploy
+
+- `TECH10_STORE_BACKEND_URL`
+  - backend alvo do proxy `/api/store`
+- `STORE_BACKEND_URL`
+  - fallback compatível se a variável acima não estiver definida
+- `TECH10_STORE_BEARER_TOKEN`
+  - opcional; injeta `Authorization: Bearer ...` no upstream da loja
+- `TECH10_STORE_API_KEY`
+  - opcional; injeta `x-api-key` no upstream da loja
+- `TECH10_ERP_PORTAL_BASE_URL`
+  - opcional; default `https://sistema.tech10cloud.com/portal`
+- `TECH10_ERP_STATUS_BASE_URL`
+  - opcional; default `https://sistema.tech10cloud.com/status`
+
+Veja o contrato completo em:
+
+- `/Users/darlancavalcante/Documents/TECH/portal_tech10/docs/CONTRATO_DE_AMBIENTE_TENANT_TECH10.md`
+
+## Validação recomendada
 
 ```bash
-cd backend && npx ts-node scripts/seed-complete-system.ts
+cd /Users/darlancavalcante/Documents/TECH/portal_tech10/SITE_RECUPERADO_TECH10
+npm run validate:runtime
+npm run smoke:runtime
 ```
 
-- Loja: slug **tech10-informatica**.
-- Lojista: `tech10.infor@gmail.com` / `123456`.
+## Compatibilidade preservada
 
-## Acesso
+Ainda existem nomes legados como:
 
-- Storefront: `http://localhost:3000/tech10/` (ou a porta do Next.js).
-- Backend deve estar no mesmo host (proxy) ou configurar CORS se a página for servida em outro domínio.
+- `cart-vivacommerce.js`
+- `VIVACOMMERCE_BASE_URL`
+- `vivacommerce_cart_id`
+
+Esses nomes foram mantidos apenas para reduzir risco de quebra durante a
+transição. Eles não devem mais ser interpretados como vínculo canônico de
+runtime.
+
+## Próximo passo recomendado
+
+1. criar projeto dedicado de deploy da Tech10 com root dir `SITE_RECUPERADO_TECH10`
+2. configurar as variáveis acima
+3. anexar `tech10.tech10cloud.com`
+4. executar smoke em:
+   - `/`
+   - `/loja`
+   - `/carrinho`
+   - `/checkout`
+   - `/portal`

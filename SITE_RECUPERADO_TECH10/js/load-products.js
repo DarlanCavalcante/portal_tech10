@@ -1,6 +1,6 @@
 /**
  * Carregar e renderizar produtos — Tech10
- * Usa MarketplaceAdapter (VivaCommerce) quando API_CONFIG.provider === 'vivacommerce'.
+ * Usa MarketplaceAdapter same-origin quando disponível.
  * Carregue na ordem: api-config.js → api-adapter.js → load-products.js
  */
 (function (global) {
@@ -73,7 +73,7 @@
     var search = options.search || null;
 
     var products = [];
-    if (config.provider === 'vivacommerce' && adapter && adapter.getProducts) {
+    if (adapter && adapter.getProducts) {
       products = await adapter.getProducts({ limit: limit, offset: offset, category_id: category, q: search });
     } else {
       var base = config.STORE_API || (config.ACTIVE_URL + '/store');
@@ -111,12 +111,13 @@
     if (!container) return;
 
     if (!products || !Array.isArray(products) || products.length === 0) {
-      container.innerHTML = '<div class="lp-empty"><i class="fas fa-box-open"></i><p>Nenhum produto encontrado nesta categoria.</p><a href="/tech10/produtos.html" class="lp-empty-link">Ver todos os produtos</a></div>';
+      var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';
+      container.innerHTML = '<div class="lp-empty"><i class="fas fa-box-open"></i><p>Nenhum produto encontrado nesta categoria.</p><a href="' + emptyShopHref + '" class="lp-empty-link">Ver todos os produtos</a></div>';
       return;
     }
 
-    var basePath = (typeof window !== 'undefined' && window.location.pathname.indexOf('/tech10') !== -1) ? '/tech10' : '';
-    var fallbackImg = basePath + '/imagem/propaganda loja/tecnologia.jpeg';
+    var fallbackImg = (global.TENANT_CONFIG && global.TENANT_CONFIG.brand && global.TENANT_CONFIG.brand.fallbackProductImageUrl)
+      || '/imagem/propaganda loja/tecnologia.jpeg';
 
     var html = products
       .filter(function (p) { return p && p.id && p.title; })

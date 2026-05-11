@@ -4,76 +4,44 @@ Data de referência: `2026-05-11`
 
 ## Resumo executivo
 
-Por decisão operacional registrada nesta rodada, o `portal_tech10` deve seguir
-como projeto independente.
+O ownership correto da Tech10 fica assim:
 
-Isso significa:
+- repositório canônico desta frente: `DarlanCavalcante/portal_tech10`
+- diretório canônico de deploy: `SITE_RECUPERADO_TECH10/`
+- domínio alvo recomendado: `tech10.tech10cloud.com`
 
-- não tratar `VIVACOMMERCE` como runtime oficial deste projeto;
-- não manter domínio da Tech10 anexado ao projeto `vivacommerce`;
-- usar referências externas apenas como contexto histórico ou legado técnico.
+## O que não faz parte do runtime canônico
 
-## 1. portal_tech10
+- `VIVACOMMERCE`
+- `vivacommerce`
+- `redevivah.com.br`
+- `redevivah-storefront`
 
-Repositório: `DarlanCavalcante/portal_tech10`
+Esses artefatos só podem ser tratados como:
 
-Papel atual:
+- referência histórica
+- contexto de auditoria
+- fonte eventual de comparação
 
-- working copy principal da Tech10;
-- snapshot funcional de site, catálogo, carrinho, checkout e admin;
-- base prioritária para saneamento, documentação e publicação futura.
+Nunca como canonicidade automática de publicação.
 
-Leitura honesta:
+## Estado aplicado
 
-é a base mais segura para continuar este trabalho sem misturar projetos.
+- o alias `tech10.tech10cloud.com` já foi removido do projeto externo `vivacommerce`
+- a publicação correta agora deve sair de projeto próprio da Tech10
+- o runtime standalone já foi preparado dentro do próprio `portal_tech10`
 
-## 2. tech10-informatica
+## Publicação correta
 
-Repositório: `DarlanCavalcante/tech10-informatica`
+1. criar projeto dedicado da Tech10
+2. usar `SITE_RECUPERADO_TECH10/` como root directory
+3. anexar `tech10.tech10cloud.com`
+4. publicar sem qualquer alias ou dependência operacional externa
 
-Papel atual:
+## Veredito
 
-- pacote estático adjacente da Tech10;
-- alternativa real de publicação;
-- precisa ser comparado com o `portal_tech10` antes de qualquer decisão final.
+O ownership está fechado:
 
-## 3. Referências externas
-
-Existem artefatos históricos com nomenclaturas e adapters ligados a
-`VIVACOMMERCE`, incluindo:
-
-- `api-config.js`
-- `api-adapter.js`
-- `cart-vivacommerce.js`
-- slugs como `revivah-tech`
-
-Esses pontos devem ser lidos como:
-
-- legado técnico;
-- possível reaproveitamento antigo;
-- contexto útil para auditoria;
-- nunca como canonicidade automática de publicação.
-
-## 4. Decisão aplicada nesta rodada
-
-Nesta rodada, o vínculo operacional criado por hipótese foi desfeito:
-
-- o alias `tech10.tech10cloud.com` foi removido do projeto Vercel `vivacommerce`;
-- o `portal_tech10` voltou a ficar sem vínculo formal de domínio com esse projeto;
-- a documentação foi ajustada para refletir essa separação.
-
-## 5. Conclusão de ownership
-
-Hoje, a leitura operacional correta fica assim:
-
-- **base principal de trabalho:** `portal_tech10`
-- **base adjacente a comparar:** `tech10-informatica`
-- **referências externas:** apenas históricas, sem vínculo ativo de produção
-
-## 6. Próximo passo recomendado
-
-O próximo passo crítico é declarar a base única de publicação:
-
-1. decidir entre `portal_tech10` e `tech10-informatica`;
-2. criar projeto próprio da Tech10 para deploy;
-3. só depois apontar `tech10.tech10cloud.com` para esse projeto próprio.
+- **código e runtime da Tech10:** `portal_tech10`
+- **domínio final recomendado:** `tech10.tech10cloud.com`
+- **integração com ERP:** contrato explícito via `/portal` e `/status`

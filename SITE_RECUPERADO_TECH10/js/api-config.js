@@ -1,39 +1,42 @@
 /**
  * Configuração centralizada da API — Tech10
- * Usa backend VivaCommerce com loja do seed (slug tech10-informatica).
+ * Usa runtime standalone do tenant Tech10, com proxy same-origin em /api/store.
  * Carregue api-adapter.js antes de load-products e cart-vivacommerce.js.
  */
 const tenantConfig = typeof window !== 'undefined' ? window.TENANT_CONFIG || {} : {};
 const tenantStore = tenantConfig.store || {};
 const tenantMeta = tenantConfig.tenant || {};
+const runtimeOrigin = tenantStore.baseUrl || (typeof window !== 'undefined' && window.location.origin
+  ? window.location.origin
+  : 'http://localhost:3101');
 const API_CONFIG = {
-  provider: tenantStore.provider || 'vivacommerce',
+  provider: tenantStore.provider || 'tech10-standalone',
 
-  /** Slug da loja Tech10 no seed — usa revivah-tech (seed-completo-segmentos.ts) */
   TECH10_STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'revivah-tech',
 
   STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'revivah-tech',
 
-  SITE_BASE_PATH: tenantMeta.publicSiteBasePath || '/tech10',
+  SITE_BASE_PATH: tenantMeta.publicSiteBasePath || '/',
 
-  VIVACOMMERCE_BASE_URL: tenantStore.baseUrl || (typeof window !== 'undefined' && window.location.origin
-    ? window.location.origin
-    : 'http://localhost:3101'),
+  RUNTIME_BASE_URL: runtimeOrigin,
+
+  // Alias legado mantido para compatibilidade temporária com scripts antigos.
+  VIVACOMMERCE_BASE_URL: runtimeOrigin,
 
   get ACTIVE_URL() {
-    return this.VIVACOMMERCE_BASE_URL;
+    return this.RUNTIME_BASE_URL;
   },
 
   get STORE_API() {
-    return this.VIVACOMMERCE_BASE_URL + '/api/store';
+    return this.RUNTIME_BASE_URL + (tenantStore.apiBasePath || '/api/store');
   },
 
   get ADMIN_API() {
-    return this.ACTIVE_URL + '/api';
+    return this.RUNTIME_BASE_URL + (tenantStore.adminApiBasePath || '/api');
   },
 
   get HEALTH() {
-    return this.ACTIVE_URL + '/health';
+    return this.RUNTIME_BASE_URL + (tenantStore.healthPath || '/api/health');
   }
 };
 

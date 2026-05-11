@@ -2,68 +2,58 @@
 
 Data-base: `2026-05-11`
 
-## Objetivo
+## Escopo
 
-Registrar o checklist mínimo para colocar a experiência pública da Tech10 no ar
-em projeto próprio da Tech10.
+Checklist para colocar no ar o runtime próprio da Tech10, usando
+`SITE_RECUPERADO_TECH10/`.
 
-## Estado confirmado hoje
+## Pré-condições
 
-- base auditada principal: `portal_tech10`
-- base adjacente: `tech10-informatica`
-- domínio desejado para publicação própria: `tech10.tech10cloud.com`
-- alias desse domínio com o projeto `vivacommerce` removido em `2026-05-11`
+- projeto dedicado criado no provedor de deploy
+- root directory configurado como `SITE_RECUPERADO_TECH10`
+- domínio `tech10.tech10cloud.com` sem vínculo com projeto externo
 
-## Bloqueios atuais
+## Variáveis mínimas
 
-### Base única
+1. `TECH10_STORE_BACKEND_URL`
+2. `TECH10_ERP_PORTAL_BASE_URL`
+3. `TECH10_ERP_STATUS_BASE_URL`
 
-- ainda falta decidir entre `portal_tech10` e `tech10-informatica`
+Opcional:
 
-### Domínio
+4. `TECH10_STORE_BEARER_TOKEN`
+5. `TECH10_STORE_API_KEY`
 
-- `tech10.tech10cloud.com` segue como bom alvo de publicação
-- ele não deve ser reapontado para projeto externo sem validação explícita
+## Rotas que precisam responder
 
-### URL oficial do tenant
+1. `/`
+2. `/loja`
+3. `/carrinho`
+4. `/checkout`
+5. `/pedido-confirmado`
+6. `/portal`
+7. `/api/health`
+8. `/api/runtime-config`
 
-A recomendação atual é:
+## Smoke mínimo
 
-- `https://tech10.tech10cloud.com`
-- `https://tech10.tech10cloud.com/loja`
-- `https://tech10.tech10cloud.com/portal`
+1. home institucional abre sem erro
+2. catálogo carrega produtos via `/api/store/*`
+3. carrinho recebe item
+4. checkout abre com resumo do carrinho
+5. portal abre e redireciona corretamente para status/portal do ERP
+6. `/api/health?deep=1` retorna `ok` ou indica claramente o upstream que falhou
 
-## Estratégia de publicação
+## Domínio
 
-- escolher uma única base da Tech10;
-- criar projeto próprio de deploy;
-- só depois apontar o domínio final;
-- integrar portal/ERP por contrato explícito.
-
-## Checklist executivo
-
-1. Escolher a base única entre `portal_tech10` e `tech10-informatica`.
-2. Criar projeto próprio da Tech10.
-3. Criar no Cloudflare o registro do domínio final apontando para o projeto novo.
-4. Validar acesso público às rotas:
+1. anexar `tech10.tech10cloud.com` ao projeto correto
+2. criar registro DNS apontando para a Vercel
+3. validar:
    - `https://tech10.tech10cloud.com`
    - `https://tech10.tech10cloud.com/loja`
    - `https://tech10.tech10cloud.com/portal`
-5. Conferir variáveis mínimas da publicação:
-   - `NEXT_PUBLIC_API_URL`
-   - `BACKEND_INTERNAL_URL`
-   - `NEXT_PUBLIC_SITE_URL`
-   - `NEXT_PUBLIC_PAINEL_URL`
-   - `NEXT_PUBLIC_WS_URL`
-6. Executar smoke final:
-   - home institucional
-   - catálogo
-   - carrinho
-   - checkout
-   - pedido confirmado
-   - entrada do portal
 
 ## Veredito
 
-O bloqueio restante agora é de decisão arquitetural e publicação própria da
-Tech10, não de vínculo externo.
+Depois desta rodada, o go-live da Tech10 depende mais de deploy e DNS do que de
+reestruturação de código.

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal do Cliente | Tech10 Informática</title>
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: linear-gradient(180deg, #eff6ff 0%, #f8fafc 45%, #ffffff 100%);
+      --card: rgba(255, 255, 255, 0.92);
+      --line: rgba(148, 163, 184, 0.28);
+      --text: #0f172a;
+      --muted: #475569;
+      --primary: #2563eb;
+      --primary-soft: rgba(37, 99, 235, 0.12);
+      --success: #0f9f6e;
+      --shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .shell {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 64px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .brand img { height: 42px; }
+    .toplinks {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .ghost-link,
+    .primary-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .ghost-link {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .primary-link {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.22);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+    .panel,
+    .helper {
+      background: var(--card);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+    .panel { padding: 32px; }
+    .helper { padding: 28px; display: flex; flex-direction: column; gap: 18px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 56ch;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .mini-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+    }
+    .mini-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .form-card {
+      margin-top: 28px;
+      padding: 24px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(241,245,249,0.9) 100%);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .field input,
+    .field select {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+    }
+    .field input:focus,
+    .field select:focus {
+      outline: 2px solid rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.4);
+    }
+    .hint,
+    .runtime-note,
+    .empty-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .btn {
+      appearance: none;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.2);
+    }
+    .btn-secondary {
+      color: var(--text);
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(15, 159, 110, 0.12);
+      color: var(--success);
+      font-weight: 700;
+      font-size: 13px;
+      width: fit-content;
+    }
+    .runtime-box {
+      padding: 16px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.88);
+    }
+    .runtime-box strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .runtime-box code {
+      font-size: 13px;
+      color: var(--muted);
+      word-break: break-all;
+    }
+    .helper h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .steps li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.78);
+    }
+    .steps i {
+      color: var(--primary);
+      margin-top: 3px;
+    }
+    .steps strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .steps p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .support-box {
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(16, 185, 129, 0.08) 100%);
+      border: 1px solid rgba(37, 99, 235, 0.12);
+      padding: 20px;
+    }
+    .support-box p {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .support-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 960px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .shell { width: min(100% - 24px, 1120px); padding-top: 24px; }
+      .topbar { flex-direction: column; align-items: stretch; }
+      .toplinks { width: 100%; }
+      .ghost-link, .primary-link { justify-content: center; width: 100%; }
+      .panel, .helper { border-radius: 22px; padding: 22px; }
+      .form-row,
+      .card-grid { grid-template-columns: 1fr; }
+      .actions .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <a href="/" class="brand">
+        <img src="../imagem/logo/tech10-logo-fundo-azul.png" alt="Tech10 Informática">
+        <span>Tech10 Informática</span>
+      </a>
+      <div class="toplinks">
+        <a href="/" class="ghost-link"><i class="fas fa-house"></i> Voltar ao site</a>
+        <a href="/loja" class="ghost-link"><i class="fas fa-store"></i> Ir para a loja</a>
+        <a href="/carrinho" class="primary-link"><i class="fas fa-shopping-cart"></i> Ver carrinho</a>
+      </div>
+    </div>
+
+    <div class="hero">
+      <section class="panel">
+        <div class="eyebrow"><i class="fas fa-shield-heart"></i> Portal oficial do cliente Tech10</div>
+        <h1>Acompanhe sua ordem de serviço sem depender do atendimento.</h1>
+        <p class="lead">
+          Este espaço conecta o site da Tech10 ao portal operacional do ERP. Aqui o cliente pode
+          consultar o andamento da O.S., abrir o portal completo e validar orçamento quando houver link mágico.
+        </p>
+
+        <div class="form-card">
+          <div class="form-row">
+            <div class="field">
+              <label for="os-number">Número da O.S.</label>
+              <input id="os-number" name="os-number" inputmode="numeric" placeholder="Ex.: 0127">
+            </div>
+            <div class="field">
+              <label for="access-mode">Modo de acesso</label>
+              <select id="access-mode" name="access-mode">
+                <option value="portal">Portal completo</option>
+                <option value="status">Consulta rápida</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field" style="margin-bottom: 14px;">
+            <label for="magic-token">Token / link mágico (opcional)</label>
+            <input id="magic-token" name="magic-token" placeholder="Cole aqui o token recebido por WhatsApp ou e-mail">
+          </div>
+
+          <p class="hint">
+            Use o <strong>portal completo</strong> quando o cliente recebeu link mágico ou precisa aprovar orçamento.
+            Use a <strong>consulta rápida</strong> quando quer apenas ver o status da ordem.
+          </p>
+
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="open-portal-btn">
+              <i class="fas fa-arrow-up-right-from-square"></i> Abrir portal
+            </button>
+            <button type="button" class="btn btn-secondary" id="open-status-btn">
+              <i class="fas fa-timeline"></i> Consultar status
+            </button>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <div class="mini-card">
+            <strong><i class="fas fa-file-signature"></i> Aprovação de orçamento</strong>
+            <p>Se o cliente recebeu link mágico, ele pode aprovar ou recusar o orçamento direto no portal.</p>
+          </div>
+          <div class="mini-card">
+            <strong><i class="fas fa-clock-rotate-left"></i> Consulta rápida</strong>
+            <p>Para checagem operacional simples, basta informar o número da O.S. e abrir a página de status.</p>
+          </div>
+        </div>
+      </section>
+
+      <aside class="helper">
+        <span class="status-chip"><i class="fas fa-circle-check"></i> Runtime standalone do tenant</span>
+        <h2>Como este fluxo está organizado</h2>
+        <ol class="steps">
+          <li>
+            <i class="fas fa-globe"></i>
+            <div>
+              <strong>Site e loja próprios</strong>
+              <p>O site Tech10 publica em runtime próprio, com rotas limpas como <code>/loja</code>, <code>/carrinho</code> e <code>/checkout</code>.</p>
+            </div>
+          </li>
+          <li>
+            <i class="fas fa-plug"></i>
+            <div>
+              <strong>Portal como ponte explícita</strong>
+              <p>O <code>/portal</code> não mistura outro storefront: ele direciona o cliente para o portal oficial do ERP, mantendo ownership claro.</p>
+            </div>
+          </li>
+          <li>
+            <i class="fas fa-shield-halved"></i>
+            <div>
+              <strong>Configuração centralizada</strong>
+              <p>As URLs críticas de portal e status vêm do runtime config do tenant, para não ficar espalhadas no HTML.</p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="runtime-box">
+          <strong>Configuração ativa</strong>
+          <div class="runtime-note" id="runtime-note">Carregando variáveis do runtime...</div>
+        </div>
+
+        <div class="support-box">
+          <p>
+            Se o cliente não tiver o número da O.S. ou o token, a orientação mais rápida continua sendo o WhatsApp oficial da loja.
+          </p>
+          <div class="support-actions">
+            <a class="btn btn-secondary" id="whatsapp-support-btn" href="https://wa.me/55974001960" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-whatsapp"></i> Falar com a Tech10
+            </a>
+            <a class="btn btn-secondary" href="/loja">
+              <i class="fas fa-store"></i> Continuar comprando
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="../js/tenant-config.js"></script>
+  <script src="../js/tenant-routes.js"></script>
+  <script src="../js/portal-entry.js"></script>
+</body>
+</html>
