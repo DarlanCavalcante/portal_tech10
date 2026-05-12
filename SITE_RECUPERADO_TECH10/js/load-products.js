@@ -164,6 +164,52 @@
       .trim();
   }
 
+  function getHomeCatalogCategorySummary(products, limit) {
+    var categoryMap = new Map();
+
+    (products || []).forEach(function (product, index) {
+      if (!product) return;
+      var slug = (product.categorySlug || toCategorySlug(product.category)).toLowerCase();
+      if (!slug || slug === 'outros') return;
+
+      var categoryName = normalizeCatalogText(product.category && product.category.name);
+      if (!categoryMap.has(slug)) {
+        categoryMap.set(slug, {
+          slug: slug,
+          label: categoryName || 'Categoria',
+          count: 0,
+          firstIndex: index
+        });
+      }
+
+      var entry = categoryMap.get(slug);
+      entry.count += 1;
+      if (categoryName) {
+        entry.label = categoryName;
+      }
+    });
+
+    return Array.from(categoryMap.values())
+      .sort(function (a, b) {
+        if (b.count !== a.count) return b.count - a.count;
+        return a.firstIndex - b.firstIndex;
+      })
+      .slice(0, limit || 4);
+  }
+
+  function formatCatalogCategoryItemCount(count) {
+    return count === 1 ? '1 item' : count + ' itens';
+  }
+
+  function getHomeCatalogIconClass(slug) {
+    if (!slug) return 'fas fa-box-open';
+    if (slug.indexOf('cabo') !== -1) return 'fas fa-plug';
+    if (slug.indexOf('mouse') !== -1 || slug.indexOf('mouses') !== -1) return 'fas fa-computer-mouse';
+    if (slug.indexOf('rede') !== -1 || slug.indexOf('equipamento') !== -1 || slug.indexOf('wifi') !== -1) return 'fas fa-wifi';
+    if (slug.indexOf('veiculo') !== -1) return 'fas fa-car-side';
+    return 'fas fa-box-open';
+  }
+
   function matchesCatalogSearch(product, search) {
     if (!search) return true;
 
@@ -191,36 +237,7 @@
     var filtersRoot = global.document && global.document.querySelector('section#produtos .filters');
     if (!filtersRoot) return;
 
-    var categoryMap = new Map();
-    (products || []).forEach(function (product, index) {
-      if (!product) return;
-      var slug = (product.categorySlug || toCategorySlug(product.category)).toLowerCase();
-      if (!slug || slug === 'outros') return;
-
-      var categoryName = normalizeCatalogText(product.category && product.category.name);
-      if (!categoryMap.has(slug)) {
-        categoryMap.set(slug, {
-          slug: slug,
-          label: categoryName || 'Categoria',
-          count: 0,
-          firstIndex: index
-        });
-      }
-
-      var entry = categoryMap.get(slug);
-      entry.count += 1;
-      if (categoryName) {
-        entry.label = categoryName;
-      }
-    });
-
-    var categories = Array.from(categoryMap.values())
-      .sort(function (a, b) {
-        if (b.count !== a.count) return b.count - a.count;
-        return a.firstIndex - b.firstIndex;
-      })
-      .slice(0, 4);
-
+    var categories = getHomeCatalogCategorySummary(products, 4);
     if (!categories.length) return;
 
     var currentActive = 'all';
@@ -251,6 +268,48 @@
     appendButton('Todos', 'all', currentActive === 'all');
     categories.forEach(function (category) {
       appendButton(category.label, category.slug, currentActive === category.slug);
+    });
+  }
+
+  function syncHomeCatalogEntryPoints(products, containerId) {
+    if ((containerId || 'produtosGrid') !== 'produtosGrid') return;
+    if (!global.document) return;
+
+    var categories = getHomeCatalogCategorySummary(products, 2);
+    if (!categories.length) return;
+
+    categories.forEach(function (category, index) {
+      var cardLink = global.document.querySelector('[data-home-catalog-slot="' + index + '"]');
+      if (cardLink) {
+        cardLink.setAttribute('href', '/loja?category=' + encodeURIComponent(category.slug));
+
+        var icon = cardLink.querySelector('[data-home-catalog-icon]');
+        if (icon) {
+          icon.className = getHomeCatalogIconClass(category.slug);
+          icon.setAttribute('data-home-catalog-icon', '');
+        }
+
+        var title = cardLink.querySelector('[data-home-catalog-title]');
+        if (title) {
+          title.textContent = category.label;
+        }
+
+        var description = cardLink.querySelector('[data-home-catalog-description]');
+        if (description) {
+          description.textContent = formatCatalogCategoryItemCount(category.count) + ' com estoque p' + '\u00fablico agora';
+        }
+
+        var route = cardLink.querySelector('[data-home-catalog-route]');
+        if (route) {
+          route.textContent = 'Ver ' + formatCatalogCategoryItemCount(category.count) + ' na loja';
+        }
+      }
+
+      var footerLink = global.document.querySelector('[data-home-footer-catalog-slot="' + index + '"]');
+      if (footerLink) {
+        footerLink.setAttribute('href', '/loja?category=' + encodeURIComponent(category.slug));
+        footerLink.textContent = category.label + ' na loja (' + category.count + ')';
+      }
     });
   }
 
@@ -426,6 +485,7 @@
     if (!container) return;
 
     syncHomeCatalogFilters(products, containerId);
+    syncHomeCatalogEntryPoints(products, containerId);
 
     if (!products || !Array.isArray(products) || products.length === 0) {
       var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';
