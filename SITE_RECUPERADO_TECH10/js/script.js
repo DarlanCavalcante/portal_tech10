@@ -281,6 +281,7 @@ async function initializeApp() {
       var produtosGrid = document.getElementById('produtosGrid');
       var hasCards = produtosGrid && (produtosGrid.querySelector('.lp-card') || produtosGrid.querySelector('.product-card'));
       if (hasCards) return;
+      var isLocalRuntime = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
       try {
         var hasCanonicalStorefrontLoader =
@@ -289,10 +290,8 @@ async function initializeApp() {
 
         if (hasCanonicalStorefrontLoader) {
           var canonicalProducts = await window.loadProductsFromAPI();
-          if (canonicalProducts.length > 0) {
-            window.renderProductsFromAPI(canonicalProducts, 'produtosGrid');
-            return;
-          }
+          window.renderProductsFromAPI(canonicalProducts, 'produtosGrid');
+          return;
         }
 
         var apiProducts = typeof loadProductsFromAPI === 'function' ? await loadProductsFromAPI() : [];
@@ -303,13 +302,22 @@ async function initializeApp() {
           return;
         }
 
-        state.products = productsData;
-        state.filteredProducts = productsData;
-        renderProducts();
+        if (isLocalRuntime) {
+          state.products = productsData;
+          state.filteredProducts = productsData;
+          renderProducts();
+        }
       } catch (e) {
-        state.products = productsData;
-        state.filteredProducts = productsData;
-        renderProducts();
+        if (isLocalRuntime) {
+          state.products = productsData;
+          state.filteredProducts = productsData;
+          renderProducts();
+        } else if (
+          typeof window.renderProductsFromAPI === 'function'
+          && typeof window.loadProductsFromAPI === 'function'
+        ) {
+          window.renderProductsFromAPI([], 'produtosGrid');
+        }
       }
     }, 800);
     
