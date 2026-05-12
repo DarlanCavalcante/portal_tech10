@@ -1,13 +1,35 @@
 /**
- * MedusaCart - Sistema de Carrinho 100% Medusa
- * Tech10 E-commerce - Gestão completa de carrinho via API Medusa
+ * Camada legada de carrinho direto.
+ * Mantida apenas como fallback profundo; a jornada principal usa cart-storefront.js.
  */
+
+function readLegacyCartId() {
+    const apiConfig = window.API_CONFIG || {};
+    if (typeof apiConfig.readStoredCartId === 'function') {
+        return apiConfig.readStoredCartId();
+    }
+    return localStorage.getItem('medusa_cart_id');
+}
+
+function persistLegacyCartId(value) {
+    const apiConfig = window.API_CONFIG || {};
+    if (typeof apiConfig.persistStoredCartId === 'function') {
+        apiConfig.persistStoredCartId(value);
+        return;
+    }
+
+    if (!value) {
+        localStorage.removeItem('medusa_cart_id');
+        return;
+    }
+
+    localStorage.setItem('medusa_cart_id', value);
+}
 
 class MedusaCart {
     constructor() {
-        // Usar configuração centralizada da API
-        this.baseUrl = window.API_CONFIG?.STORE_API || 'http://localhost:9000/store';
-        this.cartId = localStorage.getItem('medusa_cart_id');
+        this.baseUrl = window.API_CONFIG?.STORE_API || `${window.location.origin}/api/store`;
+        this.cartId = readLegacyCartId();
         this.cartCountElement = document.getElementById('cartCount');
         this.cart = null;
     }
@@ -55,7 +77,7 @@ class MedusaCart {
             const data = await response.json();
             this.cartId = data.cart.id;
             this.cart = data.cart;
-            localStorage.setItem('medusa_cart_id', this.cartId);
+            persistLegacyCartId(this.cartId);
             
             console.log('🛒 Carrinho Medusa criado:', this.cartId);
             return this.cart;
@@ -78,7 +100,7 @@ class MedusaCart {
                 if (response.status === 404) {
                     // Carrinho não existe mais, limpar ID
                     this.cartId = null;
-                    localStorage.removeItem('medusa_cart_id');
+                    persistLegacyCartId(null);
                     return null;
                 }
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -290,7 +312,7 @@ class MedusaCart {
     clearCart() {
         this.cartId = null;
         this.cart = null;
-        localStorage.removeItem('medusa_cart_id');
+        persistLegacyCartId(null);
         this.updateCartCount();
     }
 }

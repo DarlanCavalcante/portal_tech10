@@ -1,14 +1,40 @@
 /**
- * Medusa Client - Cliente API para integração com Medusa
- * Tech10 E-commerce
+ * Cliente legado de storefront direto.
+ * Mantido apenas por compatibilidade; o runtime canônico usa MarketplaceAdapter.
  */
 
-const MEDUSA_BASE_URL = 'http://localhost:9000';
+function resolveLegacyStoreApiBaseUrl() {
+  return (window.API_CONFIG && window.API_CONFIG.STORE_API)
+    || `${window.location.origin}/api/store`;
+}
+
+function readLegacyCartId() {
+  const apiConfig = window.API_CONFIG || {};
+  if (typeof apiConfig.readStoredCartId === 'function') {
+    return apiConfig.readStoredCartId();
+  }
+  return localStorage.getItem('medusa_cart_id');
+}
+
+function persistLegacyCartId(value) {
+  const apiConfig = window.API_CONFIG || {};
+  if (typeof apiConfig.persistStoredCartId === 'function') {
+    apiConfig.persistStoredCartId(value);
+    return;
+  }
+
+  if (!value) {
+    localStorage.removeItem('medusa_cart_id');
+    return;
+  }
+
+  localStorage.setItem('medusa_cart_id', value);
+}
 
 class MedusaClient {
-  constructor(baseUrl = MEDUSA_BASE_URL) {
+  constructor(baseUrl = resolveLegacyStoreApiBaseUrl()) {
     this.baseUrl = baseUrl;
-    this.cartId = localStorage.getItem('medusa_cart_id');
+    this.cartId = readLegacyCartId();
   }
 
   /**
@@ -17,7 +43,7 @@ class MedusaClient {
   async getProducts(options = {}) {
     try {
       const { limit = 12, offset = 0, category_id, q } = options;
-      let url = `${this.baseUrl}/store/products?limit=${limit}&offset=${offset}`;
+      let url = `${this.baseUrl}/products?limit=${limit}&offset=${offset}`;
       
       if (category_id) {
         url += `&category_id[]=${category_id}`;
@@ -44,7 +70,7 @@ class MedusaClient {
    */
   async getProductById(id) {
     try {
-      const response = await fetch(`${this.baseUrl}/store/products/${id}`);
+      const response = await fetch(`${this.baseUrl}/products/${id}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -60,7 +86,7 @@ class MedusaClient {
    */
   async getCategories() {
     try {
-      const response = await fetch(`${this.baseUrl}/store/product-categories`);
+      const response = await fetch(`${this.baseUrl}/product-categories`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -85,11 +111,11 @@ class MedusaClient {
         }
         // Se não existir, limpar ID
         this.cartId = null;
-        localStorage.removeItem('medusa_cart_id');
+        persistLegacyCartId(null);
       }
 
       // Criar novo carrinho
-      const response = await fetch(`${this.baseUrl}/store/carts`, {
+      const response = await fetch(`${this.baseUrl}/carts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -102,7 +128,7 @@ class MedusaClient {
 
       const cart = await response.json();
       this.cartId = cart.cart.id;
-      localStorage.setItem('medusa_cart_id', this.cartId);
+      persistLegacyCartId(this.cartId);
       return cart.cart;
     } catch (error) {
       console.error('Erro ao criar/obter carrinho:', error);
@@ -115,7 +141,7 @@ class MedusaClient {
    */
   async getCart(cartId) {
     try {
-      const response = await fetch(`${this.baseUrl}/store/carts/${cartId}`);
+      const response = await fetch(`${this.baseUrl}/carts/${cartId}`);
       if (!response.ok) {
         return null;
       }
@@ -137,7 +163,7 @@ class MedusaClient {
         throw new Error('Não foi possível criar/obter carrinho');
       }
 
-      const response = await fetch(`${this.baseUrl}/store/carts/${cart.id}/line-items`, {
+      const response = await fetch(`${this.baseUrl}/carts/${cart.id}/line-items`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -170,7 +196,7 @@ class MedusaClient {
         throw new Error('Carrinho não encontrado');
       }
 
-      const response = await fetch(`${this.baseUrl}/store/carts/${cart.id}/line-items/${lineItemId}`, {
+      const response = await fetch(`${this.baseUrl}/carts/${cart.id}/line-items/${lineItemId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -202,7 +228,7 @@ class MedusaClient {
         throw new Error('Carrinho não encontrado');
       }
 
-      const response = await fetch(`${this.baseUrl}/store/carts/${cart.id}/line-items/${lineItemId}`, {
+      const response = await fetch(`${this.baseUrl}/carts/${cart.id}/line-items/${lineItemId}`, {
         method: 'DELETE'
       });
 
@@ -223,7 +249,7 @@ class MedusaClient {
    */
   async calculateShipping(cartId, shippingAddress) {
     try {
-      const response = await fetch(`${this.baseUrl}/store/carts/${cartId}/shipping-methods`, {
+      const response = await fetch(`${this.baseUrl}/carts/${cartId}/shipping-methods`, {
         method: 'GET'
       });
 
@@ -244,7 +270,7 @@ class MedusaClient {
   async createOrder(cartId, customerData, shippingAddress) {
     try {
       // Primeiro, adicionar informações de envio ao carrinho
-      await fetch(`${this.baseUrl}/store/carts/${cartId}`, {
+      await fetch(`${this.baseUrl}/carts/${cartId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -256,7 +282,7 @@ class MedusaClient {
       });
 
       // Depois, completar o checkout
-      const response = await fetch(`${this.baseUrl}/store/carts/${cartId}/complete`, {
+      const response = await fetch(`${this.baseUrl}/carts/${cartId}/complete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -271,7 +297,7 @@ class MedusaClient {
       
       // Limpar carrinho após checkout
       this.cartId = null;
-      localStorage.removeItem('medusa_cart_id');
+      persistLegacyCartId(null);
 
       return data.order;
     } catch (error) {
