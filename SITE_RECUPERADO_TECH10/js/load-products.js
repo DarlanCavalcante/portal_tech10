@@ -416,6 +416,10 @@
   // ─────────────────────────────────────────────────────────────────────────
   // Exports globais
   // ─────────────────────────────────────────────────────────────────────────
+  function publishLegacyCatalogAliases() {
+    global.addToCartMedusa = global.addToStorefrontCart;
+  }
+
   global.loadProductsFromAPI = loadProducts;
   global.renderProductsFromAPI = renderProducts;
 
@@ -430,6 +434,6 @@
     }
   };
 
-  global.addToCartMedusa = global.addToStorefrontCart;
+  publishLegacyCatalogAliases();
 
 })(typeof window !== 'undefined' ? window : this);
