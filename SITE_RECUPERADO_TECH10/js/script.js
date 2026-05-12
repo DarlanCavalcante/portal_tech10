@@ -357,6 +357,19 @@ function setupEventListeners() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('input', handleSearch);
+        searchInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                openCanonicalStoreSearch(searchInput.value);
+            }
+        });
+    }
+
+    const searchSubmit = document.querySelector('.search-box i');
+    if (searchSubmit && searchInput) {
+        searchSubmit.addEventListener('click', function() {
+            openCanonicalStoreSearch(searchInput.value);
+        });
     }
     
     // Carrinho - sempre usar a rota canônica do storefront
@@ -542,6 +555,19 @@ function filterProducts(filter) {
     
     renderProducts();
     animateProductCards();
+}
+
+function openCanonicalStoreSearch(rawTerm) {
+    const tenantRoutes = window.TenantRoutes || {};
+    const shopHome = tenantRoutes.shopHome || '/loja';
+    const url = new URL(shopHome, window.location.origin);
+    const searchTerm = String(rawTerm || '').trim();
+
+    if (searchTerm) {
+        url.searchParams.set('search', searchTerm);
+    }
+
+    window.location.href = url.pathname + url.search;
 }
 
 function handleSearch(event) {

@@ -19,6 +19,33 @@
   var _sortValue = 'recent';
   var _totalFromApi = 0;
 
+  function _getSearchInput() {
+    return document.getElementById('pp-search');
+  }
+
+  function _getCurrentSearchTerm() {
+    var searchInput = _getSearchInput();
+    return searchInput ? String(searchInput.value || '').toLowerCase().trim() : '';
+  }
+
+  function _syncListingUrlState() {
+    try {
+      var url = new URL(window.location.href);
+      if (_activeHandle === 'all') url.searchParams.delete('category');
+      else url.searchParams.set('category', _activeHandle);
+
+      var searchTerm = _getCurrentSearchTerm();
+      if (searchTerm) {
+        url.searchParams.set('search', searchTerm);
+      } else {
+        url.searchParams.delete('search');
+      }
+      url.searchParams.delete('q');
+
+      history.replaceState(null, '', url.toString());
+    } catch (e) {}
+  }
+
   function _matchesSearch(product, term) {
     if (!term) return true;
 
@@ -66,6 +93,7 @@
     // Ler parâmetro de URL: ?category=handle
     var params = new URLSearchParams(window.location.search);
     var initCat = params.get('category') || 'all';
+    var initSearch = params.get('search') || params.get('q') || '';
     _activeHandle = initCat;
 
     // Carregar categorias
@@ -77,8 +105,9 @@
     _loadAllProducts();
 
     // Eventos
-    var searchInput = document.getElementById('pp-search');
+    var searchInput = _getSearchInput();
     if (searchInput) {
+      searchInput.value = initSearch;
       searchInput.addEventListener('input', function () {
         clearTimeout(_searchDebounce);
         _searchDebounce = setTimeout(function () {
@@ -342,12 +371,7 @@
     }
 
     // Atualizar URL sem recarregar
-    try {
-      var url = new URL(window.location.href);
-      if (handle === 'all') url.searchParams.delete('category');
-      else url.searchParams.set('category', handle);
-      history.replaceState(null, '', url.toString());
-    } catch(e) {}
+    _syncListingUrlState();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -371,7 +395,7 @@
   // ─────────────────────────────────────────────────────────────────────────
   function _applyFilterAndRender() {
     var handle = _activeHandle;
-    var search = (document.getElementById('pp-search') ? document.getElementById('pp-search').value : '').toLowerCase().trim();
+    var search = _getCurrentSearchTerm();
 
     var filtered = _allProducts.slice();
 
@@ -395,6 +419,7 @@
 
     _currentProducts = filtered;
     _offset = 0;
+    _syncListingUrlState();
     _renderPage();
   }
 
