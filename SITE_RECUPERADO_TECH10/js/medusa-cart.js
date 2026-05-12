@@ -5,6 +5,9 @@
 
 function readLegacyCartId() {
     const apiConfig = window.API_CONFIG || {};
+    if (typeof apiConfig.readLegacyCartId === 'function') {
+        return apiConfig.readLegacyCartId();
+    }
     if (typeof apiConfig.readStoredCartId === 'function') {
         return apiConfig.readStoredCartId();
     }
@@ -13,6 +16,10 @@ function readLegacyCartId() {
 
 function persistLegacyCartId(value) {
     const apiConfig = window.API_CONFIG || {};
+    if (typeof apiConfig.persistLegacyCartId === 'function') {
+        apiConfig.persistLegacyCartId(value);
+        return;
+    }
     if (typeof apiConfig.persistStoredCartId === 'function') {
         apiConfig.persistStoredCartId(value);
         return;
@@ -28,7 +35,9 @@ function persistLegacyCartId(value) {
 
 class MedusaCart {
     constructor() {
-        this.baseUrl = window.API_CONFIG?.STORE_API || `${window.location.origin}/api/store`;
+        this.baseUrl = typeof window.API_CONFIG?.resolveLegacyStoreApiBaseUrl === 'function'
+            ? window.API_CONFIG.resolveLegacyStoreApiBaseUrl()
+            : (window.API_CONFIG?.STORE_API || `${window.location.origin}/api/store`);
         this.cartId = readLegacyCartId();
         this.cartCountElement = document.getElementById('cartCount');
         this.cart = null;

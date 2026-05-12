@@ -4,12 +4,18 @@
  */
 
 function resolveLegacyStoreApiBaseUrl() {
+  if (window.API_CONFIG && typeof window.API_CONFIG.resolveLegacyStoreApiBaseUrl === 'function') {
+    return window.API_CONFIG.resolveLegacyStoreApiBaseUrl();
+  }
   return (window.API_CONFIG && window.API_CONFIG.STORE_API)
     || `${window.location.origin}/api/store`;
 }
 
 function readLegacyCartId() {
   const apiConfig = window.API_CONFIG || {};
+  if (typeof apiConfig.readLegacyCartId === 'function') {
+    return apiConfig.readLegacyCartId();
+  }
   if (typeof apiConfig.readStoredCartId === 'function') {
     return apiConfig.readStoredCartId();
   }
@@ -18,6 +24,10 @@ function readLegacyCartId() {
 
 function persistLegacyCartId(value) {
   const apiConfig = window.API_CONFIG || {};
+  if (typeof apiConfig.persistLegacyCartId === 'function') {
+    apiConfig.persistLegacyCartId(value);
+    return;
+  }
   if (typeof apiConfig.persistStoredCartId === 'function') {
     apiConfig.persistStoredCartId(value);
     return;
