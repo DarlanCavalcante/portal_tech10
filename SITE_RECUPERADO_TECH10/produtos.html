@@ -529,21 +529,51 @@
     .pp-btn-load-more:disabled { opacity: .5; cursor: not-allowed; }
 
     .pp-quote-banner {
-      background: linear-gradient(135deg, #eff6ff 0%, #ecfeff 100%);
-      border: 1px solid #bfdbfe;
-      color: #1e3a8a;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      color: #0f172a;
+      border-radius: 14px;
       padding: 14px 16px;
       margin-bottom: 18px;
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+    .pp-quote-banner__copy {
+      display: flex;
       align-items: flex-start;
       gap: 12px;
-      box-shadow: 0 1px 6px rgba(37, 99, 235, 0.08);
+      flex: 1 1 420px;
+      min-width: 0;
     }
-    .pp-quote-banner i {
+    .pp-quote-banner__icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
       color: #2563eb;
-      font-size: 18px;
-      margin-top: 2px;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .pp-quote-banner__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.1);
+      color: #1d4ed8;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
     .pp-quote-banner strong {
       display: block;
@@ -551,15 +581,17 @@
       margin-bottom: 4px;
     }
     .pp-quote-banner p {
-      font-size: 13px;
+      font-size: 12.5px;
       line-height: 1.5;
+      color: #475569;
       margin: 0;
+      max-width: 720px;
     }
     .pp-quote-banner-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 12px;
+      margin-left: auto;
     }
     .pp-quote-banner-action {
       display: inline-flex;
@@ -585,6 +617,14 @@
     }
     .pp-quote-banner-action:hover {
       transform: translateY(-1px);
+    }
+    @media (max-width: 900px) {
+      .pp-quote-banner {
+        align-items: flex-start;
+      }
+      .pp-quote-banner-actions {
+        margin-left: 0;
+      }
     }
 
     .lp-card-meta {
@@ -758,25 +798,30 @@
       </div>
 
       <div class="pp-quote-banner" id="pp-quote-banner">
-        <i class="fas fa-comments-dollar" aria-hidden="true"></i>
-        <div>
-          <strong>Loja em atendimento assistido</strong>
-          <p>Os produtos já refletem o estoque público da Tech10. Nesta fase, a confirmação da venda continua pelo atendimento para garantir disponibilidade, orientação técnica e fechamento seguro do pedido.</p>
-          <div class="pp-quote-banner-actions">
-            <a
-              href="/#contato"
-              class="pp-quote-banner-action primary"
-              data-tenant-support-link
-              data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
-            >
-              <i class="fab fa-whatsapp" aria-hidden="true"></i>
-              Falar com a Tech10
-            </a>
-            <a href="/portal" class="pp-quote-banner-action secondary" data-tenant-portal-link>
-              <i class="fas fa-receipt" aria-hidden="true"></i>
-              Acompanhar minha O.S.
-            </a>
+        <div class="pp-quote-banner__copy">
+          <span class="pp-quote-banner__icon">
+            <i class="fas fa-comments-dollar" aria-hidden="true"></i>
+          </span>
+          <div>
+            <span class="pp-quote-banner__eyebrow">Próximo passo</span>
+            <strong>Feche com atendimento assistido da Tech10</strong>
+            <p>Escolha o item na vitrine e confirme pelo WhatsApp para disponibilidade, orientação técnica e fechamento seguro. Se já tem O.S., acompanhe tudo pelo portal.</p>
           </div>
+        </div>
+        <div class="pp-quote-banner-actions">
+          <a
+            href="/#contato"
+            class="pp-quote-banner-action primary"
+            data-tenant-support-link
+            data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
+          >
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            Falar com a Tech10
+          </a>
+          <a href="/portal" class="pp-quote-banner-action secondary" data-tenant-portal-link>
+            <i class="fas fa-receipt" aria-hidden="true"></i>
+            Acompanhar minha O.S.
+          </a>
         </div>
       </div>
 
