@@ -543,6 +543,9 @@
   transition: background 0.2s, transform 0.1s;
   white-space: nowrap;
 }
+.lp-btn-add-label--compact {
+  display: none;
+}
 .lp-btn-add:hover:not(:disabled) {
   background: #1d4ed8;
 }
@@ -741,9 +744,17 @@
   }
   .lp-btn-add {
     height: 36px;
-    font-size: 11.5px;
+    font-size: 12px;
+    font-weight: 800;
     gap: 5px;
     padding: 0 10px;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.18);
+  }
+  .lp-btn-add-label--full {
+    display: none;
+  }
+  .lp-btn-add-label--compact {
+    display: inline;
   }
 }
 
