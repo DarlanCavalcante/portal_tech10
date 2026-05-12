@@ -432,6 +432,14 @@
   flex: 1;
   min-height: 38px;
 }
+.lp-card-commerce {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 4px 0 10px;
+}
 .lp-card-price {
   display: inline-flex;
   align-self: flex-start;
@@ -442,7 +450,7 @@
   font-size: 24px;
   font-weight: 800;
   color: #0f172a;
-  margin: 6px 0 6px;
+  margin: 0;
 }
 .lp-card-stock {
   font-size: 12px;
@@ -450,7 +458,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 10px;
+  margin: 0;
 }
 .lp-card-stock.in-stock { color: #10b981; }
 .lp-card-stock.out-of-stock { color: #ef4444; }
@@ -664,6 +672,13 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .lp-card-meta-chip strong {
+    display: none;
+  }
+  .lp-card-meta-chip--sku {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    letter-spacing: -0.01em;
+  }
   .lp-card-identity-note {
     margin: 0 0 8px;
     padding: 6px 8px;
@@ -677,19 +692,24 @@
     margin: 0 0 8px;
   }
   .lp-card-price {
-    font-size: 17px;
+    font-size: 16px;
     padding: 6px 8px;
-    margin: 4px 0 5px;
+  }
+  .lp-card-commerce {
+    gap: 6px;
+    margin: 2px 0 6px;
   }
   .lp-card-stock {
-    font-size: 11px;
-    margin-bottom: 8px;
+    font-size: 10.5px;
   }
   .lp-card-mode-note {
     gap: 5px;
     margin: 0 0 10px;
     padding: 6px 8px;
     font-size: 10.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .lp-card-actions {
     gap: 8px;
