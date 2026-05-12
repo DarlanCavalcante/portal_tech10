@@ -97,8 +97,8 @@ if (fs.existsSync(tenantConfigPath)) {
   assert(tenantConfig.includes("slug: 'tech10'"), 'tenant-config.js não declara o slug canônico tech10');
   assert(tenantConfig.includes("portalPath: '/portal'"), 'tenant-config.js não declara portalPath canônico');
   assert(tenantConfig.includes("apiBasePath: '/api/store'"), 'tenant-config.js não aponta para /api/store');
-  assert(tenantConfig.includes("catalogSource: 'store_backend'"), 'tenant-config.js não declara o catálogo canônico');
-  assert(tenantConfig.includes("checkoutMode: 'store_backend'"), 'tenant-config.js não declara o modo de checkout canônico');
+  assert(tenantConfig.includes("catalogSource: 'erp_stock'"), 'tenant-config.js não declara o catálogo canônico');
+  assert(tenantConfig.includes("checkoutMode: 'quote_only'"), 'tenant-config.js não declara o modo de checkout canônico');
 }
 
 if (failures.length > 0) {
