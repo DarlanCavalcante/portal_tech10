@@ -67,97 +67,20 @@ async function loadProductsFromAPI() {
 }
 }
 
-// Dados dos produtos (simulação de uma API - FALLBACK)
-const productsData = [
-    {
-        id: 1,
-        name: 'Notebook Dell Inspiron 15',
-        description: 'Intel Core i5, 8GB RAM, 256GB SSD, Tela 15.6"',
-        price: 2499.99,
-        oldPrice: 2799.99,
-        category: 'notebook',
-        image: 'notebook-dell.jpg',
-        badge: '10% OFF',
-        inStock: true
-    },
-    {
-        id: 2,
-        name: 'Desktop Gamer RGB',
-        description: 'AMD Ryzen 5, 16GB RAM, GTX 1660, 500GB SSD',
-        price: 3299.99,
-        oldPrice: null,
-        category: 'desktop',
-        image: 'desktop-gamer.jpg',
-        badge: 'NOVO',
-        inStock: true
-    },
-    {
-        id: 3,
-        name: 'iPhone 14 Pro Max',
-        description: '256GB, Câmera ProRAW, Tela Super Retina XDR',
-        price: 8999.99,
-        oldPrice: 9499.99,
-        category: 'smartphone',
-        image: 'iphone-14.jpg',
-        badge: '5% OFF',
-        inStock: true
-    },
-    {
-        id: 4,
-        name: 'Teclado Mecânico RGB',
-        description: 'Switch Blue, Retroiluminado, ABNT2',
-        price: 299.99,
-        oldPrice: null,
-        category: 'acessorio',
-        image: 'teclado-mecanico.jpg',
-        badge: null,
-        inStock: true
-    },
-    {
-        id: 5,
-        name: 'Monitor 4K 27"',
-        description: 'IPS, 60Hz, USB-C, HDR10',
-        price: 1899.99,
-        oldPrice: 2199.99,
-        category: 'acessorio',
-        image: 'monitor-4k.jpg',
-        badge: '15% OFF',
-        inStock: true
-    },
-    {
-        id: 6,
-        name: 'MacBook Air M2',
-        description: 'Chip M2, 8GB RAM, 256GB SSD, Tela 13.3"',
-        price: 7999.99,
-        oldPrice: null,
-        category: 'notebook',
-        image: 'macbook-air.jpg',
-        badge: 'LANÇAMENTO',
-        inStock: true
-    },
-    {
-        id: 7,
-        name: 'Samsung Galaxy S23',
-        description: '128GB, Câmera 50MP, Tela AMOLED 6.1"',
-        price: 3499.99,
-        oldPrice: 3799.99,
-        category: 'smartphone',
-        image: 'galaxy-s23.jpg',
-        badge: '8% OFF',
-        inStock: true
-    },
-    {
-        id: 8,
-        name: 'Headset Gamer 7.1',
-        description: 'Som Surround, Microfone Noise Cancelling',
-        price: 199.99,
-        oldPrice: null,
-        category: 'acessorio',
-        image: 'headset-gamer.jpg',
-        badge: null,
-        inStock: false
+async function loadLocalSampleProducts() {
+    try {
+        const response = await fetch('/dev/local-sample-products.json', { cache: 'no-store' });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('❌ Erro ao carregar catálogo local de exemplo:', error);
+        return [];
     }
-];
+}
 
 // Dados das Dicas do Especialista
 const dicasData = [
@@ -303,15 +226,21 @@ async function initializeApp() {
         }
 
         if (isLocalRuntime) {
-          state.products = productsData;
-          state.filteredProducts = productsData;
-          renderProducts();
+          var localSampleProducts = await loadLocalSampleProducts();
+          if (localSampleProducts.length > 0) {
+            state.products = localSampleProducts;
+            state.filteredProducts = localSampleProducts;
+            renderProducts();
+          }
         }
       } catch (e) {
         if (isLocalRuntime) {
-          state.products = productsData;
-          state.filteredProducts = productsData;
-          renderProducts();
+          var localFallbackProducts = await loadLocalSampleProducts();
+          if (localFallbackProducts.length > 0) {
+            state.products = localFallbackProducts;
+            state.filteredProducts = localFallbackProducts;
+            renderProducts();
+          }
         } else if (
           typeof window.renderProductsFromAPI === 'function'
           && typeof window.loadProductsFromAPI === 'function'
