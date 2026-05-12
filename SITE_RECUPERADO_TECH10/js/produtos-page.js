@@ -478,7 +478,9 @@
     var countEl = document.getElementById('pp-cart-count');
     if (!countEl) return;
     function update() {
-      var cart = global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce;
+      var cart = typeof global.getActiveStorefrontCart === 'function'
+        ? global.getActiveStorefrontCart()
+        : (global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce);
       if (cart && cart.getCount) {
         var n = cart.getCount();
         countEl.textContent = n;

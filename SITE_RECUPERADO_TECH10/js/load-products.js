@@ -45,6 +45,9 @@
   }
 
   function getActiveStorefrontCart() {
+    if (typeof global.getActiveStorefrontCart === 'function') {
+      return global.getActiveStorefrontCart();
+    }
     return global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce || null;
   }
 

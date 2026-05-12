@@ -258,8 +258,11 @@ async function initializeApp() {
     // Não renderizar produtos aqui - deixar o storefront canônico fazer isso
     // Se Medusa não funcionar, o fallback acima renderizará
     renderDicas();
-    // O contador agora usa o carrinho ativo do storefront, preservando aliases legados só como fallback.
+    // O contador agora usa o helper global do carrinho ativo do storefront.
     function getActiveStorefrontCart() {
+        if (typeof window.getActiveStorefrontCart === 'function') {
+            return window.getActiveStorefrontCart();
+        }
         return window.storefrontCart || window.cartStorefront || window.medusaCart || window.cartVivaCommerce || null;
     }
 
@@ -379,7 +382,7 @@ function setupEventListeners() {
         };
     }
     
-    // Carrinho agora usa MedusaCart - removido handler do modal antigo
+    // Carrinho agora usa o storefront canônico - removido handler do modal antigo
     
     // Formulário de contato
     const contatoForm = document.getElementById('contatoForm');
