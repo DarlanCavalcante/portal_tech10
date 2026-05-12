@@ -3149,6 +3149,26 @@ body.loaded {
     gap: 20px;
     flex-wrap: wrap;
     box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.cta-banner::after {
+    content: "";
+    position: absolute;
+    right: -60px;
+    top: -40px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 72%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cta-banner > * {
+    position: relative;
+    z-index: 1;
 }
 
 .cta-banner__title {
@@ -3209,11 +3229,13 @@ body.loaded {
     align-items: center;
     gap: 8px;
     white-space: nowrap;
-    transition: transform 0.15s;
+    box-shadow: 0 16px 28px rgba(15, 23, 42, 0.16);
+    transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .cta-banner__btn:hover {
     transform: scale(1.04);
+    box-shadow: 0 20px 34px rgba(15, 23, 42, 0.2);
 }
 
 .cta-banner__actions {
@@ -3307,6 +3329,17 @@ body.loaded {
     box-shadow: 0 22px 48px rgba(30, 64, 175, 0.12);
     border-color: rgba(37, 99, 235, 0.22);
     outline: none;
+}
+
+.catalog-spotlight-card--primary {
+    background: linear-gradient(145deg, #ffffff 0%, #eef5ff 100%);
+    border-color: rgba(37, 99, 235, 0.2);
+    box-shadow: 0 24px 56px rgba(30, 64, 175, 0.14);
+}
+
+.catalog-spotlight-card--primary .catalog-spotlight-card__eyebrow {
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    color: #fff;
 }
 
 .catalog-spotlight-card__image {
@@ -3457,13 +3490,22 @@ body.loaded {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    background: rgba(219, 234, 254, 0.72);
     color: #1d4ed8;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 800;
 }
 
 .catalog-spotlight-card__cta i {
     font-size: 0.82rem;
+}
+
+.catalog-spotlight-card--primary .catalog-spotlight-card__cta {
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    color: #fff;
+    box-shadow: 0 14px 28px rgba(29, 78, 216, 0.2);
 }
 
 .catalog-spotlight-card--loading {
