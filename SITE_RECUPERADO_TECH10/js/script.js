@@ -1284,6 +1284,15 @@ function initializeBackToTop() {
 let currentProductModal = null;
 
 function openProductModal(productId) {
+    if (
+        window.Tech10ProductModal
+        && typeof window.Tech10ProductModal.open === 'function'
+        && window.Tech10ProductModal.open !== openProductModal
+    ) {
+        window.Tech10ProductModal.open(productId);
+        return;
+    }
+
     console.log('🔍 Tentando abrir modal para produto:', productId);
     
     // Buscar primeiro em filteredProducts, depois em products
@@ -1456,6 +1465,15 @@ function openProductModal(productId) {
 }
 
 function closeProductModal() {
+    if (
+        window.Tech10ProductModal
+        && typeof window.Tech10ProductModal.close === 'function'
+        && window.Tech10ProductModal.close !== closeProductModal
+    ) {
+        window.Tech10ProductModal.close();
+        return;
+    }
+
     console.log('❌ Fechando modal...');
     const modal = document.getElementById('productModal');
     if (modal) {
@@ -1486,7 +1504,6 @@ function initializeProductModal() {
     const closeBtn = document.getElementById('closeProductModal');
     
     if (!modal || !closeBtn) {
-        console.warn('Modal de produto não encontrado');
         return;
     }
     

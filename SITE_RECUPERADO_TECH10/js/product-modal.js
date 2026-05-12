@@ -580,6 +580,10 @@
   // ─────────────────────────────────────────────────────────────────────────
   // Exports globais
   // ─────────────────────────────────────────────────────────────────────────
+  global.Tech10ProductModal = Object.freeze({
+    open: openProductModal,
+    close: closeProductModal
+  });
   global.openProductModal = openProductModal;
   global.__openProductModal = openProductModal;
   global.closeProductModal = closeProductModal;
