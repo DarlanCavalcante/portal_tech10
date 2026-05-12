@@ -447,9 +447,10 @@
     <script src="js/api-adapter.js"></script>
     <script>
         const RUNTIME_CONFIG_PATH = '/api/runtime-config';
-        const CART_KEY = (window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id';
-        const LEGACY_CART_KEY = (window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id';
-        let cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
+        let cartId = (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function')
+            ? window.API_CONFIG.readStoredCartId()
+            : localStorage.getItem((window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id')
+                || localStorage.getItem((window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id');
         let cart = null;
         let selectedShippingOption = { method: 'standard', cost: 0, is_free: true, zone: null };
         let runtimeConfigCache = null;

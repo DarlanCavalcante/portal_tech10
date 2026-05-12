@@ -596,11 +596,13 @@
         }
         
         // Carrinho canônico do storefront Tech10
-        const CART_KEY = (window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id';
-        const LEGACY_CART_KEY = (window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id';
-
         function getStoredCartId() {
-            return localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
+            if (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function') {
+                return window.API_CONFIG.readStoredCartId();
+            }
+            const cartKey = (window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id';
+            const legacyCartKey = (window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id';
+            return localStorage.getItem(cartKey) || localStorage.getItem(legacyCartKey);
         }
 
         function getStoreAPI() {
