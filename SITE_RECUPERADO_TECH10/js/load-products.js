@@ -123,8 +123,8 @@
     'perifericos': ['perifericos', 'teclados', 'mouses', 'monitores', 'webcams-headsets'],
     'componentes': ['componentes', 'ssd-hd', 'memoria-ram', 'processadores', 'placas-video'],
     'nobreaks-energia': ['nobreaks-energia', 'nobreaks', 'estabilizadores'],
-    'redes-conectividade': ['redes-conectividade', 'roteadores-wifi', 'switches-hubs'],
-    'eletronicos-tecnologia': ['eletronicos-tecnologia', 'computadores', 'notebooks-gamer', 'notebooks-office', 'desktops', 'all-in-one', 'smartphones', 'android', 'iphone-apple', 'perifericos', 'teclados', 'mouses', 'monitores', 'webcams-headsets', 'componentes', 'ssd-hd', 'memoria-ram', 'processadores', 'placas-video', 'nobreaks-energia', 'nobreaks', 'estabilizadores', 'redes-conectividade', 'roteadores-wifi', 'switches-hubs'],
+    'redes-conectividade': ['redes-conectividade', 'redes-equipamentos', 'roteadores-wifi', 'switches-hubs'],
+    'eletronicos-tecnologia': ['eletronicos-tecnologia', 'computadores', 'notebooks-gamer', 'notebooks-office', 'desktops', 'all-in-one', 'smartphones', 'android', 'iphone-apple', 'perifericos', 'teclados', 'mouses', 'monitores', 'webcams-headsets', 'componentes', 'ssd-hd', 'memoria-ram', 'processadores', 'placas-video', 'nobreaks-energia', 'nobreaks', 'estabilizadores', 'redes-conectividade', 'redes-equipamentos', 'roteadores-wifi', 'switches-hubs'],
   };
 
   function toCategorySlug(cat) {
