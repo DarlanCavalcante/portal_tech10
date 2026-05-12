@@ -190,6 +190,74 @@
     return 'Produto disponível para atendimento assistido.';
   }
 
+  function resetProductImageProfile(media) {
+    if (!media || !media.classList) return;
+    media.classList.remove(
+      'lp-card-img--landscape',
+      'lp-card-img--portrait',
+      'lp-card-img--square',
+      'lp-card-img--embedded',
+      'lp-card-img--fallback'
+    );
+  }
+
+  function applyProductImageProfile(img, fallbackImg) {
+    if (!img || !img.closest) return;
+    var media = img.closest('.lp-card-img');
+    if (!media) return;
+
+    resetProductImageProfile(media);
+
+    var currentSrc = String(img.currentSrc || img.src || '');
+    if (currentSrc.indexOf('data:') === 0) {
+      media.classList.add('lp-card-img--embedded');
+    }
+
+    if (fallbackImg && currentSrc.indexOf(fallbackImg) !== -1) {
+      media.classList.add('lp-card-img--fallback');
+      return;
+    }
+
+    var width = Number(img.naturalWidth || 0);
+    var height = Number(img.naturalHeight || 0);
+    if (!width || !height) return;
+
+    var ratio = width / height;
+    if (ratio >= 1.35) {
+      media.classList.add('lp-card-img--landscape');
+      return;
+    }
+    if (ratio <= 0.85) {
+      media.classList.add('lp-card-img--portrait');
+      return;
+    }
+    media.classList.add('lp-card-img--square');
+  }
+
+  function enhanceProductCardImages(container, fallbackImg) {
+    if (!container || !container.querySelectorAll) return;
+
+    container.querySelectorAll('.lp-card-img img').forEach(function (img) {
+      var handleProfile = function () {
+        applyProductImageProfile(img, fallbackImg);
+      };
+
+      if (img.complete) {
+        handleProfile();
+      } else {
+        img.addEventListener('load', handleProfile, { once: true });
+      }
+
+      img.addEventListener('error', function () {
+        var media = img.closest('.lp-card-img');
+        resetProductImageProfile(media);
+        if (media) {
+          media.classList.add('lp-card-img--fallback');
+        }
+      }, { once: true });
+    });
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Controle de quantidade por produto
   // ─────────────────────────────────────────────────────────────────────────
@@ -352,6 +420,7 @@
       .join('');
 
     container.innerHTML = html;
+    enhanceProductCardImages(container, fallbackImg);
     _attachCardEvents(container);
 
     // Esconder bloco "Marketplace em Breve" quando há produtos
