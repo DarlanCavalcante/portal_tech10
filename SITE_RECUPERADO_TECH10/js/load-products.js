@@ -158,6 +158,38 @@
     return (amount / 100).toFixed(2).replace('.', ',');
   }
 
+  function normalizeCatalogText(value) {
+    return String(value || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function buildProductDescription(product, categoryName) {
+    var productTitle = normalizeCatalogText(product && product.title);
+    var categoryLabel = normalizeCatalogText(categoryName || (product && product.category && product.category.name));
+    var rawDescription = normalizeCatalogText(product && product.description);
+
+    if (rawDescription && rawDescription.toLowerCase() !== productTitle.toLowerCase()) {
+      var displayDescription = rawDescription;
+
+      if (rawDescription.length < 18 && categoryLabel) {
+        displayDescription = categoryLabel + ' | ' + rawDescription;
+      }
+
+      if (displayDescription.length > 90) {
+        return displayDescription.substring(0, 87).trimEnd() + '...';
+      }
+
+      return displayDescription;
+    }
+
+    if (categoryLabel) {
+      return 'Categoria ' + categoryLabel + ' com atendimento assistido.';
+    }
+
+    return 'Produto disponível para atendimento assistido.';
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Controle de quantidade por produto
   // ─────────────────────────────────────────────────────────────────────────
@@ -255,13 +287,13 @@
         var price = (variant && variant.prices && variant.prices[0] && variant.prices[0].amount) ? variant.prices[0].amount : 0;
         var priceFormatted = formatPrice(price);
         var thumbnail = product.thumbnail || (product.images && product.images[0] && product.images[0].url) || fallbackImg;
-        var description = product.description ? product.description.substring(0, 90) + '...' : 'Sem descrição';
         var inventoryQty = (variant && typeof variant.inventory_quantity !== 'undefined') ? variant.inventory_quantity : 0;
         var isInStock = inventoryQty > 0;
         var stockText = isInStock ? (inventoryQty <= 5 ? ('Últimas ' + inventoryQty + ' un.') : 'Em estoque') : 'Fora de estoque';
         var stockClass = isInStock ? 'in-stock' : 'out-of-stock';
         var catSlug = product.categorySlug || toCategorySlug(product.category);
         var catName = (product.category && product.category.name) ? product.category.name : '';
+        var description = buildProductDescription(product, catName);
         var variantId = (variant && variant.id) ? variant.id : '';
         var maxQty = inventoryQty > 0 ? inventoryQty : 99;
         var pid = product.id;
@@ -273,9 +305,9 @@
             }).join('') + '</div>'
           : '';
         var supportNoteHtml = assistedSelectionEnabled
-          ? '<div class="lp-card-mode-note"><i class="fas fa-list-check"></i> Monte sua seleção e feche com atendimento Tech10.</div>'
+          ? '<div class="lp-card-mode-note"><i class="fas fa-list-check"></i> Seleção assistida pela Tech10.</div>'
           : (!cartEnabled
-          ? '<div class="lp-card-mode-note"><i class="fas fa-headset"></i> Venda assistida via atendimento Tech10.</div>'
+          ? '<div class="lp-card-mode-note"><i class="fas fa-headset"></i> Atendimento assistido Tech10.</div>'
           : '');
         var duplicateIdentityHtml = isDuplicateTitleProduct(product) && product.metadata && product.metadata.sku
           ? '<div class="lp-card-identity-note"><i class="fas fa-fingerprint"></i> Identifique este item pelo SKU <strong>' + String(product.metadata.sku).replace(/</g, '&lt;') + '</strong></div>'
