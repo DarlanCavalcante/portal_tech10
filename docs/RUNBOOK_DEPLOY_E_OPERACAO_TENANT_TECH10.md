@@ -22,6 +22,21 @@ Data-base: `2026-05-11`
 
 ## Diagnóstico rápido
 
+### Loja abre com página em branco
+
+- validar console do navegador para erro `Identifier 'tenantConfig' has already been declared`
+- esse sintoma já ocorreu em produção e foi corrigido no hotfix `f1b744b`
+- se reaparecer, revisar colisão de variáveis globais entre:
+  - `js/tenant-config.js`
+  - `js/api-config.js`
+  - `js/empresa-config.js`
+- a regra canônica é: scripts compartilhados do tenant devem ficar isolados em escopo próprio e expor apenas os objetos públicos em `window.*`
+- depois da correção, revalidar:
+  - `GET /api/health`
+  - `GET /loja`
+  - placeholder `Buscar por produto, marca ou SKU...`
+  - banner `Loja em atendimento assistido`
+
 ### `health = degraded`
 
 - verifique se `TECH10_CATALOG_BACKEND_URL` está configurada
@@ -56,3 +71,11 @@ cd /Users/darlancavalcante/Documents/TECH/portal_tech10/SITE_RECUPERADO_TECH10
 node scripts/validate-runtime-contract.mjs
 node scripts/smoke-runtime.mjs
 ```
+
+## Estado operacional mais recente
+
+- runtime público: `https://tech10-portal.vercel.app`
+- `GET /api/health`: `status=ok`
+- catálogo público: ativo, consumindo `https://core.tech10cloud.com`
+- modo comercial atual: `quote_only`
+- bloqueio externo remanescente: `tech10.tech10cloud.com` ainda sem resolução DNS

@@ -48,6 +48,7 @@ sem misturar com outros projetos.
 - `js/portal-entry.js`
 - `js/tenant-config.js`
 - `js/tenant-routes.js`
+- hotfix de escopo global dos scripts compartilhados do tenant (`f1b744b`)
 
 ## Riscos ainda abertos
 
@@ -65,3 +66,8 @@ E curadoria comercial da vitrine:
 1. consolidar taxonomia e apresentacao dos produtos reais
 2. manter a UX coerente com `quote_only`
 3. so depois apontar o dominio oficial
+
+Bloqueio externo atual:
+
+- `tech10.tech10cloud.com` ainda nao resolve por DNS
+- o runtime oficial continua publicado e operacional em `https://tech10-portal.vercel.app`
