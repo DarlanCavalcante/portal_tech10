@@ -524,6 +524,39 @@
                 });
             });
         }
+
+        const RUNTIME_CONFIG_PATH = '/api/runtime-config';
+        let runtimeConfigCache = null;
+
+        async function fetchRuntimeConfig() {
+            if (runtimeConfigCache) return runtimeConfigCache;
+            try {
+                const response = await fetch(RUNTIME_CONFIG_PATH, {
+                    method: 'GET',
+                    headers: { accept: 'application/json' }
+                });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                runtimeConfigCache = await response.json();
+                return runtimeConfigCache;
+            } catch (err) {
+                console.warn('[CARRINHO] Não foi possível carregar runtime config:', err);
+                runtimeConfigCache = { commerce: { checkoutMode: 'store_backend', capabilities: { cart: true, checkout: true, quoteOnly: false } } };
+                return runtimeConfigCache;
+            }
+        }
+
+        function isQuoteOnlyRuntime(config) {
+            const commerce = (config && config.commerce) || {};
+            const capabilities = commerce.capabilities || {};
+            return commerce.checkoutMode === 'quote_only' || capabilities.quoteOnly === true;
+        }
+
+        function buildSupportUrl(message) {
+            const support = (runtimeConfigCache && runtimeConfigCache.support) || {};
+            const whatsapp = support.whatsapp || '55974001960';
+            const text = encodeURIComponent(message || 'Olá! Vim pela loja da Tech10 e preciso de atendimento para concluir minha compra.');
+            return 'https://wa.me/' + whatsapp + '?text=' + text;
+        }
         
         // Carrinho canônico do storefront Tech10
         const CART_KEY = (window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id';
@@ -745,6 +778,10 @@
         function proceedToCheckout() {
             var cartId = getStoredCartId();
             if (!cartId) { alert('Carrinho vazio. Adicione produtos antes de finalizar.'); return; }
+            if (isQuoteOnlyRuntime(runtimeConfigCache)) {
+                window.location.href = buildSupportUrl('Olá! Vim pela loja da Tech10 e quero fechar a compra de um produto com atendimento assistido.');
+                return;
+            }
             window.location.href = 'checkout.html';
         }
 
@@ -753,7 +790,14 @@
         window.proceedToCheckout = proceedToCheckout;
         window.loadCart = loadCart;
 
-        document.addEventListener('DOMContentLoaded', function() { loadCart(); });
+        document.addEventListener('DOMContentLoaded', async function() {
+            runtimeConfigCache = await fetchRuntimeConfig();
+            if (isQuoteOnlyRuntime(runtimeConfigCache)) {
+                console.log('[CARRINHO] Runtime em quote_only; a página ficará sob o fluxo assistido.');
+                return;
+            }
+            loadCart();
+        });
     </script>
     <script src="js/tenant-config.js"></script>
     <script src="js/tenant-routes.js"></script>

@@ -434,11 +434,36 @@
     <script src="js/api-config.js"></script>
     <script src="js/api-adapter.js"></script>
     <script>
+        const RUNTIME_CONFIG_PATH = '/api/runtime-config';
         const CART_KEY = (window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id';
         const LEGACY_CART_KEY = (window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id';
         let cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
         let cart = null;
         let selectedShippingOption = { method: 'standard', cost: 0, is_free: true, zone: null };
+        let runtimeConfigCache = null;
+
+        async function fetchRuntimeConfig() {
+            if (runtimeConfigCache) return runtimeConfigCache;
+            try {
+                const response = await fetch(RUNTIME_CONFIG_PATH, {
+                    method: 'GET',
+                    headers: { accept: 'application/json' }
+                });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                runtimeConfigCache = await response.json();
+                return runtimeConfigCache;
+            } catch (err) {
+                console.warn('[CHECKOUT] Não foi possível carregar runtime config:', err);
+                runtimeConfigCache = { commerce: { checkoutMode: 'store_backend', capabilities: { cart: true, checkout: true, quoteOnly: false } } };
+                return runtimeConfigCache;
+            }
+        }
+
+        function isQuoteOnlyRuntime(config) {
+            const commerce = (config && config.commerce) || {};
+            const capabilities = commerce.capabilities || {};
+            return commerce.checkoutMode === 'quote_only' || capabilities.quoteOnly === true;
+        }
 
         function selectShipping(method, cost, isFree) {
             selectedShippingOption = { method, cost, is_free: isFree, zone: null };
@@ -570,103 +595,114 @@
             }
         }
 
-        // Submeter formulário de checkout
-        document.getElementById('checkout-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('submit-btn');
-            const errorDiv = document.getElementById('error-message');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
-            if (errorDiv) errorDiv.style.display = 'none';
+        function bindCheckoutForm() {
+            const form = document.getElementById('checkout-form');
+            if (!form) return;
 
-            cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
-            if (!cartId) {
-                showError('Carrinho não encontrado. Adicione produtos ao carrinho primeiro.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar Pedido';
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const submitBtn = document.getElementById('submit-btn');
+                const errorDiv = document.getElementById('error-message');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+                if (errorDiv) errorDiv.style.display = 'none';
+
+                cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
+                if (!cartId) {
+                    showError('Carrinho não encontrado. Adicione produtos ao carrinho primeiro.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar Pedido';
+                    return;
+                }
+
+                const formData = new FormData(e.target);
+                const customerName = String(formData.get('customer_name') || '').trim();
+                const customerEmail = String(formData.get('customer_email') || '').trim();
+                const customerPhone = String(formData.get('customer_phone') || '').trim();
+                const nameParts = customerName.split(' ');
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || '';
+                const zipCode = String(formData.get('zip_code') || '').replace(/\D/g, '');
+                const paymentMethod = String(formData.get('payment_method') || 'pix');
+
+                const checkoutPayload = {
+                    email: customerEmail,
+                    customer: { firstName, lastName, phone: customerPhone },
+                    delivery_type: 'STANDARD',
+                    shipping_address: {
+                        street: String(formData.get('street') || ''),
+                        number: String(formData.get('number') || ''),
+                        complement: String(formData.get('complement') || '') || undefined,
+                        neighborhood: String(formData.get('neighborhood') || ''),
+                        city: String(formData.get('city') || ''),
+                        state: String(formData.get('state') || ''),
+                        zipCode: zipCode
+                    }
+                };
+
+                try {
+                    const res = await fetch(getStoreAPI() + '/carts/' + cartId + '/complete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(checkoutPayload)
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || data.message || 'Erro ao processar pedido');
+
+                    const order = data.data || data.order || {};
+                    const shippingCost = selectedShippingOption ? selectedShippingOption.cost : 0;
+                    const lastOrder = {
+                        order_number: order.display_id || order.id || '',
+                        customer_name: customerName,
+                        customer_email: customerEmail,
+                        customer_phone: customerPhone,
+                        shipping_address: {
+                            street: checkoutPayload.shipping_address.street,
+                            number: checkoutPayload.shipping_address.number,
+                            complement: checkoutPayload.shipping_address.complement || '',
+                            neighborhood: checkoutPayload.shipping_address.neighborhood,
+                            city: checkoutPayload.shipping_address.city,
+                            state: checkoutPayload.shipping_address.state,
+                            zip_code: zipCode
+                        },
+                        subtotal: order.subtotal || 0,
+                        shipping_cost: shippingCost,
+                        total: order.total || 0,
+                        payment_method: paymentMethod,
+                        items: (order.items || []).map(function(item) {
+                            return {
+                                product_name: item.title || 'Produto',
+                                product_image: item.thumbnail || null,
+                                quantity: item.quantity || 1,
+                                unit_price: item.unit_price || 0,
+                                subtotal: (item.unit_price || 0) * (item.quantity || 1)
+                            };
+                        })
+                    };
+
+                    localStorage.setItem('last_order', JSON.stringify(lastOrder));
+                    localStorage.removeItem(CART_KEY);
+                    localStorage.removeItem(LEGACY_CART_KEY);
+                    window.location.href = 'pedido-confirmado.html?order=' + (lastOrder.order_number || '');
+                } catch (err) {
+                    console.error('[CHECKOUT] Erro ao finalizar:', err);
+                    showError(err.message || 'Erro ao processar pedido. Tente novamente.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar Pedido';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            runtimeConfigCache = await fetchRuntimeConfig();
+            if (isQuoteOnlyRuntime(runtimeConfigCache)) {
+                console.log('[CHECKOUT] Runtime em quote_only; a página ficará sob o fluxo assistido.');
                 return;
             }
 
-            const formData = new FormData(e.target);
-            const customerName = String(formData.get('customer_name') || '').trim();
-            const customerEmail = String(formData.get('customer_email') || '').trim();
-            const customerPhone = String(formData.get('customer_phone') || '').trim();
-            const nameParts = customerName.split(' ');
-            const firstName = nameParts[0] || '';
-            const lastName = nameParts.slice(1).join(' ') || '';
-            const zipCode = String(formData.get('zip_code') || '').replace(/\D/g, '');
-            const paymentMethod = String(formData.get('payment_method') || 'pix');
-
-            // Payload no formato esperado pelo backend VivaCommerce
-            const checkoutPayload = {
-                email: customerEmail,
-                customer: { firstName, lastName, phone: customerPhone },
-                delivery_type: 'STANDARD',
-                shipping_address: {
-                    street: String(formData.get('street') || ''),
-                    number: String(formData.get('number') || ''),
-                    complement: String(formData.get('complement') || '') || undefined,
-                    neighborhood: String(formData.get('neighborhood') || ''),
-                    city: String(formData.get('city') || ''),
-                    state: String(formData.get('state') || ''),
-                    zipCode: zipCode
-                }
-            };
-
-            try {
-                const res = await fetch(getStoreAPI() + '/carts/' + cartId + '/complete', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(checkoutPayload)
-                });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || data.message || 'Erro ao processar pedido');
-
-                // Mapear resposta do backend para o formato da página de confirmação
-                const order = data.data || data.order || {};
-                const shippingCost = selectedShippingOption ? selectedShippingOption.cost : 0;
-                const lastOrder = {
-                    order_number: order.display_id || order.id || '',
-                    customer_name: customerName,
-                    customer_email: customerEmail,
-                    customer_phone: customerPhone,
-                    shipping_address: {
-                        street: checkoutPayload.shipping_address.street,
-                        number: checkoutPayload.shipping_address.number,
-                        complement: checkoutPayload.shipping_address.complement || '',
-                        neighborhood: checkoutPayload.shipping_address.neighborhood,
-                        city: checkoutPayload.shipping_address.city,
-                        state: checkoutPayload.shipping_address.state,
-                        zip_code: zipCode
-                    },
-                    subtotal: order.subtotal || 0,
-                    shipping_cost: shippingCost,
-                    total: order.total || 0,
-                    payment_method: paymentMethod,
-                    items: (order.items || []).map(function(item) {
-                        return {
-                            product_name: item.title || 'Produto',
-                            product_image: item.thumbnail || null,
-                            quantity: item.quantity || 1,
-                            unit_price: item.unit_price || 0,
-                            subtotal: (item.unit_price || 0) * (item.quantity || 1)
-                        };
-                    })
-                };
-
-                localStorage.setItem('last_order', JSON.stringify(lastOrder));
-                localStorage.removeItem(CART_KEY);
-                localStorage.removeItem(LEGACY_CART_KEY);
-                window.location.href = 'pedido-confirmado.html?order=' + (lastOrder.order_number || '');
-            } catch (err) {
-                console.error('[CHECKOUT] Erro ao finalizar:', err);
-                showError(err.message || 'Erro ao processar pedido. Tente novamente.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar Pedido';
-            }
+            bindCheckoutForm();
+            loadCartSummary();
         });
-
-        document.addEventListener('DOMContentLoaded', function() { loadCartSummary(); });
     </script>
 </body>
 </html>
