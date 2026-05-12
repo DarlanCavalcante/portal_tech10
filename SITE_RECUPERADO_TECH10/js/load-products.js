@@ -699,8 +699,52 @@
     return parts.join(' ');
   }
 
-  function getHomeCatalogFeaturedProducts(products) {
-    return buildEditorialCatalogCollections(products).featured.slice(0, 2);
+  function getHomeCatalogFeaturedBadgeLabel(index, options) {
+    if (options && options.search) {
+      return index === 0 ? 'Resultado em foco' : 'Outra opção encontrada';
+    }
+    if (options && options.categoryLabel) {
+      return index === 0 ? options.categoryLabel + ' em foco' : 'Mais em ' + options.categoryLabel;
+    }
+    return index === 0 ? 'Categoria em foco' : 'Outro destaque do catálogo';
+  }
+
+  function getHomeCatalogFeaturedProducts(products, options) {
+    var featured = buildEditorialCatalogCollections(products, { useInput: options && options.useInput === true }).featured.slice(0, 2);
+    return featured.map(function (entry, index) {
+      return {
+        product: entry.product,
+        categorySlug: entry.categorySlug,
+        badgeLabel: getHomeCatalogFeaturedBadgeLabel(index, options)
+      };
+    });
+  }
+
+  function renderHomeCatalogFeaturedFallback(spotlightRoot, options) {
+    if (!spotlightRoot) return;
+
+    var title = 'Lendo o catálogo público da Tech10';
+    var description = 'Os produtos mais fortes do ERP aparecem aqui assim que a vitrine sincroniza.';
+    var href = buildHomeCatalogStoreHref(options && options.categorySlug, options && options.search);
+
+    if (options && options.search) {
+      title = 'Nenhum destaque para "' + options.search + '"';
+      description = 'Abra a loja completa para revisar esse termo ou ajuste a busca para seguir com a seleção assistida.';
+    } else if (options && options.categoryLabel) {
+      title = 'Sem destaque visível em ' + options.categoryLabel;
+      description = 'Abra a loja completa dessa categoria para revisar o catálogo público e seguir com atendimento assistido.';
+    }
+
+    spotlightRoot.innerHTML = '<a class="catalog-spotlight-card catalog-spotlight-card--loading" href="' + href + '">' +
+      '<div class="catalog-spotlight-card__image">' +
+        '<i class="fas fa-box-open"></i>' +
+      '</div>' +
+      '<div class="catalog-spotlight-card__content">' +
+        '<span class="catalog-spotlight-card__eyebrow">Catálogo sincronizado</span>' +
+        '<h3 class="catalog-spotlight-card__title">' + String(title).replace(/</g, '&lt;') + '</h3>' +
+        '<p class="catalog-spotlight-card__desc">' + String(description).replace(/</g, '&lt;') + '</p>' +
+      '</div>' +
+    '</a>';
   }
 
   function syncHomeCatalogFeaturedProducts(products, containerId) {
@@ -710,8 +754,32 @@
     var spotlightRoot = global.document.querySelector('[data-home-catalog-featured]');
     if (!spotlightRoot) return;
 
-    var featuredProducts = getHomeCatalogFeaturedProducts(products);
-    if (!featuredProducts.length) return;
+    var filtersRoot = global.document.querySelector('section#produtos .filters');
+    var currentFilter = getActiveHomeCatalogFilterSlug(filtersRoot);
+    var currentSearch = getHomeCatalogSearchTerm();
+    var sourceProducts = getHomeCatalogSourceProducts(products);
+    var activeCategory = currentFilter !== 'all'
+      ? getHomeCatalogCategorySummary(sourceProducts, 12).find(function (category) {
+          return category.slug === currentFilter;
+        })
+      : null;
+    var featuredSource = (currentSearch || currentFilter !== 'all')
+      ? (Array.isArray(products) ? products : [])
+      : sourceProducts;
+    var featuredProducts = getHomeCatalogFeaturedProducts(featuredSource, {
+      useInput: true,
+      search: currentSearch,
+      categoryLabel: currentSearch ? '' : (activeCategory && activeCategory.label),
+      categorySlug: activeCategory && activeCategory.slug
+    });
+    if (!featuredProducts.length) {
+      renderHomeCatalogFeaturedFallback(spotlightRoot, {
+        search: currentSearch,
+        categoryLabel: activeCategory && activeCategory.label,
+        categorySlug: activeCategory && activeCategory.slug
+      });
+      return;
+    }
 
     var fallbackImg = (global.TENANT_CONFIG && global.TENANT_CONFIG.brand && global.TENANT_CONFIG.brand.fallbackProductImageUrl)
       || '/imagem/propaganda loja/tecnologia.jpeg';
