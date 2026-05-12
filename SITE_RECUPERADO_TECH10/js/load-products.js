@@ -821,6 +821,15 @@
           ? '<div class="lp-card-identity-note"><i class="fas fa-fingerprint"></i> Identifique este item pelo SKU <strong>' + String(product.metadata.sku).replace(/</g, '&lt;') + '</strong></div>'
           : '';
         var buttonLabel = getCatalogButtonLabel(actionMode);
+        var compactButtonLabel = actionMode === 'assisted'
+          ? 'Selecionar'
+          : actionMode === 'quote'
+            ? 'Pedir'
+            : 'Adicionar';
+        var buttonLabelHtml = isInStock
+          ? '<span class="lp-btn-add-label lp-btn-add-label--full">' + buttonLabel + '</span>' +
+            '<span class="lp-btn-add-label lp-btn-add-label--compact">' + compactButtonLabel + '</span>'
+          : '<i class="fas fa-times-circle"></i> Indisponível';
         var qtyControlHtml = cartEnabled
           ? '<div class="lp-qty-ctrl" data-pid="' + pid + '">' +
               '<button class="lp-qty-btn lp-qty-minus" type="button" aria-label="Diminuir quantidade">−</button>' +
@@ -853,7 +862,7 @@
             '<div class="lp-card-actions ' + (cartEnabled ? 'cart-mode' : 'quote-mode') + '">' +
               qtyControlHtml +
               '<button class="lp-btn-add ' + stockClass + '" type="button" data-pid="' + pid + '" data-vid="' + variantId + '" data-action="' + actionMode + '" data-product-title="' + (product.title || '').replace(/"/g, '&quot;') + '" ' + (!isInStock ? 'disabled' : '') + '>' +
-                (isInStock ? buttonLabel : '<i class="fas fa-times-circle"></i> Indisponível') +
+                buttonLabelHtml +
               '</button>' +
             '</div>' +
           '</div>' +
