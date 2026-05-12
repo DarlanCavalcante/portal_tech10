@@ -386,16 +386,56 @@
 
         function getPaymentMethodText(method) {
             const methods = {
-                'pix': 'PIX - Você receberá as instruções de pagamento por email.',
-                'credit_card': 'Cartão de Crédito - O pagamento será processado em breve.',
-                'debit_card': 'Cartão de Débito - O pagamento será processado em breve.',
-                'boleto': 'Boleto Bancário - Você receberá o boleto por email.'
+                'pix': 'Preferência registrada: PIX',
+                'credit_card': 'Preferência registrada: Cartão de crédito',
+                'debit_card': 'Preferência registrada: Cartão de débito',
+                'boleto': 'Preferência registrada: Boleto bancário'
             };
-            return methods[method] || 'Método de pagamento não especificado.';
+            return methods[method] || 'Preferência de pagamento não informada.';
+        }
+
+        function getStoredOrder() {
+            const lastOrder = localStorage.getItem('last_order');
+            if (!lastOrder) return null;
+            try {
+                return JSON.parse(lastOrder);
+            } catch (e) {
+                console.error('Erro ao parsear last_order:', e);
+                return null;
+            }
+        }
+
+        function renderAssistedItems(items) {
+            if (!items || items.length === 0) {
+                return '<div class="info-item"><span>Nenhum item resumido nesta confirmação assistida.</span></div>';
+            }
+
+            return items.map(item => `
+                <div class="order-item">
+                    <img src="${item.product_image || ''}"
+                         alt="${item.product_name || 'Produto'}"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22%3E%3Crect fill=%22%23e5e7eb%22 width=%2260%22 height=%2260%22/%3E%3C/svg%3E'">
+                    <div class="order-item-info">
+                        <h4>${item.product_name || 'Produto'}</h4>
+                        <p>Quantidade: ${item.quantity || 1} x ${formatPrice(item.unit_price || 0)}</p>
+                    </div>
+                    <div class="order-item-price">
+                        ${formatPrice(item.subtotal || 0)}
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderQuoteOnlyState(runtimeConfig) {
-            const supportUrl = buildSupportUrl(runtimeConfig);
+            const order = getStoredOrder();
+            const supportUrl = (order && order.support_url) || buildSupportUrl(runtimeConfig);
+            const paymentText = order ? getPaymentMethodText(order.payment_method) : 'Confirme com a Tech10 a forma de pagamento ideal para este fechamento.';
+            const shippingSummary = order
+                ? (order.shipping_label
+                    ? `${order.shipping_label}${order.shipping_address_text ? ' · ' + order.shipping_address_text : ''}`
+                    : (order.shipping_address_text || 'A combinar com a Tech10'))
+                : 'Entrega, retirada e disponibilidade serão confirmadas com a Tech10 no atendimento.';
+
             document.title = 'Fechamento Assistido - Tech10';
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'none';
@@ -406,16 +446,44 @@
                     <i class="fas fa-headset"></i>
                 </div>
                 <h1>Fechamento assistido pela Tech10</h1>
-                <p class="subtitle">Nesta fase da loja, a confirmação do pedido continua com o atendimento para validar disponibilidade, frete e pagamento.</p>
+                <p class="subtitle">${order ? 'Recebemos seu fechamento assistido e a Tech10 já pode continuar o atendimento com os dados da sua seleção.' : 'Nesta fase da loja, a confirmação do pedido continua com o atendimento para validar disponibilidade, frete e pagamento.'}</p>
                 <div class="order-info">
                     <div class="order-number">
-                        <i class="fab fa-whatsapp"></i> Atendimento guiado pela equipe Tech10
+                        <i class="fab fa-whatsapp"></i> ${order ? 'Referência ' + (order.order_number || 'do atendimento assistido') : 'Atendimento guiado pela equipe Tech10'}
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-section">
+                            <h3><i class="fas fa-user"></i> Dados enviados</h3>
+                            <div class="info-item">
+                                <strong>Nome:</strong>
+                                <span>${order ? (order.customer_name || '-') : 'Será confirmado com você no atendimento.'}</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Email:</strong>
+                                <span>${order ? (order.customer_email || '-') : 'Será confirmado com você no atendimento.'}</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Telefone:</strong>
+                                <span>${order ? (order.customer_phone || '-') : 'Será confirmado com você no atendimento.'}</span>
+                            </div>
+                        </div>
+                        <div class="info-section">
+                            <h3><i class="fas fa-truck"></i> Entrega e pagamento</h3>
+                            <div class="info-item">
+                                <strong>Entrega:</strong>
+                                <span>${shippingSummary}</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Pagamento:</strong>
+                                <span>${paymentText}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="info-grid">
                         <div class="info-section">
                             <h3><i class="fas fa-store"></i> Como seguir agora</h3>
                             <div class="info-item">
-                                <span>Escolha o produto na loja pública, confirme a necessidade pelo WhatsApp e deixe a equipe fechar estoque, entrega e pagamento com você.</span>
+                                <span>${order ? 'Se o WhatsApp não abriu em outra aba, use o botão abaixo para continuar com a Tech10 levando essa referência e sua seleção.' : 'Escolha o produto na loja pública, confirme a necessidade pelo WhatsApp e deixe a equipe fechar estoque, entrega e pagamento com você.'}</span>
                             </div>
                         </div>
                         <div class="info-section">
@@ -425,10 +493,30 @@
                             </div>
                         </div>
                     </div>
+                    ${order ? `
+                        <div class="order-items">
+                            <h3 style="margin-bottom: 15px; color: #1f2937;">Resumo da seleção enviada</h3>
+                            <div id="assisted-order-items-list">${renderAssistedItems(order.items)}</div>
+                        </div>
+                        <div class="order-summary">
+                            <div class="summary-row">
+                                <span>Subtotal estimado:</span>
+                                <span>${formatPrice(order.subtotal || 0)}</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Entrega:</span>
+                                <span>A confirmar no atendimento</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Total final:</span>
+                                <span>A confirmar com a Tech10</span>
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
                 <div class="actions">
                     <a href="${supportUrl}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-whatsapp"></i> Falar com a Tech10
+                        <i class="fab fa-whatsapp"></i> ${order ? 'Abrir atendimento no WhatsApp' : 'Falar com a Tech10'}
                     </a>
                     <a href="/loja" class="btn btn-secondary">
                         <i class="fas fa-store"></i> Explorar catálogo
@@ -448,15 +536,7 @@
             const orderNumber = urlParams.get('order');
 
             // Tentar pegar do localStorage
-            let order = null;
-            const lastOrder = localStorage.getItem('last_order');
-            if (lastOrder) {
-                try {
-                    order = JSON.parse(lastOrder);
-                } catch (e) {
-                    console.error('Erro ao parsear last_order:', e);
-                }
-            }
+            let order = getStoredOrder();
 
             if (!order && orderNumber) {
                 // Se tiver orderNumber mas não tiver order no localStorage, mostrar erro
@@ -465,7 +545,7 @@
             }
 
             if (!order) {
-                showError('Pedido não encontrado. Por favor, verifique se você completou o checkout.');
+                showError('Pedido não encontrado. Volte à loja ou fale com a Tech10 para retomar seu fechamento.');
                 return;
             }
 
