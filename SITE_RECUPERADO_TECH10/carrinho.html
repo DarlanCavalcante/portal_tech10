@@ -622,7 +622,7 @@
                         <i class="fas fa-store"></i> Explorar catálogo
                     </a>
                     ${quoteOnly ? `<a href="${supportUrl}" target="_blank" rel="noopener noreferrer" class="continue-shopping" style="display:inline-flex;margin-top:8px;background:#ecfeff;color:#0f766e;"><i class="fab fa-whatsapp"></i> Falar com a Tech10</a>` : ''}
-                    <a href="index.html" class="continue-shopping" style="display:inline-flex;margin-top:8px;color:#6b7280;">
+                    <a href="/" class="continue-shopping" style="display:inline-flex;margin-top:8px;color:#6b7280;">
                         <i class="fas fa-home"></i> Voltar ao Início
                     </a>
                 </div>
@@ -637,13 +637,13 @@
             el.innerHTML = `
                 <div class="error">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <h3>Erro ao carregar carrinho</h3>
+                    <h3>Não foi possível carregar sua seleção</h3>
                     <p>${message}</p>
                     <button onclick="loadCart()" style="margin-top:15px;padding:10px 20px;background:#3b82f6;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;">
                         Tentar Novamente
                     </button>
                     <div style="margin-top:15px;">
-                        <a href="index.html" class="continue-shopping">Voltar para Loja</a>
+                        <a href="/loja" class="continue-shopping">Voltar para o catálogo</a>
                         <a href="${supportUrl}" target="_blank" rel="noopener noreferrer" class="continue-shopping" style="background:#ecfeff;color:#0f766e;">Falar com a Tech10</a>
                     </div>
                 </div>
@@ -804,7 +804,14 @@
 
         function proceedToCheckout() {
             var cartId = getStoredCartId();
-            if (!cartId) { alert('Carrinho vazio. Adicione produtos antes de finalizar.'); return; }
+            if (!cartId) {
+                if (isQuoteOnlyRuntime(runtimeConfigCache)) {
+                    window.location.href = buildSupportUrl('Olá! Vim pela loja da Tech10 e quero ajuda para escolher um produto e fechar a compra com atendimento assistido.');
+                    return;
+                }
+                alert('Carrinho vazio. Adicione produtos antes de finalizar.');
+                return;
+            }
             if (isQuoteOnlyRuntime(runtimeConfigCache)) {
                 window.location.href = buildSupportUrl('Olá! Vim pela loja da Tech10 e quero fechar a compra de um produto com atendimento assistido.');
                 return;
