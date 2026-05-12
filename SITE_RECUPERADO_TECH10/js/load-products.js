@@ -883,20 +883,24 @@
     var fallbackImg = (global.TENANT_CONFIG && global.TENANT_CONFIG.brand && global.TENANT_CONFIG.brand.fallbackProductImageUrl)
       || '/imagem/propaganda loja/tecnologia.jpeg';
 
-    spotlightRoot.innerHTML = featuredProducts.map(function (entry) {
+    spotlightRoot.innerHTML = featuredProducts.map(function (entry, index) {
       var product = entry.product;
       var metadata = product.metadata || {};
       var categoryLabel = normalizeCatalogText(product.category && product.category.name) || 'Catálogo';
       var badgeLabel = entry.badgeLabel || 'Produto em destaque';
       var stockState = getSpotlightStockState(product);
       var thumbnail = product.thumbnail || (product.images && product.images[0] && product.images[0].url) || fallbackImg;
+      var spotlightClass = index === 0 ? ' catalog-spotlight-card--primary' : ' catalog-spotlight-card--secondary';
+      var ctaLabel = currentSearch
+        ? (index === 0 ? 'Abrir resultado' : 'Ver alternativa')
+        : (index === 0 ? 'Selecionar este item' : 'Ver alternativa');
       var metaBits = [
         categoryLabel,
         metadata.brand ? 'Marca ' + metadata.brand : '',
         metadata.sku ? 'SKU ' + metadata.sku : ''
       ].filter(Boolean);
 
-      return '<a class="catalog-spotlight-card" href="' + getProductSearchHref(product) + '">' +
+      return '<a class="catalog-spotlight-card' + spotlightClass + '" href="' + getProductSearchHref(product) + '">' +
         '<div class="catalog-spotlight-card__image">' +
           '<img src="' + String(thumbnail).replace(/"/g, '&quot;') + '" alt="' + String(product.title || '').replace(/"/g, '&quot;') + '" loading="lazy" onerror="this.src=\'' + fallbackImg + '\'" />' +
         '</div>' +
@@ -910,7 +914,7 @@
           '<div class="catalog-spotlight-card__footer">' +
             '<span class="catalog-spotlight-card__price">R$ ' + formatPrice(getProductPriceAmount(product)) + '</span>' +
             '<span class="' + stockState.className + '"><i class="fas ' + stockState.iconClass + '"></i> ' + stockState.label + '</span>' +
-            '<span class="catalog-spotlight-card__cta">Selecionar na loja <i class="fas fa-arrow-right"></i></span>' +
+            '<span class="catalog-spotlight-card__cta">' + ctaLabel + ' <i class="fas fa-arrow-right"></i></span>' +
           '</div>' +
         '</div>' +
       '</a>';
