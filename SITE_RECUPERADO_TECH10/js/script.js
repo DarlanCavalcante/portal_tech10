@@ -478,6 +478,10 @@ function createProductCard(product) {
     const card = document.createElement('div');
     card.className = 'produto-card';
     card.dataset.category = product.category;
+    const runtime = window.__tech10_runtime_config || {};
+    const commerce = runtime.commerce || {};
+    const capabilities = commerce.capabilities || {};
+    const quoteOnly = capabilities.quoteOnly === true || capabilities.cart === false || commerce.checkoutMode === 'quote_only';
     
     const badgeHtml = product.badge ? 
         `<div class="produto-badge">${product.badge}</div>` : '';
@@ -486,7 +490,12 @@ function createProductCard(product) {
         `<span class="price-old">R$ ${formatPrice(product.oldPrice)}</span>` : '';
     
     const stockClass = product.inStock ? '' : 'out-of-stock';
-    const stockText = product.inStock ? 'Adicionar ao Carrinho' : 'Fora de Estoque';
+    const stockText = product.inStock
+        ? (quoteOnly ? 'Pedir atendimento' : 'Adicionar ao Carrinho')
+        : 'Fora de Estoque';
+    const stockIcon = product.inStock
+        ? (quoteOnly ? 'fa-comments' : 'fa-shopping-cart')
+        : 'fa-times-circle';
     
     // Determinar caminho da imagem
     let imagePath = product.image;
@@ -530,7 +539,7 @@ function createProductCard(product) {
                 <button class="btn btn-small btn-cart ${stockClass}" 
                         onclick="addToCart(${product.id})"
                         ${!product.inStock ? 'disabled' : ''}>
-                    <i class="fas fa-shopping-cart"></i>
+                    <i class="fas ${stockIcon}"></i>
                     ${stockText}
                 </button>
                 <button class="btn btn-small btn-favorite" onclick="toggleFavorite(${product.id})">
@@ -641,6 +650,40 @@ function toggleCart() {
     }
 
     window.location.href = '/carrinho.html';
+}
+
+function addToCart(productId) {
+    const runtime = window.__tech10_runtime_config || {};
+    const commerce = runtime.commerce || {};
+    const capabilities = commerce.capabilities || {};
+    const quoteOnly = capabilities.quoteOnly === true || capabilities.cart === false || commerce.checkoutMode === 'quote_only';
+
+    const product = (state.filteredProducts || []).find(p => p.id === productId)
+        || (state.products || []).find(p => p.id === productId)
+        || null;
+
+    if (quoteOnly) {
+        const tenantCompany = (window.TENANT_CONFIG && window.TENANT_CONFIG.company) || {};
+        const support = runtime.support || {};
+        const whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '55974001960').replace(/\D/g, '');
+        const lines = [
+            'Olá! Vim pelo site da Tech10 e quero atendimento para este produto.',
+            product && product.name ? `Produto: ${product.name}` : '',
+            product && product.categoryName ? `Categoria: ${product.categoryName}` : '',
+            product && product.price ? `Preço exibido: R$ ${formatPrice(product.price)}` : '',
+            '',
+            'Pode me ajudar a confirmar disponibilidade e fechamento?'
+        ].filter(Boolean);
+        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
+        return;
+    }
+
+    if (typeof window.__openProductModal === 'function') {
+        window.__openProductModal(productId);
+        return;
+    }
+
+    toggleCart();
 }
 
 function toggleFavorite(productId) {
