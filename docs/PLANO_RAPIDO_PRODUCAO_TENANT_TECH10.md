@@ -26,14 +26,15 @@ sem misturar com outros projetos.
 
 ## Caminho mais curto para produção
 
-1. manter o runtime em `quote_only` ate a vitrine ter itens reais
-2. vincular os produtos vendaveis da Tech10 ao catalogo publico do ERP
-3. revisar categorias/taxonomia para a loja
+1. manter o runtime em `quote_only` enquanto a venda continuar por atendimento
+2. manter os produtos vendaveis da Tech10 vinculados ao catalogo publico do ERP
+3. revisar categorias/taxonomia e identidade comercial dos itens na loja
 4. validar a loja com itens reais:
    - home
    - catálogo
    - carrinho
    - entrada do portal
+   - modal do produto em `quote_only`
 5. anexar `tech10.tech10cloud.com`
 6. executar smoke final em domínio oficial
 
@@ -57,10 +58,10 @@ sem misturar com outros projetos.
 
 ## Veredito
 
-O bloqueio principal agora nao e mais deploy.
+O bloqueio principal agora nao e mais deploy nem publicacao inicial de catalogo.
 
-E catalogo:
+E curadoria comercial da vitrine:
 
-1. mapear `catalogProductId` nos itens vendaveis da Tech10
-2. validar a vitrine com dados reais
+1. consolidar taxonomia e apresentacao dos produtos reais
+2. manter a UX coerente com `quote_only`
 3. so depois apontar o dominio oficial

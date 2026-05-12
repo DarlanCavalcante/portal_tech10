@@ -11,6 +11,41 @@
   var _selectedVariantIndex = 0;
   var _qty = 1;
 
+  function getRuntimeCommerce() {
+    var runtime = global.__tech10_runtime_config || {};
+    return runtime.commerce || { capabilities: { cart: true } };
+  }
+
+  function isQuoteOnlyMode() {
+    var commerce = getRuntimeCommerce();
+    return commerce.capabilities && commerce.capabilities.cart === false;
+  }
+
+  function getSupportWhatsappUrl(product) {
+    var runtime = global.__tech10_runtime_config || {};
+    var support = runtime.support || {};
+    var tenantCompany = (global.TENANT_CONFIG && global.TENANT_CONFIG.company) || {};
+    var whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
+    if (!whatsapp) return '#';
+
+    var variant = product && product.variants && product.variants[0];
+    var price = variant && variant.prices && variant.prices[0] ? variant.prices[0].amount : 0;
+    var brand = product && product.metadata && product.metadata.brand ? product.metadata.brand : '';
+    var sku = product && product.metadata && product.metadata.sku ? product.metadata.sku : '';
+
+    var message = [
+      'Olá Tech10, tenho interesse neste produto:',
+      product && product.title ? product.title : 'Produto da loja',
+      brand ? 'Marca: ' + brand : '',
+      sku ? 'SKU: ' + sku : '',
+      price ? 'Preço exibido: R$ ' + (price / 100).toFixed(2).replace('.', ',') : '',
+      '',
+      'Gostaria de confirmar disponibilidade e atendimento.'
+    ].filter(Boolean).join('\n');
+
+    return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Injetar HTML do modal no body
   // ─────────────────────────────────────────────────────────────────────────
@@ -45,6 +80,7 @@
           '<div class="pm-info">',
             '<span class="pm-cat" id="pm-cat"></span>',
             '<h2 class="pm-title" id="pm-title"></h2>',
+            '<div class="pm-meta" id="pm-meta" style="display:none"></div>',
             '<div class="pm-price-row">',
               '<span class="pm-price" id="pm-price"></span>',
               '<span class="pm-old-price" id="pm-old-price" style="display:none"></span>',
@@ -190,6 +226,23 @@
     // Título
     document.getElementById('pm-title').textContent = product.title || 'Produto';
 
+    // Marca / SKU
+    var metaEl = document.getElementById('pm-meta');
+    var metaChips = [];
+    if (product.metadata && product.metadata.brand) {
+      metaChips.push('<span class="pm-meta-chip"><strong>Marca:</strong> ' + String(product.metadata.brand).replace(/</g, '&lt;') + '</span>');
+    }
+    if (product.metadata && product.metadata.sku) {
+      metaChips.push('<span class="pm-meta-chip"><strong>SKU:</strong> ' + String(product.metadata.sku).replace(/</g, '&lt;') + '</span>');
+    }
+    if (metaChips.length) {
+      metaEl.innerHTML = metaChips.join('');
+      metaEl.style.display = 'flex';
+    } else {
+      metaEl.innerHTML = '';
+      metaEl.style.display = 'none';
+    }
+
     // Galeria de imagens
     var images = [];
     if (product.thumbnail) images.push(product.thumbnail);
@@ -228,9 +281,7 @@
     // WhatsApp link com nome do produto
     var waBtn = document.getElementById('pm-whatsapp-btn');
     if (waBtn) {
-      var waText = encodeURIComponent('Olá! Tenho interesse no produto: ' + (product.title || '') + '. Pode me ajudar?');
-      var whatsappBase = (window.TenantRoutes && window.TenantRoutes.whatsappBase) || 'https://wa.me/55974001960';
-      waBtn.href = whatsappBase + '?text=' + waText;
+      waBtn.href = getSupportWhatsappUrl(product);
     }
 
     // Variantes
@@ -311,6 +362,16 @@
 
     var addBtn = document.getElementById('pm-btn-add');
     var buyBtn = document.getElementById('pm-btn-buy');
+    var quoteOnly = isQuoteOnlyMode();
+
+    if (quoteOnly) {
+      addBtn.innerHTML = '<i class="fas fa-comments"></i> Pedir atendimento';
+      buyBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Falar no WhatsApp';
+    } else {
+      addBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho';
+      buyBtn.innerHTML = '<i class="fas fa-bolt"></i> Comprar Agora';
+    }
+
     addBtn.disabled = !isInStock;
     buyBtn.disabled = !isInStock;
     addBtn.style.opacity = isInStock ? '1' : '0.5';
@@ -328,6 +389,13 @@
 
   async function _addToCart(buyNow) {
     if (!_currentProduct) return;
+    if (isQuoteOnlyMode()) {
+      var supportUrl = getSupportWhatsappUrl(_currentProduct);
+      if (supportUrl && supportUrl !== '#') {
+        window.open(supportUrl, '_blank', 'noopener,noreferrer');
+      }
+      return;
+    }
     var variants = _currentProduct.variants || [];
     var variant = variants[_selectedVariantIndex] || variants[0];
     if (!variant) return;
@@ -353,7 +421,7 @@
       activeBtn.style.background = '#10b981';
       setTimeout(function () {
         if (buyNow) {
-          window.location.href = 'carrinho.html';
+          window.location.href = '/carrinho';
         } else {
           activeBtn.disabled = false;
           activeBtn.style.background = '';
@@ -412,6 +480,9 @@
       '@media(max-width:640px){ .pm-info{padding:16px;} }',
       '.pm-cat { font-size:11px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:.06em; }',
       '.pm-title { font-size:18px;font-weight:700;color:#111827;line-height:1.3;margin:0;word-wrap:break-word;overflow-wrap:break-word; }',
+      '.pm-meta { display:flex;flex-wrap:wrap;gap:6px;margin-top:-2px; }',
+      '.pm-meta-chip { display:inline-flex;align-items:center;gap:4px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:11px;font-weight:600;border-radius:999px;padding:4px 8px; }',
+      '.pm-meta-chip strong { color:#0f172a;font-weight:700; }',
       '.pm-price-row { display:flex;align-items:baseline;gap:10px; }',
       '.pm-price { font-size:28px;font-weight:900;color:#2563eb; }',
       '.pm-old-price { font-size:16px;color:#9ca3af;text-decoration:line-through; }',

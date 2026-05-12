@@ -151,6 +151,8 @@
     const variant = (p.variants && p.variants[0]) || {};
     const prices = variant.prices || [];
     const amount = (prices[0] && prices[0].amount) != null ? prices[0].amount : 0;
+    const metadata = p.metadata || {};
+
     return {
       id: p.id,
       title: p.title,
@@ -163,7 +165,11 @@
         prices: [{ amount }]
       }],
       images: p.images,
-      category: normalizeCategory(p.category)
+      category: normalizeCategory(p.category),
+      metadata: {
+        sku: metadata.sku || p.sku || null,
+        brand: metadata.brand || p.brand || null,
+      },
     };
   }
 
