@@ -215,7 +215,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
         console.warn('⚠️ Carrinho do storefront não disponível, usando MarketplaceAdapter');
         let cartId = (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function')
           ? window.API_CONFIG.readStoredCartId()
-          : localStorage.getItem('tech10_storefront_cart_id') || localStorage.getItem('vc_cart_id');
+          : localStorage.getItem('tech10_storefront_cart_id');
         if (!cartId) {
           const created = await window.MarketplaceAdapter.createCart();
           cartId = created.cart?.id;
@@ -225,7 +225,6 @@ function renderProducts(products, containerId = 'produtosGrid') {
             } else {
               localStorage.setItem('tech10_storefront_cart_id', cartId);
             }
-            localStorage.setItem('vc_cart_id', cartId);
           }
         }
         if (cartId) {

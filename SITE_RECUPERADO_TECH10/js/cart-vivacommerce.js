@@ -7,6 +7,7 @@
 
   const CART_ID_KEY = 'tech10_storefront_cart_id';
   const LEGACY_CART_ID_KEY = 'vivacommerce_cart_id';
+  const EXTRA_LEGACY_CART_ID_KEY = 'vc_cart_id';
 
   function getCartStorageKeys() {
     const apiConfig = global.API_CONFIG || {};
@@ -14,7 +15,11 @@
       ? apiConfig.CART_STORAGE_KEYS
       : [apiConfig.CART_STORAGE_KEY, apiConfig.LEGACY_CART_STORAGE_KEY];
 
-    return Array.from(new Set(configuredKeys.concat([CART_ID_KEY, LEGACY_CART_ID_KEY]).filter(Boolean)));
+    return Array.from(new Set(configuredKeys.concat([
+      CART_ID_KEY,
+      LEGACY_CART_ID_KEY,
+      EXTRA_LEGACY_CART_ID_KEY
+    ]).filter(Boolean)));
   }
 
   function readCartId() {
