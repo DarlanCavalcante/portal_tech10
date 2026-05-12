@@ -253,10 +253,31 @@ body.loaded {
 }
 
 .search-box i {
+    color: inherit;
+}
+
+.search-box__submit {
     position: absolute;
-    right: 1rem;
+    right: 0.35rem;
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
     color: var(--gray-400);
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.search-box__submit:hover,
+.search-box__submit:focus-visible {
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--primary-color);
+    transform: translateY(-1px);
+    outline: none;
 }
 
 .header-icons {
@@ -3037,6 +3058,18 @@ body.loaded {
     letter-spacing: 0.01em;
 }
 
+.cta-banner__pill--link {
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.cta-banner__pill--link:hover,
+.cta-banner__pill--link:focus-visible {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-1px);
+    outline: none;
+}
+
 .cta-banner__btn {
     background: #fff;
     color: #1e3a8a;
@@ -3109,6 +3142,19 @@ body.loaded {
     border: 1px solid rgba(37, 99, 235, 0.16);
     font-size: 0.86rem;
     font-weight: 700;
+}
+
+.catalog-live-tag--link {
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.catalog-live-tag--link:hover,
+.catalog-live-tag--link:focus-visible {
+    background: #dbeafe;
+    color: #1d4ed8;
+    transform: translateY(-1px);
+    outline: none;
 }
 
 /* ===================== Servicos Intro ===================== */
