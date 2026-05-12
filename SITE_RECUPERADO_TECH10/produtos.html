@@ -43,6 +43,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: nowrap;
     }
     .pp-search-wrap {
       position: relative;
@@ -436,32 +437,100 @@
     }
     @media (max-width: 900px) { .pp-mobile-filter-btn { display: flex; } }
     @media (max-width: 900px) {
+      .pp-layout {
+        padding: 16px 12px 24px;
+        gap: 16px;
+      }
       .pp-header {
         height: auto;
-        padding: 14px 16px;
+        padding: 12px;
         align-items: flex-start;
-        gap: 12px;
+        gap: 10px;
         flex-wrap: wrap;
+      }
+      .pp-logo img {
+        height: 32px;
       }
       .pp-header-right {
+        display: grid;
         width: 100%;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        align-items: stretch;
+      }
+      .pp-back-link {
+        min-height: 38px;
+        justify-content: center;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        font-size: 12.5px;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .pp-back-link i {
+        font-size: 11px;
       }
       .pp-search-wrap {
-        order: 3;
+        grid-column: 1 / -1;
         width: 100%;
       }
       .pp-search-input {
         width: 100%;
+        min-height: 40px;
+        padding: 8px 14px 8px 36px;
+        font-size: 13px;
+      }
+      .pp-search-icon {
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
       }
       .pp-support-pill {
-        order: 2;
+        grid-column: 1 / -1;
         width: 100%;
         justify-content: center;
+        min-height: 40px;
+        height: auto;
+        padding: 8px 14px;
+        font-size: 12.5px;
+        box-shadow: none;
+      }
+      .pp-support-pill small {
+        font-size: 9px;
+        letter-spacing: 0.06em;
+      }
+      .pp-controls {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+        align-items: center;
+      }
+      .pp-mobile-filter-btn {
+        width: max-content;
+        padding: 8px 12px;
+      }
+      .pp-breadcrumb {
+        grid-column: 1 / -1;
+        font-size: 12px;
+        min-width: 0;
+      }
+      .pp-result-count {
+        font-size: 12px;
+      }
+      .pp-sort-select {
+        justify-self: end;
+        min-width: 138px;
+        padding: 8px 10px;
+        font-size: 12.5px;
       }
       .pp-curation-panel {
         padding: 14px 16px;
+        margin-bottom: 16px;
+        gap: 12px;
       }
       .pp-curation-panel__title {
         font-size: 16px;
@@ -469,9 +538,59 @@
       .pp-curation-panel__desc {
         font-size: 13px;
       }
+      .pp-curation-panel__copy {
+        flex-basis: 100%;
+      }
       .pp-curation-panel__chips {
         justify-content: flex-start;
         flex: 1 1 100%;
+        gap: 6px;
+      }
+      .pp-curation-chip {
+        padding: 7px 10px;
+        font-size: 11px;
+      }
+      .pp-quote-banner {
+        padding: 12px 14px;
+        margin-bottom: 16px;
+        gap: 12px;
+      }
+      .pp-quote-banner__copy {
+        gap: 10px;
+      }
+      .pp-quote-banner__icon {
+        width: 38px;
+        height: 38px;
+        font-size: 15px;
+      }
+      .pp-quote-banner strong {
+        font-size: 13px;
+      }
+      .pp-quote-banner p {
+        font-size: 12px;
+      }
+      .pp-quote-banner-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .pp-quote-banner-action {
+        justify-content: center;
+        min-height: 38px;
+      }
+    }
+    @media (max-width: 520px) {
+      .pp-controls {
+        grid-template-columns: 1fr;
+      }
+      .pp-mobile-filter-btn,
+      .pp-sort-select {
+        width: 100%;
+        justify-content: center;
+      }
+      .pp-sort-select {
+        justify-self: stretch;
       }
     }
 
