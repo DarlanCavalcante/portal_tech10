@@ -3487,6 +3487,13 @@ body.loaded {
     font-weight: 700;
 }
 
+.catalog-live-tag--active {
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    border-color: rgba(37, 99, 235, 0.22);
+    color: #fff;
+    box-shadow: 0 12px 24px rgba(29, 78, 216, 0.18);
+}
+
 .catalog-live-tag--link {
     text-decoration: none;
     transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
@@ -3498,6 +3505,12 @@ body.loaded {
     color: #1d4ed8;
     transform: translateY(-1px);
     outline: none;
+}
+
+.catalog-live-tag--link.catalog-live-tag--active:hover,
+.catalog-live-tag--link.catalog-live-tag--active:focus-visible {
+    background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+    color: #fff;
 }
 
 /* ===================== Servicos Intro ===================== */
