@@ -34,10 +34,9 @@
             </nav>
             
             <div class="header-actions">
-                <div class="cart-icon" id="cartIcon" style="cursor: pointer;" onclick="window.location.href='../carrinho.html'">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </div>
+                <a class="cart-icon" href="https://wa.me/55974001960?text=Olá!%20Vim%20pela%20página%20de%20smartphones%20da%20Tech10%20e%20quero%20atendimento." target="_blank" rel="noopener noreferrer" aria-label="Falar com a Tech10 no WhatsApp" data-cart-link-mode="support">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
                 <button class="menu-toggle" id="menuToggle">
                     <span></span>
                     <span></span>
@@ -263,14 +262,5 @@
     </script>
     <script src="../js/tenant-config.js"></script>
     <script src="../js/tenant-routes.js"></script>
-    <script src="../js/api-config.js"></script>
-    <script src="../js/api-adapter.js"></script>
-    <script src="../js/cart-storefront.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var cart = window.medusaCart || window.cartVivaCommerce;
-            if (cart && cart.init) cart.init().catch(function(e){ console.error("Cart init:", e); });
-        });
-    </script>
 </body>
 </html>
