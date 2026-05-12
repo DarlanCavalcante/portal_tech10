@@ -356,6 +356,71 @@
       outline: none;
       cursor: pointer;
     }
+    .pp-curation-panel {
+      background: linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid rgba(37, 99, 235, 0.12);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+    }
+    .pp-curation-panel__copy {
+      flex: 1 1 420px;
+      min-width: 0;
+    }
+    .pp-curation-panel__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .pp-curation-panel__title {
+      font-size: 18px;
+      line-height: 1.35;
+      color: #0f172a;
+      margin: 0 0 8px;
+    }
+    .pp-curation-panel__desc {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #475569;
+      margin: 0;
+      max-width: 760px;
+    }
+    .pp-curation-panel__chips {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 0 1 360px;
+    }
+    .pp-curation-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eff6ff;
+      border: 1px solid rgba(37, 99, 235, 0.12);
+      color: #1e3a8a;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
     .pp-mobile-filter-btn {
       display: none;
       align-items: center;
@@ -394,6 +459,19 @@
         order: 2;
         width: 100%;
         justify-content: center;
+      }
+      .pp-curation-panel {
+        padding: 14px 16px;
+      }
+      .pp-curation-panel__title {
+        font-size: 16px;
+      }
+      .pp-curation-panel__desc {
+        font-size: 13px;
+      }
+      .pp-curation-panel__chips {
+        justify-content: flex-start;
+        flex: 1 1 100%;
       }
     }
 
@@ -666,6 +744,17 @@
           <option value="price-desc">Maior preço</option>
           <option value="name">Nome A–Z</option>
         </select>
+      </div>
+
+      <div class="pp-curation-panel" id="pp-curation-panel">
+        <div class="pp-curation-panel__copy">
+          <span class="pp-curation-panel__eyebrow" data-pp-curation-eyebrow>Destaques Tech10</span>
+          <h3 class="pp-curation-panel__title" data-pp-curation-title>Vitrine editorial baseada no estoque público da Tech10.</h3>
+          <p class="pp-curation-panel__desc" data-pp-curation-desc>Carregando a leitura comercial da vitrine para destacar melhor os produtos e a seleção assistida.</p>
+        </div>
+        <div class="pp-curation-panel__chips" data-pp-curation-chips>
+          <span class="pp-curation-chip">Seleção assistida</span>
+        </div>
       </div>
 
       <div class="pp-quote-banner" id="pp-quote-banner">
