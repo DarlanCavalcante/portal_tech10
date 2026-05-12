@@ -8,7 +8,55 @@
 
   function getRuntimeCommerce() {
     var runtime = global.__tech10_runtime_config || {};
-    return runtime.commerce || { capabilities: { cart: true } };
+    if (runtime.commerce) {
+      return runtime.commerce;
+    }
+    var config = global.API_CONFIG || {};
+    var quoteOnly = (config.CHECKOUT_MODE || 'quote_only') === 'quote_only';
+    return {
+      checkoutMode: config.CHECKOUT_MODE || 'quote_only',
+      capabilities: {
+        cart: !quoteOnly,
+        checkout: !quoteOnly,
+        quoteOnly: quoteOnly,
+        assistedCartBridge: quoteOnly,
+        assistedCheckoutBridge: quoteOnly
+      }
+    };
+  }
+
+  function hasAssistedSelectionBridge() {
+    var commerce = getRuntimeCommerce();
+    var capabilities = commerce.capabilities || {};
+    var quoteOnly = commerce.checkoutMode === 'quote_only'
+      || capabilities.quoteOnly === true
+      || capabilities.cart === false;
+
+    return quoteOnly && capabilities.assistedCartBridge === true;
+  }
+
+  function getCatalogButtonLabel(actionMode) {
+    if (actionMode === 'assisted') {
+      return '<i class="fas fa-list-check"></i> Adicionar à seleção';
+    }
+    if (actionMode === 'quote') {
+      return '<i class="fab fa-whatsapp"></i> Falar com a Tech10';
+    }
+    return '<i class="fas fa-shopping-cart"></i> Adicionar';
+  }
+
+  function getCatalogButtonLoadingLabel(actionMode) {
+    if (actionMode === 'assisted') {
+      return '<i class="fas fa-spinner fa-spin"></i> Adicionando à seleção...';
+    }
+    return '<i class="fas fa-spinner fa-spin"></i> Adicionando...';
+  }
+
+  function getCatalogButtonSuccessLabel(actionMode) {
+    if (actionMode === 'assisted') {
+      return '<i class="fas fa-check"></i> Na seleção!';
+    }
+    return '<i class="fas fa-check"></i> Adicionado!';
   }
 
   function getSupportWhatsappUrl(product, quantity) {
@@ -196,7 +244,9 @@
     var fallbackImg = (global.TENANT_CONFIG && global.TENANT_CONFIG.brand && global.TENANT_CONFIG.brand.fallbackProductImageUrl)
       || '/imagem/propaganda loja/tecnologia.jpeg';
     var runtimeCommerce = getRuntimeCommerce();
-    var cartEnabled = !(runtimeCommerce.capabilities && runtimeCommerce.capabilities.cart === false);
+    var capabilities = runtimeCommerce.capabilities || {};
+    var assistedSelectionEnabled = hasAssistedSelectionBridge();
+    var cartEnabled = assistedSelectionEnabled || !(capabilities && capabilities.cart === false);
 
     var html = products
       .filter(function (p) { return p && p.id && p.title; })
@@ -215,22 +265,22 @@
         var variantId = (variant && variant.id) ? variant.id : '';
         var maxQty = inventoryQty > 0 ? inventoryQty : 99;
         var pid = product.id;
-        var actionMode = cartEnabled ? 'cart' : 'quote';
+        var actionMode = assistedSelectionEnabled ? 'assisted' : (cartEnabled ? 'cart' : 'quote');
         var metaChips = getProductMetaChips(product);
         var metaHtml = metaChips.length
           ? '<div class="lp-card-meta">' + metaChips.map(function (chip) {
               return '<span class="lp-card-meta-chip"><strong>' + chip.label + ':</strong> ' + String(chip.value).replace(/</g, '&lt;') + '</span>';
             }).join('') + '</div>'
           : '';
-        var supportNoteHtml = !cartEnabled
+        var supportNoteHtml = assistedSelectionEnabled
+          ? '<div class="lp-card-mode-note"><i class="fas fa-list-check"></i> Monte sua seleção e feche com atendimento Tech10.</div>'
+          : (!cartEnabled
           ? '<div class="lp-card-mode-note"><i class="fas fa-headset"></i> Venda assistida via atendimento Tech10.</div>'
-          : '';
+          : '');
         var duplicateIdentityHtml = isDuplicateTitleProduct(product) && product.metadata && product.metadata.sku
           ? '<div class="lp-card-identity-note"><i class="fas fa-fingerprint"></i> Identifique este item pelo SKU <strong>' + String(product.metadata.sku).replace(/</g, '&lt;') + '</strong></div>'
           : '';
-        var buttonLabel = cartEnabled
-          ? '<i class="fas fa-shopping-cart"></i> Adicionar'
-          : '<i class="fab fa-whatsapp"></i> Falar com a Tech10';
+        var buttonLabel = getCatalogButtonLabel(actionMode);
         var qtyControlHtml = cartEnabled
           ? '<div class="lp-qty-ctrl" data-pid="' + pid + '">' +
               '<button class="lp-qty-btn lp-qty-minus" type="button" aria-label="Diminuir quantidade">−</button>' +
@@ -342,7 +392,7 @@
       btn.disabled = true;
       setTimeout(function () {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fab fa-whatsapp"></i> Falar com a Tech10';
+        btn.innerHTML = getCatalogButtonLabel('quote');
       }, 1800);
     }
 
@@ -358,28 +408,27 @@
 
   async function _addToCart(variantId, productId, qty, btn) {
     if (!variantId || !productId) return;
+    var actionMode = btn && btn.dataset && btn.dataset.action ? btn.dataset.action : 'cart';
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adicionando...';
+      btn.innerHTML = getCatalogButtonLoadingLabel(actionMode);
     }
     try {
-      for (var i = 0; i < (qty || 1); i++) {
-        var cart = typeof global.getActiveStorefrontCart === 'function'
-          ? global.getActiveStorefrontCart()
-          : (global.storefrontCart || null);
-        if (cart && cart.addItem) {
-          await cart.addItem(variantId, productId, 1, false);
-        } else if (typeof global.addToStorefrontCart === 'function') {
-          await global.addToStorefrontCart(variantId, productId, false);
-        }
+      var cart = typeof global.getActiveStorefrontCart === 'function'
+        ? global.getActiveStorefrontCart()
+        : (global.storefrontCart || null);
+      if (cart && cart.addItem) {
+        await cart.addItem(variantId, productId, qty || 1, false);
+      } else if (typeof global.addToStorefrontCart === 'function') {
+        await global.addToStorefrontCart(variantId, productId, false, qty || 1);
       }
       if (btn) {
-        btn.innerHTML = '<i class="fas fa-check"></i> Adicionado!';
+        btn.innerHTML = getCatalogButtonSuccessLabel(actionMode);
         btn.style.background = '#10b981';
         setTimeout(function () {
           if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Adicionar';
+            btn.innerHTML = getCatalogButtonLabel(actionMode);
             btn.style.background = '';
           }
         }, 2000);
@@ -388,7 +437,7 @@
       console.error('[load-products] addToCart error:', err);
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Adicionar';
+        btn.innerHTML = getCatalogButtonLabel(actionMode);
       }
     }
   }
@@ -423,12 +472,12 @@
   global.loadProductsFromAPI = loadProducts;
   global.renderProductsFromAPI = renderProducts;
 
-  global.addToStorefrontCart = async function (variantId, productId, buyNow) {
+  global.addToStorefrontCart = async function (variantId, productId, buyNow, quantity) {
     var cart = typeof global.getActiveStorefrontCart === 'function'
       ? global.getActiveStorefrontCart()
       : (global.storefrontCart || null);
     if (cart && cart.addItem) {
-      await cart.addItem(variantId, productId, 1, buyNow);
+      await cart.addItem(variantId, productId, quantity || 1, buyNow);
     } else {
       console.warn('Carrinho não inicializado. Carregue cart-storefront.js.');
     }

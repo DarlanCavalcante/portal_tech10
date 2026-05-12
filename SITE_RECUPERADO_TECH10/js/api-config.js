@@ -36,6 +36,8 @@
 
     CART_STORAGE_KEY: `${tenantRuntimeId}_storefront_cart_id`,
 
+    ASSISTED_CART_STORAGE_KEY: `${tenantRuntimeId}_assisted_cart`,
+
     LEGACY_CART_STORAGE_KEY: 'vivacommerce_cart_id',
 
     EXTRA_LEGACY_CART_STORAGE_KEYS: ['vc_cart_id', 'medusa_cart_id'],
@@ -60,6 +62,10 @@
         const value = localStorage.getItem(key);
         if (value) return value;
       }
+      const assistedCart = this.readAssistedCart();
+      if (assistedCart && assistedCart.id) {
+        return assistedCart.id;
+      }
       return null;
     },
 
@@ -80,6 +86,29 @@
 
     persistLegacyCartId(value) {
       this.persistStoredCartId(value);
+    },
+
+    readAssistedCart() {
+      if (typeof localStorage === 'undefined') return null;
+      try {
+        const rawValue = localStorage.getItem(this.ASSISTED_CART_STORAGE_KEY);
+        if (!rawValue) return null;
+        const parsedValue = JSON.parse(rawValue);
+        return parsedValue && typeof parsedValue === 'object' ? parsedValue : null;
+      } catch (error) {
+        console.warn('[api-config] assisted cart parse error:', error);
+        localStorage.removeItem(this.ASSISTED_CART_STORAGE_KEY);
+        return null;
+      }
+    },
+
+    persistAssistedCart(value) {
+      if (typeof localStorage === 'undefined') return;
+      if (!value) {
+        localStorage.removeItem(this.ASSISTED_CART_STORAGE_KEY);
+        return;
+      }
+      localStorage.setItem(this.ASSISTED_CART_STORAGE_KEY, JSON.stringify(value));
     },
 
     get ACTIVE_URL() {
