@@ -11,11 +11,13 @@
     return runtime.commerce || { capabilities: { cart: true } };
   }
 
-  function getSupportWhatsappUrl(product) {
+  function getSupportWhatsappUrl(product, quantity) {
     var runtime = global.__tech10_runtime_config || {};
     var support = runtime.support || {};
+    var tenantRoutes = global.TenantRoutes || {};
+    var tenantCompanyFromRoutes = tenantRoutes.company || {};
     var tenantCompany = (global.TENANT_CONFIG && global.TENANT_CONFIG.company) || {};
-    var whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
+    var whatsapp = String(tenantCompanyFromRoutes.whatsapp || support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
     if (!whatsapp) return '';
 
     var title = product && product.title ? product.title : 'um produto da loja';
@@ -23,12 +25,15 @@
     var price = product && product.variants && product.variants[0] && product.variants[0].prices && product.variants[0].prices[0]
       ? product.variants[0].prices[0].amount
       : 0;
+    var qty = parseInt(quantity, 10);
+    if (isNaN(qty) || qty < 1) qty = 1;
 
     var message = [
-      'Olá Tech10, tenho interesse neste produto:',
+      'Olá! Vim pela loja da Tech10 e tenho interesse neste produto:',
       title,
       metadata.brand ? 'Marca: ' + metadata.brand : '',
       metadata.sku ? 'SKU: ' + metadata.sku : '',
+      qty > 1 ? 'Quantidade desejada: ' + qty : '',
       price ? 'Preço exibido: R$ ' + formatPrice(price) : '',
       '',
       'Gostaria de confirmar disponibilidade e atendimento.'
@@ -327,7 +332,8 @@
     var product = products.find(function (item) {
       return String(item.id) === String(productId);
     });
-    var whatsappUrl = getSupportWhatsappUrl(product);
+    var quantity = getQty(productId);
+    var whatsappUrl = getSupportWhatsappUrl(product, quantity);
 
     if (btn) {
       btn.innerHTML = '<i class="fas fa-paper-plane"></i> Abrindo atendimento...';
