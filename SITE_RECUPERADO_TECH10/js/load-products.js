@@ -164,6 +164,96 @@
       .trim();
   }
 
+  function matchesCatalogSearch(product, search) {
+    if (!search) return true;
+
+    var metadata = product && product.metadata ? product.metadata : {};
+    var category = product && product.category ? product.category : {};
+    var haystack = [
+      product && product.title,
+      product && product.description,
+      metadata.brand,
+      metadata.sku,
+      category.name,
+      category.handle,
+      product && product.categorySlug
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    return haystack.indexOf(search) !== -1;
+  }
+
+  function syncHomeCatalogFilters(products, containerId) {
+    if ((containerId || 'produtosGrid') !== 'produtosGrid') return;
+
+    var filtersRoot = global.document && global.document.querySelector('section#produtos .filters');
+    if (!filtersRoot) return;
+
+    var categoryMap = new Map();
+    (products || []).forEach(function (product, index) {
+      if (!product) return;
+      var slug = (product.categorySlug || toCategorySlug(product.category)).toLowerCase();
+      if (!slug || slug === 'outros') return;
+
+      var categoryName = normalizeCatalogText(product.category && product.category.name);
+      if (!categoryMap.has(slug)) {
+        categoryMap.set(slug, {
+          slug: slug,
+          label: categoryName || 'Categoria',
+          count: 0,
+          firstIndex: index
+        });
+      }
+
+      var entry = categoryMap.get(slug);
+      entry.count += 1;
+      if (categoryName) {
+        entry.label = categoryName;
+      }
+    });
+
+    var categories = Array.from(categoryMap.values())
+      .sort(function (a, b) {
+        if (b.count !== a.count) return b.count - a.count;
+        return a.firstIndex - b.firstIndex;
+      })
+      .slice(0, 4);
+
+    if (!categories.length) return;
+
+    var currentActive = 'all';
+    var activeButton = filtersRoot.querySelector('.filter-btn.active');
+    if (activeButton && activeButton.getAttribute('data-filter')) {
+      currentActive = activeButton.getAttribute('data-filter');
+    }
+
+    if (currentActive !== 'all' && !categories.some(function (category) { return category.slug === currentActive; })) {
+      currentActive = 'all';
+    }
+
+    filtersRoot.innerHTML = '';
+
+    function appendButton(label, slug, isActive) {
+      var button = global.document.createElement('button');
+      button.className = 'filter-btn' + (isActive ? ' active' : '');
+      button.setAttribute('data-filter', slug);
+      button.textContent = label;
+      button.addEventListener('click', function (event) {
+        if (typeof global.handleFilterClick === 'function') {
+          global.handleFilterClick(event);
+        }
+      });
+      filtersRoot.appendChild(button);
+    }
+
+    appendButton('Todos', 'all', currentActive === 'all');
+    categories.forEach(function (category) {
+      appendButton(category.label, category.slug, currentActive === category.slug);
+    });
+  }
+
   function buildProductDescription(product, categoryName) {
     var productTitle = normalizeCatalogText(product && product.title);
     var categoryLabel = normalizeCatalogText(categoryName || (product && product.category && product.category.name));
@@ -334,6 +424,8 @@
   function renderProducts(products, containerId) {
     var container = document.getElementById(containerId || 'produtosGrid');
     if (!container) return;
+
+    syncHomeCatalogFilters(products, containerId);
 
     if (!products || !Array.isArray(products) || products.length === 0) {
       var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';
@@ -556,8 +648,7 @@
     }
     if (search) {
       list = list.filter(function (p) {
-        return (p.title || '').toLowerCase().indexOf(search) !== -1 ||
-               (p.description || '').toLowerCase().indexOf(search) !== -1;
+        return matchesCatalogSearch(p, search);
       });
     }
     renderProducts(list, (opts && opts.containerId) ? opts.containerId : 'produtosGrid');
