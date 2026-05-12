@@ -3,6 +3,9 @@
  * Mantida por compatibilidade enquanto o storefront canônico cobre a jornada principal.
  */
 
+const LEGACY_PRODUCTS_GRID_ID = 'produtos-legacy-storefront';
+const LEGACY_PRODUCTS_GRID_SELECTORS = `#produtosGrid, .produtos-grid, #${LEGACY_PRODUCTS_GRID_ID}, #produtos-medusa`;
+
 // Usa MarketplaceAdapter (api-adapter.js) com slug definido em api-config.js
 // A URL base e o slug vêm de window.API_CONFIG — não usar URL legada de storefront.
 
@@ -75,7 +78,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
   if (!container) {
     console.warn(`Container #${containerId} não encontrado`);
     // Tentar encontrar qualquer container de produtos
-    const alternative = document.querySelector('#produtosGrid, .produtos-grid, #produtos-medusa');
+    const alternative = document.querySelector(LEGACY_PRODUCTS_GRID_SELECTORS);
     if (alternative) {
       console.log(`✅ Usando container alternativo: ${alternative.id || alternative.className}`);
       return renderProducts(products, alternative.id || 'produtosGrid');
@@ -475,6 +478,7 @@ async function init() {
     // PRIMEIRO tentar produtosGrid (ID real no HTML)
     const containers = [
       'produtosGrid',  // ID real no HTML - PRIMEIRO!
+      LEGACY_PRODUCTS_GRID_ID,
       'produtos-medusa',
       'products-container',
       'produtos-container',
@@ -499,8 +503,8 @@ async function init() {
       productSections.forEach(section => {
         const grid = section.querySelector('.produtos-grid, .products-grid, .grid');
         if (grid) {
-          renderProducts(products, grid.id || 'produtos-medusa');
-          if (!grid.id) grid.id = 'produtos-medusa';
+          renderProducts(products, grid.id || LEGACY_PRODUCTS_GRID_ID);
+          if (!grid.id) grid.id = LEGACY_PRODUCTS_GRID_ID;
           rendered = true;
           console.log('✅ Produtos renderizados em grid encontrado');
         }
@@ -523,11 +527,11 @@ async function init() {
 }
 
 function publishLegacyStorefrontAliases() {
+  window.loadProductsFromLegacyStorefront = loadProductsFromLegacyStorefront;
   window.addToCartMedusa = window.addToStorefrontCart;
   window.loadProductsFromMedusa = loadProductsFromLegacyStorefront;
 }
 
 // Exportar para uso global
-window.loadProductsFromLegacyStorefront = loadProductsFromLegacyStorefront;
-window.loadProductsFromMedusa = loadProductsFromLegacyStorefront;
+publishLegacyStorefrontAliases();
 window.renderProducts = renderProducts;
