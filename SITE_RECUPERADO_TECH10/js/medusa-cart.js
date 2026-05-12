@@ -33,7 +33,7 @@ function persistLegacyCartId(value) {
     localStorage.setItem('medusa_cart_id', value);
 }
 
-class MedusaCart {
+class LegacyStorefrontCart {
     constructor() {
         this.baseUrl = typeof window.API_CONFIG?.resolveLegacyStoreApiBaseUrl === 'function'
             ? window.API_CONFIG.resolveLegacyStoreApiBaseUrl()
@@ -63,9 +63,9 @@ class MedusaCart {
             // Atualizar contador do carrinho
             await this.updateCartCount();
             
-            console.log('✅ MedusaCart inicializado');
+            console.log('✅ Carrinho legado inicializado');
         } catch (error) {
-            console.error('❌ Erro ao inicializar MedusaCart:', error);
+            console.error('❌ Erro ao inicializar carrinho legado:', error);
         }
     }
 
@@ -88,7 +88,7 @@ class MedusaCart {
             this.cart = data.cart;
             persistLegacyCartId(this.cartId);
             
-            console.log('🛒 Carrinho Medusa criado:', this.cartId);
+            console.log('🛒 Carrinho legado criado:', this.cartId);
             return this.cart;
         } catch (error) {
             console.error('❌ Erro ao criar carrinho:', error);
@@ -328,12 +328,14 @@ class MedusaCart {
 
 // Inicializar quando o DOM carregar
 if (typeof window !== 'undefined') {
+    window.LegacyStorefrontCart = LegacyStorefrontCart;
+    window.MedusaCart = window.MedusaCart || LegacyStorefrontCart;
     document.addEventListener('DOMContentLoaded', () => {
         // Só inicializar se não estiver na página de carrinho (ela inicializa sozinha)
         if (window.location.pathname !== '/carrinho' && !window.location.pathname.includes('carrinho.html')) {
-            window.medusaCart = new MedusaCart();
+            window.medusaCart = new LegacyStorefrontCart();
             window.medusaCart.init().catch(error => {
-                console.error('Erro ao inicializar MedusaCart:', error);
+                console.error('Erro ao inicializar carrinho legado:', error);
             });
         }
     });
@@ -341,5 +343,5 @@ if (typeof window !== 'undefined') {
 
 // Exportar para uso global
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MedusaCart;
+    module.exports = LegacyStorefrontCart;
 }
