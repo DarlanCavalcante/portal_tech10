@@ -460,9 +460,13 @@
 
     try {
       for (var i = 0; i < qty; i++) {
-        var cart = global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce;
+        var cart = typeof global.getActiveStorefrontCart === 'function'
+          ? global.getActiveStorefrontCart()
+          : (global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce);
         if (cart && cart.addItem) {
           await cart.addItem(variantId, productId, 1, false);
+        } else if (typeof global.addToStorefrontCart === 'function') {
+          await global.addToStorefrontCart(variantId, productId, false);
         }
       }
       activeBtn.innerHTML = '<i class="fas fa-check"></i> Adicionado!';

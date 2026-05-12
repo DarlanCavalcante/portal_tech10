@@ -29,6 +29,10 @@
     } catch (_) {}
   }
 
+  function getActiveStorefrontCart() {
+    return global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce || null;
+  }
+
   class StorefrontCart {
     constructor() {
       this.adapter = global.MarketplaceAdapter;
@@ -144,5 +148,6 @@
     window.cartStorefront = cart;
     window.cartVivaCommerce = cart;
     window.medusaCart = window.medusaCart || cart;
+    window.getActiveStorefrontCart = getActiveStorefrontCart;
   }
 })(typeof window !== 'undefined' ? window : this);
