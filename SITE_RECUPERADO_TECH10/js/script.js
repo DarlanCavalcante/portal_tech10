@@ -362,17 +362,17 @@ function setupEventListeners() {
 
         // Remover qualquer handler anterior
         cartIcon.onclick = null;
-        // Adicionar nosso handler que sempre redireciona para carrinho Medusa
+        // Adicionar nosso handler que sempre redireciona para a rota canônica do carrinho
         cartIcon.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            window.location.href = '/carrinho.html';
+            window.location.href = '/carrinho';
         });
         // Também configurar onclick diretamente como fallback
         cartIcon.onclick = function(e) {
             e.preventDefault();
             e.stopPropagation();
-            window.location.href = '/carrinho.html';
+            window.location.href = '/carrinho';
         };
     }
     
@@ -396,7 +396,7 @@ function setupEventListeners() {
         link.addEventListener('click', handleSmoothScroll);
     });
     
-    // Modal antigo do carrinho removido - agora usa página dedicada /carrinho.html
+    // Modal antigo do carrinho removido - agora usa a rota canônica /carrinho
 }
 
 // Manipulação de produtos
@@ -602,7 +602,7 @@ function toggleCart() {
         return;
     }
 
-    window.location.href = '/carrinho.html';
+    window.location.href = '/carrinho';
 }
 
 function findProductById(productId) {

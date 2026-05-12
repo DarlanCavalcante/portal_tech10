@@ -131,7 +131,7 @@ class MedusaCart {
             // Se for compra imediata, redirecionar após 1 segundo
             if (buyNow) {
                 setTimeout(() => {
-                    window.location.href = '/carrinho.html';
+                    window.location.href = '/carrinho';
                 }, 1000);
             }
             
@@ -299,7 +299,7 @@ class MedusaCart {
 if (typeof window !== 'undefined') {
     document.addEventListener('DOMContentLoaded', () => {
         // Só inicializar se não estiver na página de carrinho (ela inicializa sozinha)
-        if (!window.location.pathname.includes('carrinho.html')) {
+        if (window.location.pathname !== '/carrinho' && !window.location.pathname.includes('carrinho.html')) {
             window.medusaCart = new MedusaCart();
             window.medusaCart.init().catch(error => {
                 console.error('Erro ao inicializar MedusaCart:', error);
