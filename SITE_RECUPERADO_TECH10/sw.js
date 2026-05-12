@@ -138,13 +138,8 @@ async function networkFirst(request, cacheName) {
       return cachedResponse;
     }
     
-    // Fallback para HTML: Tech10 usa /tech10/, não a raiz
+    // Fallback para HTML da Tech10 standalone.
     if (request.destination === 'document') {
-      const path = url.pathname || '';
-      if (path.startsWith('/tech10/')) {
-        const fallback = await caches.match('/tech10/index.html');
-        if (fallback) return fallback;
-      }
       const fallback = await caches.match('/index.html');
       if (fallback) return fallback;
     }

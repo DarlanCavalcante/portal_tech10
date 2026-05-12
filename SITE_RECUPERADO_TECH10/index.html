@@ -21,14 +21,15 @@
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <a href="/tech10/" class="logo" aria-label="Tech10 - Página inicial">
+            <a href="/" class="logo" aria-label="Tech10 - Página inicial">
                 <img src="imagem/logo/tech10-logo-fundo-azul.png" alt="Tech10 - Informática e Tecnologia" height="40">
             </a>
             
             <nav class="nav">
                 <ul class="nav-list">
                     <li><a href="#home" class="nav-link">Início</a></li>
-                    <li><a href="/lojas/revivah-tech/shop" class="nav-link nav-link--highlight"><i class="fas fa-store nav-link-icon"></i>Loja</a></li>
+                    <li><a href="/loja" class="nav-link nav-link--highlight"><i class="fas fa-store nav-link-icon"></i>Loja</a></li>
+                    <li><a href="/portal" class="nav-link nav-link--highlight" data-tenant-portal-link><i class="fas fa-receipt nav-link-icon"></i>Portal</a></li>
                     <li><a href="#produtos" class="nav-link">Destaques</a></li>
                     <li><a href="#servicos" class="nav-link">Serviços</a></li>
                     <li><a href="#empresas" class="nav-link nav-link--accent">Empresas</a></li>
@@ -43,7 +44,7 @@
                     <input type="text" placeholder="Buscar produtos..." id="searchInput">
                     <i class="fas fa-search"></i>
                 </div>
-                <div class="cart-icon" id="cartIcon" style="cursor: pointer;" onclick="window.location.href='/tech10/carrinho.html'">
+                <div class="cart-icon" id="cartIcon" style="cursor: pointer;" onclick="window.location.href='/carrinho'">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </div>
@@ -75,7 +76,8 @@
                 <h1 class="hero-title">Tecnologia que Conecta Seu Mundo</h1>
                 <p class="hero-subtitle">Especialistas em Apple, Samsung e desenvolvimento Full Stack. Qualidade e confiança há 20 anos em Santa Maria/RS</p>
                 <div class="hero-buttons">
-                    <a href="/lojas/revivah-tech/shop" class="btn btn-primary" style="text-decoration: none; display: inline-block;"><i class="fas fa-store" style="margin-right:6px"></i>Ver Loja Online</a>
+                    <a href="/loja" class="btn btn-primary" style="text-decoration: none; display: inline-block;"><i class="fas fa-store" style="margin-right:6px"></i>Ver Loja Online</a>
+                    <a href="/portal" class="btn btn-secondary" style="text-decoration: none; display: inline-block;" data-tenant-portal-link><i class="fas fa-receipt" style="margin-right:6px"></i>Acompanhar O.S.</a>
                     <a href="#servicos" class="btn btn-secondary" style="text-decoration: none; display: inline-block;">Nossos Serviços</a>
                 </div>
             </div>
@@ -118,14 +120,14 @@
                         <p>Desenvolvimento profissional</p>
                     </div>
                 </a>
-                <a href="/shop?store=revivah-tech&categorySlug=notebooks" style="text-decoration: none; color: inherit;">
+                <a href="/loja?category=notebooks" style="text-decoration: none; color: inherit;">
                     <div class="category-card" style="cursor: pointer;">
                         <i class="fas fa-laptop"></i>
                         <h3>Notebooks</h3>
                         <p>Venda e assistência técnica</p>
                     </div>
                 </a>
-                <a href="/shop?store=revivah-tech&categorySlug=smartphones" style="text-decoration: none; color: inherit;">
+                <a href="/loja?category=smartphones" style="text-decoration: none; color: inherit;">
                     <div class="category-card" style="cursor: pointer;">
                         <i class="fas fa-mobile-alt"></i>
                         <h3>Smartphones</h3>
@@ -152,7 +154,7 @@
                     <h2 class="cta-banner__title">Loja Online Aberta!</h2>
                     <p class="cta-banner__desc">Todos os nossos produtos com estoque em tempo real, carrinho e pagamento seguro.</p>
                 </div>
-                <a href="/lojas/revivah-tech/shop" class="cta-banner__btn">
+                <a href="/loja" class="cta-banner__btn">
                     <i class="fas fa-store"></i> Ver Catálogo Completo
                 </a>
             </div>
@@ -803,14 +805,16 @@
     </button>
 
     <!-- Scripts auxiliares (defer para nao bloquear renderizacao) -->
+    <script src="js/tenant-config.js"></script>
+    <script src="js/tenant-routes.js"></script>
     <script src="js/modal-manager.js" defer></script>
     <script src="js/api-client.js" defer></script>
     <script src="js/empresa-config.js" defer></script>
 
-    <!-- VivaCommerce Tech10 — loja do seed (slug: revivah-tech) -->
+    <!-- Runtime canônico do tenant Tech10 -->
     <script src="js/api-config.js"></script>
     <script src="js/api-adapter.js"></script>
-    <script src="js/cart-vivacommerce.js"></script>
+    <script src="js/cart-storefront.js"></script>
     <script src="js/load-products.js"></script>
     <script src="js/product-modal.js" defer></script>
 
@@ -829,7 +833,7 @@
                 window.location.reload();
             });
 
-            // Registrar Service Worker (path relativo para funcionar em /tech10/)
+            // Registrar Service Worker com path relativo para o runtime standalone.
             navigator.serviceWorker.register('sw.js')
                 .then(registration => {
                     console.log('✅ Tech10 SW registrado:', registration.scope);
@@ -935,7 +939,7 @@
             // Inicializar carrinho VivaCommerce
             var cart = window.medusaCart || window.cartVivaCommerce;
             if (cart && cart.init) cart.init().catch(function(e) { console.error('Cart init:', e); });
-            // Carregar produtos do tenant revivah-tech via MarketplaceAdapter
+            // Carregar produtos do tenant via MarketplaceAdapter
             if (typeof loadProductsFromAPI === 'function' && typeof renderProductsFromAPI === 'function') {
                 loadProductsFromAPI().then(function(products) {
                     renderProductsFromAPI(products, 'produtosGrid');

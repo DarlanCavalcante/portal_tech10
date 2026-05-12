@@ -6,12 +6,25 @@
 (function () {
   'use strict';
 
+  const tenantConfig = typeof window !== 'undefined' ? window.TENANT_CONFIG || {} : {};
+  const tenantMeta = tenantConfig.tenant || {};
+  const company = tenantConfig.company || {};
+  const brand = tenantConfig.brand || {};
+  const primaryStore = {
+    id: tenantMeta.id || 'tech10',
+    name: company.name || 'Tech10',
+    slug: tenantMeta.slug || 'tech10',
+    desc: company.description || 'Informática e tecnologia',
+    bannerUrl: brand.logoUrl || '/imagem/logo/tech10-logo-fundo-azul.png',
+    logoUrl: brand.logoUrl || '/imagem/logo/tech10-logo-fundo-azul.png',
+  };
+
   // Dados de exemplo — substituir por fetch da API /lojas
   const CATEGORIES = [
     {
       name: 'Tecnologia',
       stores: [
-        { id: 'tech10', name: 'Tech10', slug: 'revivah-tech', desc: 'Informática e tecnologia', bannerUrl: '/tech10/imagem/logo/tech10-logo-fundo-azul.png', logoUrl: '/tech10/imagem/logo/tech10-logo-fundo-azul.png' },
+        primaryStore,
         { id: '2', name: 'TechStore', slug: 'tech-store', desc: 'Eletrônicos e gadgets', bannerUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400', logoUrl: null },
         { id: '3', name: 'ByteShop', slug: 'byte-shop', desc: 'Hardware e periféricos', bannerUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400', logoUrl: null },
       ]
@@ -40,7 +53,7 @@
   const categoriesEl = document.querySelector('.rev-categories');
 
   function getStoreHref(store) {
-    if (store.slug === 'revivah-tech') return '/tech10/';
+    if (store.slug === primaryStore.slug) return '/';
     return '/lojas/' + (store.slug || store.id) + '/';
   }
 

@@ -1,13 +1,22 @@
 /**
- * API Adapter — VivaCommerce / Tech10
- * Usa rotas por tenant para puxar apenas produtos/categorias da loja do seed (tech10-informatica).
+ * API Adapter — Store proxy / Tech10
+ * Usa rotas same-origin do runtime standalone para acessar produtos/categorias.
  */
 (function (global) {
   'use strict';
 
   function getBaseUrl() {
     const config = global.API_CONFIG || {};
-    if (config.provider === 'vivacommerce' && config.VIVACOMMERCE_BASE_URL) {
+    if (config.STORE_RUNTIME_BASE_URL) {
+      return config.STORE_RUNTIME_BASE_URL.replace(/\/$/, '');
+    }
+    if (config.RUNTIME_BASE_URL) {
+      return config.RUNTIME_BASE_URL.replace(/\/$/, '');
+    }
+    if (config.LEGACY_STORE_BASE_URL) {
+      return config.LEGACY_STORE_BASE_URL.replace(/\/$/, '');
+    }
+    if (config.VIVACOMMERCE_BASE_URL) {
       return config.VIVACOMMERCE_BASE_URL.replace(/\/$/, '');
     }
     return (config.ACTIVE_URL || 'http://localhost:3000').replace(/\/$/, '');
@@ -20,6 +29,23 @@
 
   const base = () => getBaseUrl() + '/api/store';
   const slug = () => getStoreSlug();
+
+  async function getRuntimeConfig() {
+    if (global.__tech10_runtime_config) {
+      return global.__tech10_runtime_config;
+    }
+
+    try {
+      const res = await fetch(`${getBaseUrl()}/api/runtime-config`);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      global.__tech10_runtime_config = data;
+      return data;
+    } catch (err) {
+      console.error('[api-adapter] getRuntimeConfig:', err);
+      return null;
+    }
+  }
 
   /**
    * Produtos — GET /api/store/tenant/:slug/products (page, perPage)
@@ -228,6 +254,7 @@
   }
 
   global.MarketplaceAdapter = {
+    getRuntimeConfig,
     getProducts,
     getProductById,
     getCategories,

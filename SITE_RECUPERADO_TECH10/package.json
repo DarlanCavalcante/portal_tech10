@@ -1,0 +1,10 @@
+{
+  "name": "tech10-portal-runtime",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Runtime standalone do tenant Tech10 com site, loja, portal e proxy same-origin.",
+  "scripts": {
+    "validate:runtime": "node scripts/validate-runtime-contract.mjs",
+    "smoke:runtime": "node scripts/smoke-runtime.mjs"
+  }
+}

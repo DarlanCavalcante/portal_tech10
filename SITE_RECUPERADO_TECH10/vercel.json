@@ -1,0 +1,143 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/tech10",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tech10/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tech10/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tech10/produtos.html",
+      "destination": "/loja",
+      "permanent": true
+    },
+    {
+      "source": "/tech10/carrinho.html",
+      "destination": "/carrinho",
+      "permanent": true
+    },
+    {
+      "source": "/tech10/checkout.html",
+      "destination": "/checkout",
+      "permanent": true
+    },
+    {
+      "source": "/tech10/pedido-confirmado.html",
+      "destination": "/pedido-confirmado",
+      "permanent": true
+    },
+    {
+      "source": "/lojas/tech10/shop",
+      "destination": "/loja",
+      "permanent": false
+    },
+    {
+      "source": "/lojas/revivah-tech/shop",
+      "destination": "/loja",
+      "permanent": false
+    },
+    {
+      "source": "/shop",
+      "destination": "/loja",
+      "permanent": false
+    },
+    {
+      "source": "/produtos.html",
+      "destination": "/loja",
+      "permanent": false
+    },
+    {
+      "source": "/carrinho.html",
+      "destination": "/carrinho",
+      "permanent": false
+    },
+    {
+      "source": "/checkout.html",
+      "destination": "/checkout",
+      "permanent": false
+    },
+    {
+      "source": "/pedido-confirmado.html",
+      "destination": "/pedido-confirmado",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/store",
+      "destination": "/api/store-proxy"
+    },
+    {
+      "source": "/api/store/(.*)",
+      "destination": "/api/store-proxy?path=$1"
+    },
+    {
+      "source": "/loja",
+      "destination": "/produtos.html"
+    },
+    {
+      "source": "/carrinho",
+      "destination": "/carrinho.html"
+    },
+    {
+      "source": "/checkout",
+      "destination": "/checkout.html"
+    },
+    {
+      "source": "/pedido-confirmado",
+      "destination": "/pedido-confirmado.html"
+    },
+    {
+      "source": "/portal",
+      "destination": "/portal/index.html"
+    },
+    {
+      "source": "/status",
+      "destination": "/portal/index.html?mode=status"
+    }
+  ]
+}

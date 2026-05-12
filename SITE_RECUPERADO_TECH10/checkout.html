@@ -31,6 +31,25 @@
             color: #2563eb;
             margin-bottom: 10px;
         }
+        .checkout-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+        .checkout-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
         .checkout-grid {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -270,6 +289,11 @@
         <div class="header">
             <h1><i class="fas fa-shopping-bag"></i> Finalizar Compra</h1>
             <p>Preencha os dados abaixo para concluir seu pedido</p>
+            <div class="checkout-links">
+                <a href="/loja"><i class="fas fa-store"></i> Voltar para a loja</a>
+                <a href="/carrinho"><i class="fas fa-shopping-cart"></i> Ver carrinho</a>
+                <a href="/portal" data-tenant-portal-link><i class="fas fa-receipt"></i> Portal do cliente</a>
+            </div>
             <div class="checkout-trust">
                 <span><i class="fas fa-lock"></i> Conexão SSL Segura</span>
                 <span><i class="fas fa-shield-alt"></i> Dados Protegidos</span>
@@ -405,11 +429,14 @@
         </div>
     </div>
 
+    <script src="js/tenant-config.js"></script>
+    <script src="js/tenant-routes.js"></script>
     <script src="js/api-config.js"></script>
     <script src="js/api-adapter.js"></script>
     <script>
-        const CART_KEY = 'vivacommerce_cart_id';
-        let cartId = localStorage.getItem(CART_KEY);
+        const CART_KEY = (window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id';
+        const LEGACY_CART_KEY = (window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id';
+        let cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
         let cart = null;
         let selectedShippingOption = { method: 'standard', cost: 0, is_free: true, zone: null };
 
@@ -512,7 +539,7 @@
 
         // Carregar carrinho para exibir no resumo
         async function loadCartSummary() {
-            cartId = localStorage.getItem(CART_KEY);
+            cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
             const summaryEl = document.getElementById('cart-summary');
             if (!cartId) {
                 if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Carrinho não encontrado. <a href="index.html">Voltar para a loja</a></p></div>';
@@ -552,7 +579,7 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
             if (errorDiv) errorDiv.style.display = 'none';
 
-            cartId = localStorage.getItem(CART_KEY);
+            cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
             if (!cartId) {
                 showError('Carrinho não encontrado. Adicione produtos ao carrinho primeiro.');
                 submitBtn.disabled = false;
@@ -629,6 +656,7 @@
 
                 localStorage.setItem('last_order', JSON.stringify(lastOrder));
                 localStorage.removeItem(CART_KEY);
+                localStorage.removeItem(LEGACY_CART_KEY);
                 window.location.href = 'pedido-confirmado.html?order=' + (lastOrder.order_number || '');
             } catch (err) {
                 console.error('[CHECKOUT] Erro ao finalizar:', err);

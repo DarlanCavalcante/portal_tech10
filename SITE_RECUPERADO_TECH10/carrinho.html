@@ -467,14 +467,17 @@
 
     <header>
         <div class="header-content">
-            <a href="/tech10/" class="logo">
+            <a href="/" class="logo">
                 <img src="imagem/logo/tech10-logo-fundo-azul.png" alt="Tech10" height="36">
             </a>
             <div class="header-actions">
-                <a href="produtos.html" class="continue-shopping" style="font-size:14px;">
+                <a href="/loja" class="continue-shopping" style="font-size:14px;">
                     <i class="fas fa-store"></i> Continuar Comprando
                 </a>
-                <a href="carrinho.html" class="cart-icon">
+                <a href="/portal" class="continue-shopping" style="font-size:14px;" data-tenant-portal-link>
+                    <i class="fas fa-receipt"></i> Portal
+                </a>
+                <a href="/carrinho" class="cart-icon">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </a>
@@ -485,7 +488,7 @@
     <div class="container">
         <div class="cart-header">
             <h1><i class="fas fa-shopping-cart"></i> Meu Carrinho</h1>
-            <a href="produtos.html" class="continue-shopping">
+            <a href="/loja" class="continue-shopping">
                 <i class="fas fa-arrow-left"></i> Continuar Comprando
             </a>
         </div>
@@ -522,8 +525,13 @@
             });
         }
         
-        // VivaCommerce — carrinho Tech10
-        const CART_KEY = 'vivacommerce_cart_id';
+        // Carrinho canônico do storefront Tech10
+        const CART_KEY = (window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id';
+        const LEGACY_CART_KEY = (window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id';
+
+        function getStoredCartId() {
+            return localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
+        }
 
         function getStoreAPI() {
             return (window.API_CONFIG && window.API_CONFIG.STORE_API) || '/api/store';
@@ -665,13 +673,14 @@
         }
 
         async function loadCart() {
-            var cartId = localStorage.getItem(CART_KEY);
+            var cartId = getStoredCartId();
             if (!cartId) { showEmptyCart(); return; }
 
             try {
                 var res = await fetch(getStoreAPI() + '/carts/' + cartId);
                 if (res.status === 404) {
                     localStorage.removeItem(CART_KEY);
+                    localStorage.removeItem(LEGACY_CART_KEY);
                     showEmptyCart();
                     return;
                 }
@@ -691,7 +700,7 @@
 
         async function updateQuantity(itemId, newQuantity) {
             if (newQuantity < 1) { await removeItem(itemId); return; }
-            var cartId = localStorage.getItem(CART_KEY);
+            var cartId = getStoredCartId();
             if (!cartId) { showEmptyCart(); return; }
             try {
                 var adapter = window.MarketplaceAdapter;
@@ -714,7 +723,7 @@
 
         async function removeItem(itemId) {
             if (!confirm('Remover este item do carrinho?')) return;
-            var cartId = localStorage.getItem(CART_KEY);
+            var cartId = getStoredCartId();
             if (!cartId) { showEmptyCart(); return; }
             try {
                 var adapter = window.MarketplaceAdapter;
@@ -734,7 +743,7 @@
         }
 
         function proceedToCheckout() {
-            var cartId = localStorage.getItem(CART_KEY);
+            var cartId = getStoredCartId();
             if (!cartId) { alert('Carrinho vazio. Adicione produtos antes de finalizar.'); return; }
             window.location.href = 'checkout.html';
         }
@@ -746,6 +755,8 @@
 
         document.addEventListener('DOMContentLoaded', function() { loadCart(); });
     </script>
+    <script src="js/tenant-config.js"></script>
+    <script src="js/tenant-routes.js"></script>
     <script src="js/api-config.js"></script>
     <script src="js/api-adapter.js"></script>
 </body>

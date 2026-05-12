@@ -22,8 +22,8 @@ const categoryMapping = {
     'Acessórios': 'acessorio'
 };
 
-// Quando VivaCommerce está ativo, load-products.js já definiu loadProductsFromAPI (adapter); não sobrescrever.
-if (!(window.API_CONFIG && window.API_CONFIG.provider === 'vivacommerce' && typeof window.loadProductsFromAPI === 'function')) {
+// Quando o storefront standalone está ativo, load-products.js já definiu loadProductsFromAPI; não sobrescrever.
+if (!(window.API_CONFIG && typeof window.loadProductsFromAPI === 'function')) {
 // Função para carregar produtos da API (fallback quando não usa VivaCommerce)
 async function loadProductsFromAPI() {
     try {
