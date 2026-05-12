@@ -130,8 +130,19 @@ function splitStorePath(rawPath) {
 function classifyStoreOperation(method, pathParts) {
   const root = (pathParts[0] || '').toLowerCase();
   const readMethod = method === 'GET' || method === 'HEAD';
-  const checkoutRoots = ['carts', 'checkouts', 'orders', 'line-items', 'payment', 'payments'];
+  const nestedParts = pathParts.map((part) => String(part).toLowerCase());
+  const checkoutRoots = ['checkouts', 'orders', 'line-items', 'payment', 'payments'];
   const catalogRoots = ['products', 'categories', 'collections', 'lojas', 'tenant', 'search'];
+
+  if (root === 'carts') {
+    const touchesTransactionalCheckout = nestedParts.includes('complete')
+      || nestedParts.includes('payment-sessions')
+      || nestedParts.includes('payment-session')
+      || nestedParts.includes('payment-methods')
+      || nestedParts.includes('complete-cart');
+
+    return touchesTransactionalCheckout ? 'checkout' : 'cart';
+  }
 
   if (checkoutRoots.includes(root)) {
     return 'checkout';
@@ -147,6 +158,10 @@ function classifyStoreOperation(method, pathParts) {
 function getBackendForOperation(env, operation) {
   if (operation === 'catalog') {
     return env.catalogBackendUrl;
+  }
+
+  if (operation === 'cart') {
+    return env.checkoutBackendUrl || env.catalogBackendUrl;
   }
 
   if (env.checkoutMode !== 'store_backend') {

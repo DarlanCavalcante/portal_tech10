@@ -9,6 +9,7 @@ const {
 
 function buildUpstreamHeaders(req, operation, env) {
   const headers = new Headers();
+  const useCatalogCredentials = operation === 'catalog' || operation === 'cart';
   const passthrough = [
     'accept',
     'accept-language',
@@ -24,12 +25,12 @@ function buildUpstreamHeaders(req, operation, env) {
   });
 
   const bearerToken =
-    operation === 'catalog'
+    useCatalogCredentials
       ? process.env.TECH10_CATALOG_BEARER_TOKEN || process.env.TECH10_STORE_BEARER_TOKEN
       : process.env.TECH10_CHECKOUT_BEARER_TOKEN || process.env.TECH10_STORE_BEARER_TOKEN;
 
   const apiKey =
-    operation === 'catalog'
+    useCatalogCredentials
       ? process.env.TECH10_CATALOG_API_KEY || process.env.TECH10_STORE_API_KEY
       : process.env.TECH10_CHECKOUT_API_KEY || process.env.TECH10_STORE_API_KEY;
 
@@ -86,17 +87,21 @@ module.exports = async function handler(req, res) {
     const error =
       operation === 'catalog'
         ? 'TECH10_CATALOG_BACKEND_NOT_CONFIGURED'
+        : operation === 'cart'
+          ? 'TECH10_ASSISTED_CART_BRIDGE_NOT_CONFIGURED'
         : 'TECH10_CHECKOUT_BACKEND_NOT_CONFIGURED';
 
     const envKey =
       operation === 'catalog'
         ? 'TECH10_CATALOG_BACKEND_URL'
+        : operation === 'cart'
+          ? 'TECH10_CATALOG_BACKEND_URL'
         : 'TECH10_CHECKOUT_BACKEND_URL';
 
     res.status(503).json({
       success: false,
       error,
-      message: `Configure ${envKey} para ativar ${operation === 'catalog' ? 'o catálogo' : 'o checkout'} da loja pública.`,
+      message: `Configure ${envKey} para ativar ${operation === 'catalog' ? 'o catálogo' : operation === 'cart' ? 'a ponte assistida de seleção' : 'o checkout'} da loja pública.`,
       operation,
       catalogSource: env.catalogSource,
       checkoutMode: env.checkoutMode,
