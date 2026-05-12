@@ -44,13 +44,6 @@
     return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
   }
 
-  function getActiveStorefrontCart() {
-    if (typeof global.getActiveStorefrontCart === 'function') {
-      return global.getActiveStorefrontCart();
-    }
-    return global.storefrontCart || null;
-  }
-
   function getProductMetaChips(product) {
     var metadata = product && product.metadata ? product.metadata : {};
     var chips = [];
@@ -371,13 +364,13 @@
     }
     try {
       for (var i = 0; i < (qty || 1); i++) {
-        var cart = getActiveStorefrontCart();
+        var cart = typeof global.getActiveStorefrontCart === 'function'
+          ? global.getActiveStorefrontCart()
+          : (global.storefrontCart || null);
         if (cart && cart.addItem) {
           await cart.addItem(variantId, productId, 1, false);
         } else if (typeof global.addToStorefrontCart === 'function') {
           await global.addToStorefrontCart(variantId, productId, false);
-        } else if (typeof global.addToCartMedusa === 'function') {
-          await global.addToCartMedusa(variantId, productId, false);
         }
       }
       if (btn) {
@@ -427,7 +420,9 @@
   global.renderProductsFromAPI = renderProducts;
 
   global.addToStorefrontCart = async function (variantId, productId, buyNow) {
-    var cart = getActiveStorefrontCart();
+    var cart = typeof global.getActiveStorefrontCart === 'function'
+      ? global.getActiveStorefrontCart()
+      : (global.storefrontCart || null);
     if (cart && cart.addItem) {
       await cart.addItem(variantId, productId, 1, buyNow);
     } else {

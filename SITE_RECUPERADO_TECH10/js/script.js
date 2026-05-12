@@ -191,9 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function initializeApp() {
-    // CORREÇÃO: Sistema Medusa já está gerenciando produtos via load-products-medusa.js
-    // Não precisamos mais carregar produtos aqui - deixar o Medusa fazer isso
-    console.log('🔄 Inicializando app (produtos serão carregados pelo Medusa)...');
+    // O storefront canônico gerencia os produtos; este arquivo só entra como contingência.
+    console.log('🔄 Inicializando app (produtos serão carregados pelo storefront canônico)...');
     
     // Limpar state.products para evitar conflitos
     state.products = [];
@@ -255,19 +254,14 @@ async function initializeApp() {
     setupResponsiveDicas();
     setupEventListeners();
     
-    // Não renderizar produtos aqui - deixar o storefront canônico fazer isso
-    // Se Medusa não funcionar, o fallback acima renderizará
+    // Não renderizar produtos aqui - deixar o storefront canônico fazer isso.
+    // Se a camada principal falhar, o fallback acima assume a renderização.
     renderDicas();
     // O contador agora usa o helper global do carrinho ativo do storefront.
-    function getActiveStorefrontCart() {
-        if (typeof window.getActiveStorefrontCart === 'function') {
-            return window.getActiveStorefrontCart();
-        }
-        return window.storefrontCart || null;
-    }
-
     function syncStorefrontCartCount() {
-        var cart = getActiveStorefrontCart();
+        var cart = typeof window.getActiveStorefrontCart === 'function'
+            ? window.getActiveStorefrontCart()
+            : (window.storefrontCart || null);
         if (cart && typeof cart.updateCartCount === 'function') {
             cart.updateCartCount().catch(err => console.error('Erro ao atualizar contador:', err));
         }
@@ -1123,8 +1117,8 @@ function createDicaModal() {
 // Inicializar ao carregar
 window.addEventListener('load', function() {
     // Se o carrinho canônico já estiver inicializado, atualizar contador.
-    var cart = (typeof getActiveStorefrontCart === 'function')
-        ? getActiveStorefrontCart()
+    var cart = (typeof window.getActiveStorefrontCart === 'function')
+        ? window.getActiveStorefrontCart()
         : (window.storefrontCart || null);
     if (cart && typeof cart.updateCartCount === 'function') {
         cart.updateCartCount().catch(err => console.error('Erro ao atualizar contador:', err));

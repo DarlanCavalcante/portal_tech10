@@ -1,12 +1,10 @@
 /**
- * Carregar produtos do Medusa e exibir no frontend
- * Tech10 E-commerce
- * 
- * Usa API_CONFIG para URL centralizada (permite migração fácil)
+ * Camada legada de contingência para carregar e exibir produtos no frontend.
+ * Mantida por compatibilidade enquanto o storefront canônico cobre a jornada principal.
  */
 
 // Usa MarketplaceAdapter (api-adapter.js) com slug definido em api-config.js
-// A URL base e o slug vêm de window.API_CONFIG — não usar URL legada do Medusa
+// A URL base e o slug vêm de window.API_CONFIG — não usar URL legada de storefront.
 
 async function loadProductsFromMedusa() {
   try {
@@ -21,7 +19,7 @@ async function loadProductsFromMedusa() {
   }
 }
 
-function getLegacyRuntimeCommerce() {
+function getFallbackRuntimeCommerce() {
   const runtime = window.__tech10_runtime_config || {};
   const commerce = runtime.commerce || {};
   if (!commerce.checkoutMode && window.API_CONFIG && window.API_CONFIG.CHECKOUT_MODE) {
@@ -31,16 +29,9 @@ function getLegacyRuntimeCommerce() {
 }
 
 function isQuoteOnlyRuntime() {
-  const commerce = getLegacyRuntimeCommerce();
+  const commerce = getFallbackRuntimeCommerce();
   const capabilities = commerce.capabilities || {};
   return capabilities.quoteOnly === true || commerce.checkoutMode === 'quote_only';
-}
-
-function getActiveStorefrontCart() {
-  if (typeof window.getActiveStorefrontCart === 'function') {
-    return window.getActiveStorefrontCart();
-  }
-  return window.storefrontCart || null;
 }
 
 function buildSupportUrlForProduct(product, quantity = 1) {
@@ -168,7 +159,9 @@ function renderProducts(products, containerId = 'produtosGrid') {
 
   // Função global canônica para adicionar ao carrinho do storefront
   window.addToStorefrontCart = async function(variantId, productId, buyNow = false) {
-    const activeCart = getActiveStorefrontCart();
+    const activeCart = typeof window.getActiveStorefrontCart === 'function'
+      ? window.getActiveStorefrontCart()
+      : (window.storefrontCart || null);
     try {
       if (!variantId) {
         if (activeCart) {
@@ -380,7 +373,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
       }
       
       // Adicionar ao carrinho
-      await (window.addToStorefrontCart || window.addToCartMedusa)(variantId, productId);
+      await window.addToStorefrontCart(variantId, productId);
       
       // Redirecionar para carrinho
       showNotification('✅ Produto adicionado! Redirecionando...');
@@ -402,7 +395,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
         window.requestLegacySupport(productId);
         return;
       }
-      await (window.addToStorefrontCart || window.addToCartMedusa)(variantId, productId);
+      await window.addToStorefrontCart(variantId, productId);
     } catch (error) {
       console.error('Erro ao adicionar ao carrinho:', error);
       showNotification('❌ Erro ao adicionar produto ao carrinho', 'error');
