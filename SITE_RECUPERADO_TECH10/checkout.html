@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Tech10</title>
+    <title>Fechamento Assistido - Tech10</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/medusa-cart.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
@@ -49,6 +49,12 @@
             border: 1px solid #dbeafe;
             background: #eff6ff;
             color: #1d4ed8;
+        }
+        .checkout-links a.support-link {
+            background: #ecfeff;
+            border-color: rgba(15, 118, 110, 0.18);
+            color: #0f766e;
+            font-weight: 700;
         }
         .checkout-grid {
             display: grid;
@@ -271,7 +277,7 @@
     <div class="checkout-steps-bar">
         <div class="cs-step done">
             <div class="cs-step-num"><i class="fas fa-check" style="font-size:11px"></i></div>
-            <span class="cs-step-lbl">Carrinho</span>
+            <span class="cs-step-lbl">Seleção</span>
         </div>
         <div class="cs-sep done"></div>
         <div class="cs-step active">
@@ -281,23 +287,23 @@
         <div class="cs-sep"></div>
         <div class="cs-step">
             <div class="cs-step-num">3</div>
-            <span class="cs-step-lbl">Confirmação</span>
+            <span class="cs-step-lbl">Fechamento</span>
         </div>
     </div>
 
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-shopping-bag"></i> Finalizar Compra</h1>
-            <p>Preencha os dados abaixo para concluir seu pedido</p>
+            <h1><i class="fas fa-headset"></i> Fechamento assistido</h1>
+            <p>Confirme seus dados para seguir com a Tech10 no fechamento do pedido.</p>
             <div class="checkout-links">
                 <a href="/loja"><i class="fas fa-store"></i> Voltar para a loja</a>
-                <a href="/carrinho"><i class="fas fa-shopping-cart"></i> Ver carrinho</a>
                 <a href="/portal" data-tenant-portal-link><i class="fas fa-receipt"></i> Portal do cliente</a>
+                <a href="/#contato" class="support-link" data-tenant-support-link data-support-primary="true" data-support-message="Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido."><i class="fab fa-whatsapp"></i> Falar com a Tech10</a>
             </div>
             <div class="checkout-trust">
-                <span><i class="fas fa-lock"></i> Conexão SSL Segura</span>
-                <span><i class="fas fa-shield-alt"></i> Dados Protegidos</span>
-                <span><i class="fas fa-undo"></i> 7 dias para devolução</span>
+                <span><i class="fas fa-comments"></i> Atendimento guiado</span>
+                <span><i class="fas fa-shield-alt"></i> Confirmação de estoque</span>
+                <span><i class="fas fa-credit-card"></i> Pagamento alinhado com a Tech10</span>
             </div>
         </div>
 
@@ -411,7 +417,7 @@
                     </div>
 
                     <button type="submit" class="btn-submit" id="submit-btn">
-                        <i class="fas fa-lock"></i> Finalizar Pedido
+                        <i class="fas fa-headset"></i> Finalizar com atendimento
                     </button>
                 </form>
             </div>
