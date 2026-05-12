@@ -702,8 +702,8 @@
             el.innerHTML = `
                 <div id="cart-items-container">${itemsHtml}</div>
                 <div class="cart-summary" style="position:sticky;top:20px;">
-                    <h3 style="font-size:18px;font-weight:700;margin-bottom:20px;color:#111827;"><i class="fas fa-receipt" style="color:#2563eb"></i> Resumo do Pedido</h3>
-                    <div style="font-size:14px;color:#6b7280;margin-bottom:16px;">${count} ${count === 1 ? 'item' : 'itens'} no carrinho</div>
+                    <h3 style="font-size:18px;font-weight:700;margin-bottom:20px;color:#111827;"><i class="fas fa-receipt" style="color:#2563eb"></i> ${quoteOnly ? 'Sua seleção' : 'Resumo do Pedido'}</h3>
+                    <div style="font-size:14px;color:#6b7280;margin-bottom:16px;">${count} ${count === 1 ? 'item' : 'itens'} ${quoteOnly ? 'na sua seleção' : 'no carrinho'}</div>
                     <div class="summary-row">
                         <span>Subtotal:</span>
                         <span style="font-weight:600;">R$ ${formatPrice(subtotal)}</span>
@@ -717,7 +717,7 @@
                         <span>R$ ${formatPrice(total)}</span>
                     </div>
                     <button class="checkout-btn" onclick="proceedToCheckout()">
-                        <i class="fas ${quoteOnly ? 'fa-headset' : 'fa-lock'}"></i> ${quoteOnly ? 'Fechar com atendimento' : 'Finalizar Compra com Segurança'}
+                        <i class="fas ${quoteOnly ? 'fa-headset' : 'fa-lock'}"></i> ${quoteOnly ? 'Continuar fechamento assistido' : 'Finalizar Compra com Segurança'}
                     </button>
                     <div class="trust-seals">
                         <div class="trust-seal"><i class="fas ${quoteOnly ? 'fa-comments' : 'fa-lock'}"></i> ${quoteOnly ? 'Atendimento assistido' : 'SSL Seguro'}</div>
@@ -754,7 +754,7 @@
                 }
             } catch (err) {
                 console.error('[CARRINHO] Erro ao carregar:', err);
-                showError(err.message || 'Não foi possível carregar o carrinho.');
+                showError(err.message || (isQuoteOnlyRuntime(runtimeConfigCache) ? 'Não foi possível carregar sua seleção.' : 'Não foi possível carregar o carrinho.'));
             }
         }
 
@@ -813,7 +813,7 @@
                 return;
             }
             if (isQuoteOnlyRuntime(runtimeConfigCache)) {
-                window.location.href = buildSupportUrl('Olá! Vim pela loja da Tech10 e quero fechar a compra de um produto com atendimento assistido.');
+                window.location.href = '/checkout';
                 return;
             }
             window.location.href = 'checkout.html';
@@ -826,11 +826,10 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             runtimeConfigCache = await fetchRuntimeConfig();
-            if (isQuoteOnlyRuntime(runtimeConfigCache)) {
-                console.log('[CARRINHO] Runtime em quote_only; a página ficará sob o fluxo assistido.');
-                return;
-            }
             loadCart();
+            if (isQuoteOnlyRuntime(runtimeConfigCache)) {
+                console.log('[CARRINHO] Runtime em quote_only; a página exibirá a seleção e seguirá para o fechamento assistido.');
+            }
         });
     </script>
     <script src="js/tenant-config.js"></script>
