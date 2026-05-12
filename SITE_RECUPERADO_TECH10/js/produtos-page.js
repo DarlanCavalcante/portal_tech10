@@ -16,7 +16,7 @@
   var _allProducts = []; // todos carregados para sort/filter client-side
   var _currentProducts = []; // após filtro/sort
   var _searchDebounce = null;
-  var _sortValue = 'recent';
+  var _sortValue = 'featured';
   var _totalFromApi = 0;
 
   function _getSearchInput() {
@@ -118,6 +118,7 @@
 
     var sortSel = document.getElementById('pp-sort');
     if (sortSel) {
+      sortSel.value = _sortValue;
       sortSel.addEventListener('change', function () {
         _sortValue = sortSel.value;
         _applyFilterAndRender();
@@ -425,7 +426,11 @@
 
   function _sort(list, mode) {
     var sorted = list.slice();
-    if (mode === 'price-asc') {
+    if (mode === 'featured' || mode === 'recent') {
+      if (typeof global.getTech10EditorialCatalogCollections === 'function') {
+        return global.getTech10EditorialCatalogCollections(sorted, { useInput: true }).orderedProducts;
+      }
+    } else if (mode === 'price-asc') {
       sorted.sort(function (a, b) { return _getPrice(a) - _getPrice(b); });
     } else if (mode === 'price-desc') {
       sorted.sort(function (a, b) { return _getPrice(b) - _getPrice(a); });

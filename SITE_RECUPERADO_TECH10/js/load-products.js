@@ -106,6 +106,20 @@
       .toLowerCase();
   }
 
+  function getProductInventoryAmount(product) {
+    return product && product.variants && product.variants[0]
+      ? Number(product.variants[0].inventory_quantity || 0)
+      : 0;
+  }
+
+  function getProductCategorySlug(product) {
+    return (product && (product.categorySlug || toCategorySlug(product.category)) || 'outros').toLowerCase();
+  }
+
+  function getProductCategoryLabel(product) {
+    return normalizeCatalogText(product && product.category && product.category.name) || 'Catálogo';
+  }
+
   function isDuplicateTitleProduct(product) {
     var titleKey = getProductTitleKey(product);
     var counts = global.__tech10_product_title_counts || {};
@@ -376,6 +390,131 @@
       : 0;
   }
 
+  function buildProductTitleCountMap(products) {
+    var counts = {};
+    (products || []).forEach(function (product) {
+      var key = getProductTitleKey(product);
+      if (!key) return;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    return counts;
+  }
+
+  function sortEditorialCategoryProducts(products, titleCounts) {
+    return (products || []).slice().sort(function (a, b) {
+      var aDuplicate = titleCounts[getProductTitleKey(a)] > 1 ? 1 : 0;
+      var bDuplicate = titleCounts[getProductTitleKey(b)] > 1 ? 1 : 0;
+      if (aDuplicate !== bDuplicate) return aDuplicate - bDuplicate;
+
+      var priceDiff = getProductPriceAmount(b) - getProductPriceAmount(a);
+      if (priceDiff !== 0) return priceDiff;
+
+      var inventoryDiff = getProductInventoryAmount(b) - getProductInventoryAmount(a);
+      if (inventoryDiff !== 0) return inventoryDiff;
+
+      return String(a && a.title || '').localeCompare(String(b && b.title || ''), 'pt-BR');
+    });
+  }
+
+  function rotateCategorySequence(categories, startIndex) {
+    if (!categories || !categories.length) return [];
+    var safeStart = startIndex >= 0 ? startIndex % categories.length : 0;
+    return categories.slice(safeStart).concat(categories.slice(0, safeStart));
+  }
+
+  function buildEditorialCatalogCollections(products, options) {
+    var sourceProducts = ((options && options.useInput === true)
+      ? (Array.isArray(products) ? products : [])
+      : getHomeCatalogSourceProducts(products))
+      .filter(function (product) {
+        return product && product.id && product.title;
+      });
+    var categories = getHomeCatalogCategorySummary(sourceProducts, 12);
+    var titleCounts = buildProductTitleCountMap(sourceProducts);
+    var grouped = {};
+
+    categories.forEach(function (category) {
+      grouped[category.slug] = sortEditorialCategoryProducts(sourceProducts.filter(function (product) {
+        return matchesCategory(product, category.slug);
+      }), titleCounts);
+    });
+
+    var featured = [];
+    var featuredIds = {};
+    var leaderCategory = categories[0] || null;
+
+    function addFeatured(product, badgeLabel) {
+      if (!product || !product.id || featuredIds[product.id]) return;
+      featuredIds[product.id] = true;
+      featured.push({
+        product: product,
+        badgeLabel: badgeLabel,
+        categorySlug: getProductCategorySlug(product)
+      });
+    }
+
+    if (leaderCategory && grouped[leaderCategory.slug] && grouped[leaderCategory.slug][0]) {
+      addFeatured(grouped[leaderCategory.slug][0], 'Categoria em foco');
+    }
+
+    var secondaryProduct = sourceProducts
+      .filter(function (product) { return !featuredIds[product.id]; })
+      .sort(function (a, b) {
+        var priceDiff = getProductPriceAmount(b) - getProductPriceAmount(a);
+        if (priceDiff !== 0) return priceDiff;
+        return getProductInventoryAmount(b) - getProductInventoryAmount(a);
+      })
+      .find(function (product) {
+        if (!leaderCategory) return true;
+        return !matchesCategory(product, leaderCategory.slug);
+      });
+
+    if (!secondaryProduct) {
+      secondaryProduct = sourceProducts.find(function (product) {
+        return !featuredIds[product.id];
+      });
+    }
+
+    addFeatured(secondaryProduct, 'Outro destaque do catálogo');
+
+    var orderedProducts = featured.map(function (entry) { return entry.product; });
+    var leaderIndex = leaderCategory ? categories.findIndex(function (category) {
+      return category.slug === leaderCategory.slug;
+    }) : -1;
+    var rotatedCategories = rotateCategorySequence(categories, leaderIndex >= 0 ? leaderIndex + 1 : 0);
+    var hasRemaining = true;
+
+    while (hasRemaining) {
+      hasRemaining = false;
+      rotatedCategories.forEach(function (category) {
+        var bucket = grouped[category.slug] || [];
+        while (bucket.length && featuredIds[bucket[0].id]) {
+          bucket.shift();
+        }
+        if (bucket.length) {
+          var nextProduct = bucket.shift();
+          featuredIds[nextProduct.id] = true;
+          orderedProducts.push(nextProduct);
+          hasRemaining = true;
+        }
+      });
+    }
+
+    sourceProducts.forEach(function (product) {
+      if (product && product.id && !featuredIds[product.id]) {
+        orderedProducts.push(product);
+        featuredIds[product.id] = true;
+      }
+    });
+
+    return {
+      sourceProducts: sourceProducts,
+      categories: categories,
+      featured: featured,
+      orderedProducts: orderedProducts
+    };
+  }
+
   function getProductSearchHref(product) {
     if (!product) return '/loja';
     var metadata = product.metadata || {};
@@ -407,52 +546,7 @@
   }
 
   function getHomeCatalogFeaturedProducts(products) {
-    var sourceProducts = getHomeCatalogSourceProducts(products)
-      .filter(function (product) {
-        return product && product.id && product.title;
-      });
-    var categories = getHomeCatalogCategorySummary(sourceProducts, 4);
-    if (!sourceProducts.length) return [];
-
-    var featured = [];
-    var featuredIds = {};
-    var leaderCategory = categories[0] || null;
-
-    function addFeatured(product, badgeLabel) {
-      if (!product || !product.id || featuredIds[product.id]) return;
-      featuredIds[product.id] = true;
-      featured.push({ product: product, badgeLabel: badgeLabel });
-    }
-
-    if (leaderCategory) {
-      var leaderProduct = sourceProducts.find(function (product) {
-        return matchesCategory(product, leaderCategory.slug);
-      });
-      addFeatured(leaderProduct, 'Categoria em foco');
-    }
-
-    var secondaryProduct = sourceProducts
-      .slice()
-      .sort(function (a, b) {
-        var priceDiff = getProductPriceAmount(b) - getProductPriceAmount(a);
-        if (priceDiff !== 0) return priceDiff;
-        return 0;
-      })
-      .find(function (product) {
-        if (featuredIds[product.id]) return false;
-        if (!leaderCategory) return true;
-        return !matchesCategory(product, leaderCategory.slug);
-      });
-
-    if (!secondaryProduct) {
-      secondaryProduct = sourceProducts.find(function (product) {
-        return !featuredIds[product.id];
-      });
-    }
-
-    addFeatured(secondaryProduct, 'Outro destaque do catálogo');
-
-    return featured.slice(0, 2);
+    return buildEditorialCatalogCollections(products).featured.slice(0, 2);
   }
 
   function syncHomeCatalogFeaturedProducts(products, containerId) {
@@ -912,6 +1006,7 @@
 
   global.loadProductsFromAPI = loadProducts;
   global.renderProductsFromAPI = renderProducts;
+  global.getTech10EditorialCatalogCollections = buildEditorialCatalogCollections;
 
   global.addToStorefrontCart = async function (variantId, productId, buyNow, quantity) {
     var cart = typeof global.getActiveStorefrontCart === 'function'
