@@ -57,3 +57,19 @@ Depois do smoke técnico, validar também:
 - produtos com nome parecido ficam distinguíveis por marca e/ou SKU
 - a busca encontra produtos também por `marca` e `SKU`
 - produtos com título repetido exibem orientação explícita para confirmação por `SKU`
+- a página `/loja` não pode renderizar em branco por erro de escopo global entre scripts do tenant
+- o HTML público da `/loja` deve conter:
+  - placeholder `Buscar por produto, marca ou SKU...`
+  - banner `Loja em atendimento assistido`
+
+## Hotfix conhecido
+
+Em `2026-05-12`, a Tech10 recebeu um hotfix de produção no commit `f1b744b`
+para corrigir o erro:
+
+```text
+Identifier 'tenantConfig' has already been declared
+```
+
+Esse hotfix isolou `api-config.js` e `empresa-config.js` em escopo próprio.
+Se a loja voltar a abrir em branco, esse é o primeiro ponto a verificar.

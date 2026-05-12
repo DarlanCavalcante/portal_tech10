@@ -30,6 +30,17 @@ Na rodada seguinte de curadoria comercial:
 - o produto `Roteador Wireless TP-Link 300Mbps` teve a marca normalizada de `TP- Link` para `TP-Link`;
 - a API publica do ERP e o `tech10-portal` passaram a responder a mesma vitrine com `brand` consistente nos `7` itens publicados.
 
+Na rodada mais recente de hotfix operacional:
+
+- a produção da Tech10 apresentou página em branco por colisão global de `tenantConfig`;
+- o erro vinha de `api-config.js` e `empresa-config.js` rodando no mesmo escopo global;
+- a correção entrou no commit `f1b744b`, via PR `#6`;
+- o alias `https://tech10-portal.vercel.app` voltou a servir a build corrigida;
+- `GET /api/health` continuou `status=ok`;
+- o HTML público da `/loja` confirmou:
+  - placeholder `Buscar por produto, marca ou SKU...`
+  - banner `Loja em atendimento assistido`
+
 ## O que foi confirmado
 
 ### Runtime publico Tech10
@@ -125,6 +136,11 @@ E executar uma rodada controlada no ERP para:
 2. revisar itens que ainda dependam de categoria tecnica ou sem taxonomia comercial ideal;
 3. validar a loja em `quote_only` com itens reais;
 4. depois decidir se o checkout continua por atendimento ou evolui para pedido transacional.
+
+Bloqueio externo remanescente:
+
+- `tech10.tech10cloud.com` continua sem resolver por DNS em `2026-05-11 22:48:21 -03`
+- isso confirma que o maior gargalo restante do go-live final e dominio/ownership, nao codigo
 
 ## Veredito
 

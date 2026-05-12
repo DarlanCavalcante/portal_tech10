@@ -17,6 +17,7 @@ Leitura sugerida:
 9. `CONTRATO_CATALOGO_ESTOQUE_ERP_TENANT_TECH10.md`
 10. `RUNBOOK_DEPLOY_E_OPERACAO_TENANT_TECH10.md`
 11. `SMOKE_E_VALIDACAO_TENANT_TECH10.md`
+12. revisar o hotfix operacional documentado no `RAIOX_GO_LIVE_CATALOGO_TENANT_TECH10_2026-05-11.md`
 
 Documentos canônicos:
 
