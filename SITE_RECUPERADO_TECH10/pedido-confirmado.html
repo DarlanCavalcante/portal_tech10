@@ -138,6 +138,23 @@
             color: #6b7280;
             font-size: 14px;
         }
+        .order-item-context {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .order-item-context-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 11px;
+            font-weight: 600;
+        }
         .order-item-price {
             font-weight: 700;
             color: #2563eb;
@@ -322,6 +339,26 @@
             return 'R$ ' + (amount / 100).toFixed(2).replace('.', ',');
         }
 
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderItemContextHtml(item) {
+            const chips = [];
+            if (item && item.brand) {
+                chips.push('<span class="order-item-context-chip"><strong>Marca:</strong> ' + escapeHtml(item.brand) + '</span>');
+            }
+            if (item && item.sku) {
+                chips.push('<span class="order-item-context-chip"><strong>SKU:</strong> ' + escapeHtml(item.sku) + '</span>');
+            }
+            return chips.length ? '<div class="order-item-context">' + chips.join('') + '</div>' : '';
+        }
+
         async function fetchRuntimeConfig() {
             try {
                 const response = await fetch(RUNTIME_CONFIG_PATH, {
@@ -418,6 +455,7 @@
                     <div class="order-item-info">
                         <h4>${item.product_name || 'Produto'}</h4>
                         <p>Quantidade: ${item.quantity || 1} x ${formatPrice(item.unit_price || 0)}</p>
+                        ${renderItemContextHtml(item)}
                     </div>
                     <div class="order-item-price">
                         ${formatPrice(item.subtotal || 0)}
