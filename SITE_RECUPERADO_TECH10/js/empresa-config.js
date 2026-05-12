@@ -1,4 +1,5 @@
 // Configurações da Empresa - Tech10 Informática
+(function (global) {
 const tenantConfig = typeof window !== 'undefined' ? window.TENANT_CONFIG || {} : {};
 const tenantCompany = tenantConfig.company || {};
 const tenantStats = tenantConfig.stats || {};
@@ -194,5 +195,9 @@ function aplicarConfiguracoes() {
     }
 }
 
+global.empresaConfig = empresaConfig;
+global.aplicarConfiguracoes = aplicarConfiguracoes;
+
 // Aplicar configurações quando a página carregar
 document.addEventListener('DOMContentLoaded', aplicarConfiguracoes);
+})(typeof window !== 'undefined' ? window : globalThis);

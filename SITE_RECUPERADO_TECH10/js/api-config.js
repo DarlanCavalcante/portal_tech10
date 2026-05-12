@@ -3,61 +3,67 @@
  * Usa runtime standalone do tenant Tech10, com proxy same-origin em /api/store.
  * Carregue api-adapter.js antes de load-products e cart-storefront.js.
  */
-const tenantConfig = typeof window !== 'undefined' ? window.TENANT_CONFIG || {} : {};
-const tenantStore = tenantConfig.store || {};
-const tenantMeta = tenantConfig.tenant || {};
-const tenantRuntimeId = tenantStore.runtimeId || tenantMeta.id || tenantStore.slug || tenantMeta.slug || 'tenant';
-const runtimeOrigin = tenantStore.baseUrl || (typeof window !== 'undefined' && window.location.origin
-  ? window.location.origin
-  : 'http://localhost:3101');
-const API_CONFIG = {
-  provider: tenantStore.provider || 'tenant-standalone',
+(function (global) {
+  'use strict';
 
-  TECH10_STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'tech10',
+  const tenantConfig = typeof window !== 'undefined' ? window.TENANT_CONFIG || {} : {};
+  const tenantStore = tenantConfig.store || {};
+  const tenantMeta = tenantConfig.tenant || {};
+  const tenantRuntimeId = tenantStore.runtimeId || tenantMeta.id || tenantStore.slug || tenantMeta.slug || 'tenant';
+  const runtimeOrigin = tenantStore.baseUrl || (typeof window !== 'undefined' && window.location.origin
+    ? window.location.origin
+    : 'http://localhost:3101');
 
-  STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'tech10',
+  const API_CONFIG = {
+    provider: tenantStore.provider || 'tenant-standalone',
 
-  SITE_BASE_PATH: tenantMeta.publicSiteBasePath || '/',
+    TECH10_STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'tech10',
 
-  RUNTIME_BASE_URL: runtimeOrigin,
-  STORE_RUNTIME_BASE_URL: runtimeOrigin,
+    STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'tech10',
 
-  // Alias legado mantido apenas para compatibilidade temporária com scripts antigos.
-  VIVACOMMERCE_BASE_URL: runtimeOrigin,
-  LEGACY_STORE_BASE_URL: runtimeOrigin,
+    SITE_BASE_PATH: tenantMeta.publicSiteBasePath || '/',
 
-  CATALOG_SOURCE: tenantStore.catalogSource || 'store_backend',
+    RUNTIME_BASE_URL: runtimeOrigin,
+    STORE_RUNTIME_BASE_URL: runtimeOrigin,
 
-  CHECKOUT_MODE: tenantStore.checkoutMode || 'store_backend',
+    // Alias legado mantido apenas para compatibilidade temporária com scripts antigos.
+    VIVACOMMERCE_BASE_URL: runtimeOrigin,
+    LEGACY_STORE_BASE_URL: runtimeOrigin,
 
-  CART_STORAGE_KEY: `${tenantRuntimeId}_storefront_cart_id`,
+    CATALOG_SOURCE: tenantStore.catalogSource || 'store_backend',
 
-  LEGACY_CART_STORAGE_KEY: 'vivacommerce_cart_id',
+    CHECKOUT_MODE: tenantStore.checkoutMode || 'store_backend',
 
-  get ACTIVE_URL() {
-    return this.RUNTIME_BASE_URL;
-  },
+    CART_STORAGE_KEY: `${tenantRuntimeId}_storefront_cart_id`,
 
-  get STORE_API() {
-    return this.RUNTIME_BASE_URL + (tenantStore.apiBasePath || '/api/store');
-  },
+    LEGACY_CART_STORAGE_KEY: 'vivacommerce_cart_id',
 
-  get ADMIN_API() {
-    return this.RUNTIME_BASE_URL + (tenantStore.adminApiBasePath || '/api');
-  },
+    get ACTIVE_URL() {
+      return this.RUNTIME_BASE_URL;
+    },
 
-  get HEALTH() {
-    return this.RUNTIME_BASE_URL + (tenantStore.healthPath || '/api/health');
+    get STORE_API() {
+      return this.RUNTIME_BASE_URL + (tenantStore.apiBasePath || '/api/store');
+    },
+
+    get ADMIN_API() {
+      return this.RUNTIME_BASE_URL + (tenantStore.adminApiBasePath || '/api');
+    },
+
+    get HEALTH() {
+      return this.RUNTIME_BASE_URL + (tenantStore.healthPath || '/api/health');
+    }
+  };
+
+  global.API_CONFIG = API_CONFIG;
+
+  if (typeof window !== 'undefined') {
+    console.log('API Config Tech10:', {
+      provider: API_CONFIG.provider,
+      url: API_CONFIG.ACTIVE_URL,
+      storeSlug: API_CONFIG.TECH10_STORE_SLUG,
+      catalogSource: API_CONFIG.CATALOG_SOURCE,
+      checkoutMode: API_CONFIG.CHECKOUT_MODE
+    });
   }
-};
-
-if (typeof window !== 'undefined') {
-  window.API_CONFIG = API_CONFIG;
-  console.log('API Config Tech10:', {
-    provider: API_CONFIG.provider,
-    url: API_CONFIG.ACTIVE_URL,
-    storeSlug: API_CONFIG.TECH10_STORE_SLUG,
-    catalogSource: API_CONFIG.CATALOG_SOURCE,
-    checkoutMode: API_CONFIG.CHECKOUT_MODE
-  });
-}
+})(typeof window !== 'undefined' ? window : globalThis);
