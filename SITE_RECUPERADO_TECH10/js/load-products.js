@@ -469,41 +469,81 @@
 
     var modeNode = global.document.querySelector('[data-home-catalog-mode]');
     if (modeNode) {
-      modeNode.textContent = 'Fechamento assistido';
+      modeNode.textContent = currentSearch || activeCategory ? 'Seleção assistida' : 'Fechamento assistido';
     }
 
     var leaderNode = global.document.querySelector('[data-home-catalog-leader]');
-    if (leaderNode) {
-      leaderNode.textContent = 'Categoria em foco: ' + categories[0].label;
-      leaderNode.setAttribute('href', '/loja?category=' + encodeURIComponent(categories[0].slug));
-    }
-
     var primaryCtaNode = global.document.querySelector('[data-home-catalog-primary-cta]');
     var primaryCtaLabelNode = global.document.querySelector('[data-home-catalog-primary-cta-label]');
-    if (primaryCtaNode) {
-      primaryCtaNode.setAttribute('href', '/loja?category=' + encodeURIComponent(categories[0].slug));
-    }
-    if (primaryCtaLabelNode) {
-      primaryCtaLabelNode.textContent = 'Explorar ' + categories[0].label;
+    var supportCtaNode = global.document.querySelector('[data-home-catalog-support-cta]');
+    var bannerDescNode = global.document.querySelector('[data-home-catalog-banner-desc]');
+    var subtitleNode = global.document.querySelector('[data-home-catalog-subtitle]');
+    var bannerDesc = categories[0].label + ' lidera o catálogo agora, com ' + formatCatalogCategoryItemCount(categories[0].count) + ' e fechamento assistido para concluir com segurança.';
+    var subtitle = 'Comece por ' + categories[0].label + ' ou filtre o catálogo público para seguir com a seleção assistida da Tech10.';
+    var leaderLabel = 'Categoria em foco: ' + categories[0].label;
+    var leaderHref = buildHomeCatalogStoreHref(categories[0].slug, null);
+    var primaryLabel = 'Explorar ' + categories[0].label;
+    var primaryHref = buildHomeCatalogStoreHref(categories[0].slug, null);
+    var supportMessage = 'Olá! Vim pelo catálogo da Tech10 e quero ajuda para escolher um item de ' + categories[0].label + ' com atendimento assistido.';
+
+    if (currentSearch) {
+      var resolvedSearchCategory = contextualCategory ? contextualCategory.label : 'Catálogo';
+      bannerDesc = 'Busca ativa para "' + currentSearch + '" com ' + formatCatalogCategoryItemCount(visibleCount) + ' no catálogo público'
+        + (contextualCategory ? ' em ' + resolvedSearchCategory : '')
+        + ' e seleção assistida para seguir com segurança.';
+      subtitle = visibleCount === 1
+        ? 'Revise o item encontrado para "' + currentSearch + '" ou abra a loja completa para continuar com a seleção assistida da Tech10.'
+        : 'Revise os resultados para "' + currentSearch + '" ou abra a loja completa para continuar com a seleção assistida da Tech10.';
+      leaderLabel = 'Resultado em foco';
+      leaderHref = buildHomeCatalogStoreHref(contextualCategory && contextualCategory.slug, currentSearch);
+      primaryLabel = visibleCount === 1 ? 'Ver item na loja' : 'Ver resultados na loja';
+      primaryHref = buildHomeCatalogStoreHref(contextualCategory && contextualCategory.slug, currentSearch);
+      supportMessage = 'Olá! Vim pelo catálogo da Tech10 e quero ajuda para encontrar "' + currentSearch + '"'
+        + (contextualCategory ? ' em ' + contextualCategory.label : '')
+        + ' com atendimento assistido.';
+      if (totalItemsNode) {
+        totalItemsNode.textContent = visibleCount === 1 ? '1 resultado ativo' : visibleCount + ' resultados ativos';
+      }
+      if (categoryCountNode) {
+        categoryCountNode.textContent = contextualCategory ? contextualCategory.label : 'Busca no catálogo';
+      }
+    } else if (activeCategory) {
+      bannerDesc = activeCategory.label + ' está em foco agora, com ' + formatCatalogCategoryItemCount(visibleCount) + ' no catálogo público e atendimento assistido para seguir com segurança.';
+      subtitle = 'Veja os ' + formatCatalogCategoryItemCount(visibleCount) + ' de ' + activeCategory.label + ' ou abra a loja completa dessa categoria para continuar com a seleção assistida da Tech10.';
+      leaderLabel = activeCategory.label + ' em foco';
+      leaderHref = buildHomeCatalogStoreHref(activeCategory.slug, null);
+      primaryLabel = 'Explorar ' + activeCategory.label;
+      primaryHref = buildHomeCatalogStoreHref(activeCategory.slug, null);
+      supportMessage = 'Olá! Vim pelo catálogo da Tech10 e quero ajuda para escolher um item de ' + activeCategory.label + ' com atendimento assistido.';
+      if (totalItemsNode) {
+        totalItemsNode.textContent = formatCatalogCategoryItemCount(visibleCount) + ' em foco';
+      }
+      if (categoryCountNode) {
+        categoryCountNode.textContent = 'Categoria filtrada';
+      }
     }
 
-    var supportCtaNode = global.document.querySelector('[data-home-catalog-support-cta]');
+    if (leaderNode) {
+      leaderNode.textContent = leaderLabel;
+      leaderNode.setAttribute('href', leaderHref);
+    }
+    if (primaryCtaNode) {
+      primaryCtaNode.setAttribute('href', primaryHref);
+    }
+    if (primaryCtaLabelNode) {
+      primaryCtaLabelNode.textContent = primaryLabel;
+    }
     if (supportCtaNode) {
-      var supportMessage = 'Olá! Vim pelo catálogo da Tech10 e quero ajuda para escolher um item de ' + categories[0].label + ' com atendimento assistido.';
       supportCtaNode.setAttribute('data-support-message', supportMessage);
       if (global.TenantRoutes && typeof global.TenantRoutes.supportUrl === 'function') {
         supportCtaNode.setAttribute('href', global.TenantRoutes.supportUrl(supportMessage));
       }
     }
-
-    var bannerDescNode = global.document.querySelector('[data-home-catalog-banner-desc]');
     if (bannerDescNode) {
-      bannerDescNode.textContent = categories[0].label + ' lidera o catálogo agora, com ' + formatCatalogCategoryItemCount(categories[0].count) + ' e fechamento assistido para concluir com segurança.';
+      bannerDescNode.textContent = bannerDesc;
     }
-
-    var subtitleNode = global.document.querySelector('[data-home-catalog-subtitle]');
     if (subtitleNode) {
-      subtitleNode.textContent = 'Comece por ' + categories[0].label + ' ou filtre o catálogo público para seguir com a seleção assistida da Tech10.';
+      subtitleNode.textContent = subtitle;
     }
 
     var summaryNode = global.document.querySelector('[data-home-catalog-summary]');
