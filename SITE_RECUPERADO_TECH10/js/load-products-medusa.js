@@ -112,8 +112,8 @@ function renderProducts(products, containerId = 'produtosGrid') {
       container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Nenhum produto válido encontrado.</p>';
     }
 
-  // Função global para adicionar ao carrinho - Usa MedusaCart
-  window.addToCartMedusa = async function(variantId, productId, buyNow = false) {
+  // Função global canônica para adicionar ao carrinho do storefront
+  window.addToStorefrontCart = async function(variantId, productId, buyNow = false) {
     try {
       if (!variantId) {
         if (window.medusaCart) {
@@ -196,6 +196,9 @@ function renderProducts(products, containerId = 'produtosGrid') {
       throw error;
     }
   };
+
+  // Alias legado preservado para superfícies antigas
+  window.addToCartMedusa = window.addToStorefrontCart;
 
   // Função para abrir modal do produto
   window.openProductModal = async function(productId) {
@@ -300,7 +303,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
       if (window.closeProductModal) window.closeProductModal();
       
       // Adicionar ao carrinho
-      await window.addToCartMedusa(variantId, productId);
+      await (window.addToStorefrontCart || window.addToCartMedusa)(variantId, productId);
       
       // Redirecionar para carrinho
       showNotification('✅ Produto adicionado! Redirecionando...');
@@ -318,7 +321,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
   window.handleAddToCart = async function(variantId, productId) {
     try {
       if (window.closeProductModal) window.closeProductModal();
-      await window.addToCartMedusa(variantId, productId);
+      await (window.addToStorefrontCart || window.addToCartMedusa)(variantId, productId);
     } catch (error) {
       console.error('Erro ao adicionar ao carrinho:', error);
       showNotification('❌ Erro ao adicionar produto ao carrinho', 'error');
