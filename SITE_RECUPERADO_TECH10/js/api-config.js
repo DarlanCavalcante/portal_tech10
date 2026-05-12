@@ -6,15 +6,16 @@
 const tenantConfig = typeof window !== 'undefined' ? window.TENANT_CONFIG || {} : {};
 const tenantStore = tenantConfig.store || {};
 const tenantMeta = tenantConfig.tenant || {};
+const tenantRuntimeId = tenantStore.runtimeId || tenantMeta.id || tenantStore.slug || tenantMeta.slug || 'tenant';
 const runtimeOrigin = tenantStore.baseUrl || (typeof window !== 'undefined' && window.location.origin
   ? window.location.origin
   : 'http://localhost:3101');
 const API_CONFIG = {
-  provider: tenantStore.provider || 'tech10-standalone',
+  provider: tenantStore.provider || 'tenant-standalone',
 
-  TECH10_STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'revivah-tech',
+  TECH10_STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'tech10',
 
-  STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'revivah-tech',
+  STORE_SLUG: tenantStore.slug || tenantMeta.slug || 'tech10',
 
   SITE_BASE_PATH: tenantMeta.publicSiteBasePath || '/',
 
@@ -29,7 +30,7 @@ const API_CONFIG = {
 
   CHECKOUT_MODE: tenantStore.checkoutMode || 'store_backend',
 
-  CART_STORAGE_KEY: 'tech10_storefront_cart_id',
+  CART_STORAGE_KEY: `${tenantRuntimeId}_storefront_cart_id`,
 
   LEGACY_CART_STORAGE_KEY: 'vivacommerce_cart_id',
 

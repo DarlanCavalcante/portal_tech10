@@ -71,6 +71,11 @@
       "permanent": true
     },
     {
+      "source": "/lojas/tech10/shop",
+      "destination": "/loja",
+      "permanent": false
+    },
+    {
       "source": "/lojas/revivah-tech/shop",
       "destination": "/loja",
       "permanent": false

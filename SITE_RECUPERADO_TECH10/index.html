@@ -811,7 +811,7 @@
     <script src="js/api-client.js" defer></script>
     <script src="js/empresa-config.js" defer></script>
 
-    <!-- VivaCommerce Tech10 — loja do seed (slug: revivah-tech) -->
+    <!-- Runtime canônico do tenant Tech10 -->
     <script src="js/api-config.js"></script>
     <script src="js/api-adapter.js"></script>
     <script src="js/cart-storefront.js"></script>
@@ -939,7 +939,7 @@
             // Inicializar carrinho VivaCommerce
             var cart = window.medusaCart || window.cartVivaCommerce;
             if (cart && cart.init) cart.init().catch(function(e) { console.error('Cart init:', e); });
-            // Carregar produtos do tenant revivah-tech via MarketplaceAdapter
+            // Carregar produtos do tenant via MarketplaceAdapter
             if (typeof loadProductsFromAPI === 'function' && typeof renderProductsFromAPI === 'function') {
                 loadProductsFromAPI().then(function(products) {
                     renderProductsFromAPI(products, 'produtosGrid');

@@ -7,7 +7,7 @@ const {
   splitStorePath,
 } = require('./runtime-env');
 
-function buildUpstreamHeaders(req, operation) {
+function buildUpstreamHeaders(req, operation, env) {
   const headers = new Headers();
   const passthrough = [
     'accept',
@@ -43,7 +43,10 @@ function buildUpstreamHeaders(req, operation) {
     headers.set('x-api-key', apiKey);
   }
 
-  headers.set('x-tech10-runtime', 'tech10-portal');
+  headers.set('x-tech10-runtime', env.runtimeId);
+  headers.set('x-tenant-runtime', env.runtimeId);
+  headers.set('x-tenant-id', env.tenantId);
+  headers.set('x-store-slug', env.storeSlug);
 
   return headers;
 }
@@ -92,7 +95,7 @@ module.exports = async function handler(req, res) {
     res.status(503).json({
       success: false,
       error,
-      message: `Configure ${envKey} para ativar ${operation === 'catalog' ? 'o catálogo' : 'o checkout'} da Tech10.`,
+      message: `Configure ${envKey} para ativar ${operation === 'catalog' ? 'o catálogo' : 'o checkout'} da loja pública.`,
       operation,
       catalogSource: env.catalogSource,
       checkoutMode: env.checkoutMode,
@@ -106,7 +109,7 @@ module.exports = async function handler(req, res) {
   try {
     const upstream = await fetch(target, {
       method: req.method,
-      headers: buildUpstreamHeaders(req, operation),
+      headers: buildUpstreamHeaders(req, operation, env),
       body: buildRequestBody(req),
       redirect: 'follow',
     });

@@ -51,6 +51,15 @@ Ela contém:
 
 ## Variáveis esperadas no deploy
 
+- `TECH10_TENANT_ID`
+  - identificador lógico do tenant; default `tech10`
+- `TECH10_PUBLIC_STORE_SLUG`
+  - slug público canônico do catálogo; default `tech10`
+- `TECH10_SITE_NAME`
+  - nome exibido pelo runtime/health; default `Tech10 Informática`
+- `TECH10_RUNTIME_ID`
+  - identificador do runtime standalone; default `tech10-portal`
+
 - `TECH10_CATALOG_SOURCE`
   - `store_backend` ou `erp_stock`
 - `TECH10_CATALOG_BACKEND_URL`
@@ -101,6 +110,9 @@ Ainda existem aliases legados como `VIVACOMMERCE_BASE_URL`,
 `cartVivaCommerce` e `vivacommerce_cart_id` apenas para reduzir risco de
 quebra durante a transição. O runtime canônico agora usa `cart-storefront.js`
 e `tech10_storefront_cart_id`.
+
+O slug legado `revivah-tech` permanece só como alias de compatibilidade. O
+slug público canônico desta base agora é `tech10`.
 
 ## Próximo passo recomendado
 

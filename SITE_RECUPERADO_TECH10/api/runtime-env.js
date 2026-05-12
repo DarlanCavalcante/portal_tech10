@@ -1,6 +1,10 @@
 const DEFAULT_PORTAL_BASE_URL = 'https://sistema.tech10cloud.com/portal';
 const DEFAULT_STATUS_BASE_URL = 'https://sistema.tech10cloud.com/status';
 const DEFAULT_SUPPORT_WHATSAPP = '55974001960';
+const DEFAULT_TENANT_ID = 'tech10';
+const DEFAULT_STORE_SLUG = 'tech10';
+const DEFAULT_SITE_NAME = 'Tech10 Informática';
+const DEFAULT_RUNTIME_ID = 'tech10-portal';
 
 const ALLOWED_CATALOG_SOURCES = ['store_backend', 'erp_stock'];
 const ALLOWED_CHECKOUT_MODES = ['store_backend', 'quote_only'];
@@ -62,9 +66,18 @@ function getRuntimeEnv() {
     process.env.TECH10_SUPPORT_WHATSAPP || DEFAULT_SUPPORT_WHATSAPP
   );
 
+  const tenantId = String(process.env.TECH10_TENANT_ID || DEFAULT_TENANT_ID).trim() || DEFAULT_TENANT_ID;
+  const storeSlug = String(
+    process.env.TECH10_PUBLIC_STORE_SLUG || process.env.TECH10_STORE_SLUG || DEFAULT_STORE_SLUG
+  ).trim() || DEFAULT_STORE_SLUG;
+  const siteName = String(process.env.TECH10_SITE_NAME || DEFAULT_SITE_NAME).trim() || DEFAULT_SITE_NAME;
+  const runtimeId = String(process.env.TECH10_RUNTIME_ID || DEFAULT_RUNTIME_ID).trim() || DEFAULT_RUNTIME_ID;
+
   return {
-    tenantId: 'tech10',
-    siteName: 'Tech10 Informática',
+    tenantId,
+    storeSlug,
+    siteName,
+    runtimeId,
     mode: 'standalone',
     catalogSource,
     checkoutMode,

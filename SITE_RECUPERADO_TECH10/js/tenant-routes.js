@@ -11,6 +11,8 @@
   const tenant = cfg.tenant || {};
   const company = cfg.company || {};
   const brand = cfg.brand || {};
+  const legacyStoreSlugs = Array.isArray(tenant.legacyStoreSlugs) ? tenant.legacyStoreSlugs : ['revivah-tech'];
+  const legacySitePaths = Array.isArray(tenant.legacySitePaths) ? tenant.legacySitePaths : ['/tech10'];
 
   const routes = {
     siteHome: tenant.publicSiteBasePath || '/',
@@ -22,7 +24,9 @@
     portal: tenant.portalPath || '/portal',
     whatsappBase: company.whatsapp ? `https://wa.me/${company.whatsapp}` : 'https://wa.me/55974001960',
     logoUrl: (brand && brand.logoUrl) || '/imagem/logo/tech10-logo-fundo-azul.png',
-    storeSlug: (tenant && tenant.slug) || 'revivah-tech',
+    storeSlug: (tenant && tenant.slug) || 'tech10',
+    legacyStoreSlugs,
+    legacySitePaths,
   };
 
   function absoluteSiteHome() {
@@ -69,42 +73,52 @@
       return;
     }
 
-    if (href === '/tech10/' || href === '/tech10' || href === '/tech10/index.html') {
+    if (
+      routes.legacySitePaths.some(function (sitePath) {
+        return href === sitePath || href === `${sitePath}/` || href === `${sitePath}/index.html`;
+      })
+    ) {
       anchor.setAttribute('href', absoluteSiteHome());
       return;
     }
 
-    if (href === '/tech10/produtos.html') {
+    if (routes.legacySitePaths.some((sitePath) => href === `${sitePath}/produtos.html`)) {
       anchor.setAttribute('href', routes.shopHome);
       return;
     }
 
-    if (href === '/tech10/carrinho.html' || href === '/carrinho.html') {
+    if (routes.legacySitePaths.some((sitePath) => href === `${sitePath}/carrinho.html`) || href === '/carrinho.html') {
       anchor.setAttribute('href', routes.cart);
       return;
     }
 
-    if (href === '/tech10/checkout.html' || href === '/checkout.html') {
+    if (routes.legacySitePaths.some((sitePath) => href === `${sitePath}/checkout.html`) || href === '/checkout.html') {
       anchor.setAttribute('href', routes.checkout);
       return;
     }
 
-    if (href === '/tech10/pedido-confirmado.html' || href === '/pedido-confirmado.html') {
+    if (
+      routes.legacySitePaths.some((sitePath) => href === `${sitePath}/pedido-confirmado.html`)
+      || href === '/pedido-confirmado.html'
+    ) {
       anchor.setAttribute('href', routes.orderSuccess);
       return;
     }
 
-    if (href === '/lojas/revivah-tech/shop') {
+    if ([routes.storeSlug].concat(routes.legacyStoreSlugs).some((storeSlug) => href === `/lojas/${storeSlug}/shop`)) {
       anchor.setAttribute('href', routes.shopHome);
       return;
     }
 
-    if (href.indexOf('/shop?store=revivah-tech') === 0) {
-      anchor.setAttribute('href', href.replace('/shop?store=revivah-tech', routes.categoryShopBasePath));
-      return;
+    for (const storeSlug of [routes.storeSlug].concat(routes.legacyStoreSlugs)) {
+      const legacyShopQuery = `/shop?store=${storeSlug}`;
+      if (href.indexOf(legacyShopQuery) === 0) {
+        anchor.setAttribute('href', href.replace(legacyShopQuery, routes.categoryShopBasePath));
+        return;
+      }
     }
 
-    if (href === '/portal' || href === '/tech10/portal') {
+    if (href === '/portal' || routes.legacySitePaths.some((sitePath) => href === `${sitePath}/portal`)) {
       anchor.setAttribute('href', routes.portal);
       return;
     }
@@ -120,13 +134,20 @@
     if (!onclick) return;
 
     let next = onclick;
-    next = next.replace(/\/tech10\/carrinho\.html/g, routes.cart);
-    next = next.replace(/\/tech10\/checkout\.html/g, routes.checkout);
-    next = next.replace(/\/tech10\/pedido-confirmado\.html/g, routes.orderSuccess);
-    next = next.replace(/\/tech10\/produtos\.html/g, routes.shopHome);
-    next = next.replace(/\/tech10\//g, absoluteSiteHome());
-    next = next.replace(/\/lojas\/revivah-tech\/shop/g, routes.shopHome);
-    next = next.replace(/\/shop\?store=revivah-tech/g, routes.categoryShopBasePath);
+    routes.legacySitePaths.forEach(function (sitePath) {
+      const escaped = sitePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      next = next.replace(new RegExp(`${escaped}/carrinho\\.html`, 'g'), routes.cart);
+      next = next.replace(new RegExp(`${escaped}/checkout\\.html`, 'g'), routes.checkout);
+      next = next.replace(new RegExp(`${escaped}/pedido-confirmado\\.html`, 'g'), routes.orderSuccess);
+      next = next.replace(new RegExp(`${escaped}/produtos\\.html`, 'g'), routes.shopHome);
+      next = next.replace(new RegExp(`${escaped}/`, 'g'), absoluteSiteHome());
+    });
+
+    [routes.storeSlug].concat(routes.legacyStoreSlugs).forEach(function (storeSlug) {
+      const escapedSlug = storeSlug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      next = next.replace(new RegExp(`/lojas/${escapedSlug}/shop`, 'g'), routes.shopHome);
+      next = next.replace(new RegExp(`/shop\\?store=${escapedSlug}`, 'g'), routes.categoryShopBasePath);
+    });
 
     if (next !== onclick) {
       element.setAttribute('onclick', next);

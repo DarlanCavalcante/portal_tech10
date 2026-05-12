@@ -22,7 +22,11 @@ contexto dos nomes legados ainda presentes no frontend.
 - `tenant.id`
   - valor atual: `tech10`
 - `tenant.slug`
-  - valor atual: `revivah-tech`
+  - valor atual: `tech10`
+- `tenant.legacyStoreSlugs`
+  - valor atual: `['revivah-tech']`
+- `tenant.legacySitePaths`
+  - valor atual: `['/tech10']`
 - `tenant.publicSiteBasePath`
   - valor atual: `/`
 - `tenant.storefrontPath`
@@ -52,9 +56,13 @@ contexto dos nomes legados ainda presentes no frontend.
 ### store
 
 - `store.provider`
-  - valor atual: `tech10-standalone`
+  - valor atual: `tenant-standalone`
+- `store.runtimeId`
+  - valor atual: `tech10-portal`
+- `store.runtimeLabel`
+  - valor atual: `Tech10 Portal`
 - `store.slug`
-  - valor atual: `revivah-tech`
+  - valor atual: `tech10`
 - `store.catalogSource`
   - valor atual: `store_backend`
 - `store.checkoutMode`
@@ -83,6 +91,14 @@ contexto dos nomes legados ainda presentes no frontend.
 
 ### Obrigatórias
 
+- `TECH10_TENANT_ID`
+  - identificador lógico do tenant
+- `TECH10_PUBLIC_STORE_SLUG`
+  - slug público canônico da loja
+- `TECH10_SITE_NAME`
+  - nome operacional exibido no runtime
+- `TECH10_RUNTIME_ID`
+  - identificador operacional do runtime standalone
 - `TECH10_CATALOG_SOURCE`
   - `store_backend` ou `erp_stock`
 - `TECH10_CATALOG_BACKEND_URL`
@@ -139,6 +155,7 @@ Ainda existem nomes como:
 - `VIVACOMMERCE_BASE_URL`
 - `cartVivaCommerce`
 - `vivacommerce_cart_id`
+- `revivah-tech`
 
 Esses nomes foram mantidos por compatibilidade de transição e não representam
 vínculo oficial com outro projeto.

@@ -76,8 +76,9 @@ module.exports = async function handler(req, res) {
 
   res.status(overallStatus === 'ok' ? 200 : 503).json({
     status: overallStatus,
-    service: 'tech10-portal',
+    service: env.runtimeId,
     tenant: env.tenantId,
+    storeSlug: env.storeSlug,
     mode: env.mode,
     timestamp: new Date().toISOString(),
     routes: {

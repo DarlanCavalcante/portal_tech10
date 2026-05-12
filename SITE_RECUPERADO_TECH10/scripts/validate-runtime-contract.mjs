@@ -33,6 +33,10 @@ const requiredDocs = [
 ];
 
 const requiredEnvKeys = [
+  'TECH10_TENANT_ID',
+  'TECH10_PUBLIC_STORE_SLUG',
+  'TECH10_SITE_NAME',
+  'TECH10_RUNTIME_ID',
   'TECH10_CATALOG_SOURCE',
   'TECH10_CATALOG_BACKEND_URL',
   'TECH10_CHECKOUT_MODE',
@@ -89,7 +93,8 @@ if (fs.existsSync(vercelConfigPath)) {
 const tenantConfigPath = path.join(runtimeRoot, 'js', 'tenant-config.js');
 if (fs.existsSync(tenantConfigPath)) {
   const tenantConfig = fs.readFileSync(tenantConfigPath, 'utf8');
-  assert(tenantConfig.includes("provider: 'tech10-standalone'"), 'tenant-config.js não está em modo tech10-standalone');
+  assert(tenantConfig.includes("provider: 'tenant-standalone'"), 'tenant-config.js não está em modo tenant-standalone');
+  assert(tenantConfig.includes("slug: 'tech10'"), 'tenant-config.js não declara o slug canônico tech10');
   assert(tenantConfig.includes("portalPath: '/portal'"), 'tenant-config.js não declara portalPath canônico');
   assert(tenantConfig.includes("apiBasePath: '/api/store'"), 'tenant-config.js não aponta para /api/store');
   assert(tenantConfig.includes("catalogSource: 'store_backend'"), 'tenant-config.js não declara o catálogo canônico');

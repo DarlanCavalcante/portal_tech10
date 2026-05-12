@@ -378,7 +378,7 @@ if (document.readyState === 'loading') {
 }
 
 async function init() {
-  console.log('🛍️ Carregando produtos via VivaCommerce adapter (revivah-tech)...');
+  console.log('🛍️ Carregando produtos via adapter canônico do tenant...');
   
   const products = await loadProductsFromMedusa();
   console.log(`✅ ${products.length} produtos carregados`);

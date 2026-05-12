@@ -15,7 +15,9 @@
   const config = {
     tenant: {
       id: 'tech10',
-      slug: 'revivah-tech',
+      slug: 'tech10',
+      legacyStoreSlugs: ['revivah-tech'],
+      legacySitePaths: ['/tech10'],
       publicSiteBasePath: '/',
       storefrontPath: '/loja',
       categoryShopBasePath: '/loja',
@@ -56,8 +58,10 @@
       themePreset: 'tech',
     },
     store: {
-      provider: 'tech10-standalone',
-      slug: 'revivah-tech',
+      provider: 'tenant-standalone',
+      runtimeId: 'tech10-portal',
+      runtimeLabel: 'Tech10 Portal',
+      slug: 'tech10',
       baseUrl: origin,
       apiBasePath: '/api/store',
       adminApiBasePath: '/api',
