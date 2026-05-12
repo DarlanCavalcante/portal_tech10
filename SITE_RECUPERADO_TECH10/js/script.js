@@ -255,18 +255,21 @@ async function initializeApp() {
     setupResponsiveDicas();
     setupEventListeners();
     
-    // Não renderizar produtos aqui - deixar Medusa fazer isso
+    // Não renderizar produtos aqui - deixar o storefront canônico fazer isso
     // Se Medusa não funcionar, o fallback acima renderizará
     renderDicas();
-    // updateCartCount removido - agora usa MedusaCart que atualiza automaticamente
-    // MedusaCart será inicializado quando o DOM carregar (medusa-cart.js)
-    // Função stub para não gerar erro se for chamada antes do MedusaCart estar pronto
-    function updateCartCountStub() {
-        if (window.medusaCart && typeof window.medusaCart.updateCartCount === 'function') {
-            window.medusaCart.updateCartCount().catch(err => console.error('Erro ao atualizar contador:', err));
+    // O contador agora usa o carrinho ativo do storefront, preservando aliases legados só como fallback.
+    function getActiveStorefrontCart() {
+        return window.storefrontCart || window.cartStorefront || window.medusaCart || window.cartVivaCommerce || null;
+    }
+
+    function syncStorefrontCartCount() {
+        var cart = getActiveStorefrontCart();
+        if (cart && typeof cart.updateCartCount === 'function') {
+            cart.updateCartCount().catch(err => console.error('Erro ao atualizar contador:', err));
         }
     }
-    updateCartCountStub();
+    syncStorefrontCartCount();
     setupScrollEffects();
     setupMobileMenu();
     setupHeroVideo();
@@ -1116,11 +1119,12 @@ function createDicaModal() {
 
 // Inicializar ao carregar
 window.addEventListener('load', function() {
-    // loadCartFromStorage removido - agora usa MedusaCart
-    // O MedusaCart é inicializado automaticamente quando o DOM carrega (medusa-cart.js)
-    // Se já estiver inicializado, atualizar contador
-    if (window.medusaCart && typeof window.medusaCart.updateCartCount === 'function') {
-        window.medusaCart.updateCartCount().catch(err => console.error('Erro ao atualizar contador:', err));
+    // Se o carrinho canônico já estiver inicializado, atualizar contador.
+    var cart = (typeof getActiveStorefrontCart === 'function')
+        ? getActiveStorefrontCart()
+        : (window.storefrontCart || window.cartStorefront || window.medusaCart || window.cartVivaCommerce || null);
+    if (cart && typeof cart.updateCartCount === 'function') {
+        cart.updateCartCount().catch(err => console.error('Erro ao atualizar contador:', err));
     }
     registerServiceWorker();
 });

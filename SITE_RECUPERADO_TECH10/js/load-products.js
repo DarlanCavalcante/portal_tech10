@@ -44,6 +44,10 @@
     return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
   }
 
+  function getActiveStorefrontCart() {
+    return global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce || null;
+  }
+
   function getProductMetaChips(product) {
     var metadata = product && product.metadata ? product.metadata : {};
     var chips = [];
@@ -364,9 +368,11 @@
     }
     try {
       for (var i = 0; i < (qty || 1); i++) {
-        var cart = global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce;
+        var cart = getActiveStorefrontCart();
         if (cart && cart.addItem) {
           await cart.addItem(variantId, productId, 1, false);
+        } else if (typeof global.addToStorefrontCart === 'function') {
+          await global.addToStorefrontCart(variantId, productId, false);
         } else if (typeof global.addToCartMedusa === 'function') {
           await global.addToCartMedusa(variantId, productId, false);
         }
@@ -417,13 +423,15 @@
   global.loadProductsFromAPI = loadProducts;
   global.renderProductsFromAPI = renderProducts;
 
-  global.addToCartMedusa = async function (variantId, productId, buyNow) {
-    var cart = global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce;
+  global.addToStorefrontCart = async function (variantId, productId, buyNow) {
+    var cart = getActiveStorefrontCart();
     if (cart && cart.addItem) {
       await cart.addItem(variantId, productId, 1, buyNow);
     } else {
       console.warn('Carrinho não inicializado. Carregue cart-storefront.js.');
     }
   };
+
+  global.addToCartMedusa = global.addToStorefrontCart;
 
 })(typeof window !== 'undefined' ? window : this);
