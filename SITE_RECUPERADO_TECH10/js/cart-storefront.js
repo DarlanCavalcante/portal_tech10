@@ -57,7 +57,33 @@
   }
 
   function getActiveStorefrontCart() {
-    return global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce || null;
+    return [
+      global.storefrontCart,
+      global.cartStorefront,
+      global.medusaCart,
+      global.cartVivaCommerce
+    ].find(function (cart) {
+      return Boolean(cart);
+    }) || null;
+  }
+
+  function getLegacyNotificationBridge(currentCart) {
+    return [
+      global.medusaCart,
+      global.cartVivaCommerce
+    ].find(function (cart) {
+      return cart && cart !== currentCart && typeof cart.showNotification === 'function';
+    }) || null;
+  }
+
+  function publishCartAliases(cart) {
+    if (typeof window === 'undefined') return;
+
+    window.storefrontCart = cart;
+    window.cartStorefront = cart;
+    window.cartVivaCommerce = window.cartVivaCommerce || cart;
+    window.medusaCart = window.medusaCart || cart;
+    window.getActiveStorefrontCart = getActiveStorefrontCart;
   }
 
   class StorefrontCart {
@@ -161,8 +187,9 @@
     }
 
     showNotification(message, type) {
-      if (typeof global.medusaCart !== 'undefined' && global.medusaCart !== this && global.medusaCart.showNotification) {
-        global.medusaCart.showNotification(message, type);
+      const bridge = getLegacyNotificationBridge(this);
+      if (bridge) {
+        bridge.showNotification(message, type);
         return;
       }
       if (typeof alert !== 'undefined') alert(message);
@@ -170,11 +197,5 @@
   }
 
   const cart = new StorefrontCart();
-  if (typeof window !== 'undefined') {
-    window.storefrontCart = cart;
-    window.cartStorefront = cart;
-    window.cartVivaCommerce = cart;
-    window.medusaCart = window.medusaCart || cart;
-    window.getActiveStorefrontCart = getActiveStorefrontCart;
-  }
+  publishCartAliases(cart);
 })(typeof window !== 'undefined' ? window : this);
