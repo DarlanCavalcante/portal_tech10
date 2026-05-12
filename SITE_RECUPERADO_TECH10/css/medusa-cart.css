@@ -1,9 +1,20 @@
 /**
- * Estilos para MedusaCart
- * Tech10 E-commerce
+ * Estilos da camada legada de carrinho/notificações.
+ * Mantém compatibilidade com naming histórico e naming neutro atual.
  */
 
 /* Animações de notificação */
+@keyframes legacy-storefront-slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 @keyframes medusa-slideIn {
     from {
         transform: translateX(100%);
@@ -12,6 +23,17 @@
     to {
         transform: translateX(0);
         opacity: 1;
+    }
+}
+
+@keyframes legacy-storefront-slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
     }
 }
 
@@ -72,17 +94,20 @@
 }
 
 /* Notificações */
-.medusa-notification {
+.medusa-notification,
+.legacy-storefront-notification {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 500;
 }
 
-.medusa-notification.success {
+.medusa-notification.success,
+.legacy-storefront-notification.success {
     background: #10b981 !important;
 }
 
-.medusa-notification.error {
+.medusa-notification.error,
+.legacy-storefront-notification.error {
     background: #ef4444 !important;
 }
 
@@ -94,7 +119,8 @@
 
 /* Responsivo */
 @media (max-width: 768px) {
-    .medusa-notification {
+    .medusa-notification,
+    .legacy-storefront-notification {
         right: 10px !important;
         left: 10px !important;
         max-width: calc(100% - 20px) !important;
