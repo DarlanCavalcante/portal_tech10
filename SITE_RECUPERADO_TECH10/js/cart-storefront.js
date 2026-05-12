@@ -80,7 +80,7 @@
         this.cart = cart;
         await this.updateCartCount();
         this.showNotification('Produto adicionado ao carrinho!');
-        if (buyNow) setTimeout(() => { window.location.href = 'carrinho.html'; }, 1000);
+        if (buyNow) setTimeout(() => { window.location.href = '/carrinho'; }, 1000);
         return this.cart;
       } catch (err) {
         this.showNotification(err.message || 'Erro ao adicionar produto', 'error');
@@ -122,6 +122,11 @@
         const count = (cart && cart.items) ? cart.items.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0;
         if (this.cartCountElement) this.cartCountElement.textContent = count;
       } catch (_) {}
+    }
+
+    getCount() {
+      if (!this.cart || !Array.isArray(this.cart.items)) return 0;
+      return this.cart.items.reduce((sum, item) => sum + (item.quantity || 0), 0);
     }
 
     showNotification(message, type) {

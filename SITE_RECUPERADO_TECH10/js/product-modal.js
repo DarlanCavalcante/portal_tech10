@@ -460,7 +460,7 @@
 
     try {
       for (var i = 0; i < qty; i++) {
-        var cart = global.medusaCart || global.cartVivaCommerce;
+        var cart = global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce;
         if (cart && cart.addItem) {
           await cart.addItem(variantId, productId, 1, false);
         }
