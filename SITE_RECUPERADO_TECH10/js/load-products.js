@@ -370,6 +370,136 @@
     }
   }
 
+  function getProductPriceAmount(product) {
+    return product && product.variants && product.variants[0] && product.variants[0].prices && product.variants[0].prices[0]
+      ? Number(product.variants[0].prices[0].amount || 0)
+      : 0;
+  }
+
+  function getProductSearchHref(product) {
+    if (!product) return '/loja';
+    var metadata = product.metadata || {};
+    var searchTerm = metadata.sku || product.title || '';
+    if (!searchTerm) return '/loja';
+    return '/loja?search=' + encodeURIComponent(searchTerm);
+  }
+
+  function buildSpotlightDescription(product, badgeLabel, categoryLabel) {
+    var metadata = product && product.metadata ? product.metadata : {};
+    var price = getProductPriceAmount(product);
+    var parts = [];
+
+    if (badgeLabel === 'Categoria em foco' && categoryLabel) {
+      parts.push(categoryLabel + ' lidera o catálogo público da Tech10 agora.');
+    } else if (categoryLabel) {
+      parts.push(categoryLabel + ' também aparece no ERP com estoque público.');
+    }
+
+    if (metadata.sku) {
+      parts.push('Busca por SKU pronta para acelerar o atendimento.');
+    }
+
+    if (price > 0) {
+      parts.push('Preço exibido de R$ ' + formatPrice(price) + ' na vitrine assistida.');
+    }
+
+    return parts.join(' ');
+  }
+
+  function getHomeCatalogFeaturedProducts(products) {
+    var sourceProducts = getHomeCatalogSourceProducts(products)
+      .filter(function (product) {
+        return product && product.id && product.title;
+      });
+    var categories = getHomeCatalogCategorySummary(sourceProducts, 4);
+    if (!sourceProducts.length) return [];
+
+    var featured = [];
+    var featuredIds = {};
+    var leaderCategory = categories[0] || null;
+
+    function addFeatured(product, badgeLabel) {
+      if (!product || !product.id || featuredIds[product.id]) return;
+      featuredIds[product.id] = true;
+      featured.push({ product: product, badgeLabel: badgeLabel });
+    }
+
+    if (leaderCategory) {
+      var leaderProduct = sourceProducts.find(function (product) {
+        return matchesCategory(product, leaderCategory.slug);
+      });
+      addFeatured(leaderProduct, 'Categoria em foco');
+    }
+
+    var secondaryProduct = sourceProducts
+      .slice()
+      .sort(function (a, b) {
+        var priceDiff = getProductPriceAmount(b) - getProductPriceAmount(a);
+        if (priceDiff !== 0) return priceDiff;
+        return 0;
+      })
+      .find(function (product) {
+        if (featuredIds[product.id]) return false;
+        if (!leaderCategory) return true;
+        return !matchesCategory(product, leaderCategory.slug);
+      });
+
+    if (!secondaryProduct) {
+      secondaryProduct = sourceProducts.find(function (product) {
+        return !featuredIds[product.id];
+      });
+    }
+
+    addFeatured(secondaryProduct, 'Outro destaque do catálogo');
+
+    return featured.slice(0, 2);
+  }
+
+  function syncHomeCatalogFeaturedProducts(products, containerId) {
+    if ((containerId || 'produtosGrid') !== 'produtosGrid') return;
+    if (!global.document) return;
+
+    var spotlightRoot = global.document.querySelector('[data-home-catalog-featured]');
+    if (!spotlightRoot) return;
+
+    var featuredProducts = getHomeCatalogFeaturedProducts(products);
+    if (!featuredProducts.length) return;
+
+    var fallbackImg = (global.TENANT_CONFIG && global.TENANT_CONFIG.brand && global.TENANT_CONFIG.brand.fallbackProductImageUrl)
+      || '/imagem/propaganda loja/tecnologia.jpeg';
+
+    spotlightRoot.innerHTML = featuredProducts.map(function (entry) {
+      var product = entry.product;
+      var metadata = product.metadata || {};
+      var categoryLabel = normalizeCatalogText(product.category && product.category.name) || 'Catálogo';
+      var badgeLabel = entry.badgeLabel || 'Produto em destaque';
+      var thumbnail = product.thumbnail || (product.images && product.images[0] && product.images[0].url) || fallbackImg;
+      var metaBits = [
+        categoryLabel,
+        metadata.brand ? 'Marca ' + metadata.brand : '',
+        metadata.sku ? 'SKU ' + metadata.sku : ''
+      ].filter(Boolean);
+
+      return '<a class="catalog-spotlight-card" href="' + getProductSearchHref(product) + '">' +
+        '<div class="catalog-spotlight-card__image">' +
+          '<img src="' + String(thumbnail).replace(/"/g, '&quot;') + '" alt="' + String(product.title || '').replace(/"/g, '&quot;') + '" loading="lazy" onerror="this.src=\'' + fallbackImg + '\'" />' +
+        '</div>' +
+        '<div class="catalog-spotlight-card__content">' +
+          '<span class="catalog-spotlight-card__eyebrow">' + badgeLabel + '</span>' +
+          '<h3 class="catalog-spotlight-card__title">' + String(product.title || '').replace(/</g, '&lt;') + '</h3>' +
+          '<div class="catalog-spotlight-card__meta">' + metaBits.map(function (bit) {
+            return '<span>' + String(bit).replace(/</g, '&lt;') + '</span>';
+          }).join('') + '</div>' +
+          '<p class="catalog-spotlight-card__desc">' + buildSpotlightDescription(product, badgeLabel, categoryLabel).replace(/</g, '&lt;') + '</p>' +
+          '<div class="catalog-spotlight-card__footer">' +
+            '<span class="catalog-spotlight-card__price">R$ ' + formatPrice(getProductPriceAmount(product)) + '</span>' +
+            '<span class="catalog-spotlight-card__cta">Abrir item na loja <i class="fas fa-arrow-right"></i></span>' +
+          '</div>' +
+        '</div>' +
+      '</a>';
+    }).join('');
+  }
+
   function buildProductDescription(product, categoryName) {
     var productTitle = normalizeCatalogText(product && product.title);
     var categoryLabel = normalizeCatalogText(categoryName || (product && product.category && product.category.name));
@@ -544,6 +674,7 @@
     syncHomeCatalogFilters(products, containerId);
     syncHomeCatalogEntryPoints(products, containerId);
     syncHomeCatalogLiveSummary(products, containerId);
+    syncHomeCatalogFeaturedProducts(products, containerId);
 
     if (!products || !Array.isArray(products) || products.length === 0) {
       var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';
