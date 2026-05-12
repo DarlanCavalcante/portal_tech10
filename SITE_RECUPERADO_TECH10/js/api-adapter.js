@@ -64,17 +64,8 @@
 
   function getBaseUrl() {
     const config = global.API_CONFIG || {};
-    if (config.STORE_RUNTIME_BASE_URL) {
-      return config.STORE_RUNTIME_BASE_URL.replace(/\/$/, '');
-    }
-    if (config.RUNTIME_BASE_URL) {
-      return config.RUNTIME_BASE_URL.replace(/\/$/, '');
-    }
-    if (config.LEGACY_STORE_BASE_URL) {
-      return config.LEGACY_STORE_BASE_URL.replace(/\/$/, '');
-    }
-    if (config.VIVACOMMERCE_BASE_URL) {
-      return config.VIVACOMMERCE_BASE_URL.replace(/\/$/, '');
+    if (typeof config.resolveRuntimeBaseUrl === 'function') {
+      return config.resolveRuntimeBaseUrl();
     }
     return (config.ACTIVE_URL || 'http://localhost:3000').replace(/\/$/, '');
   }

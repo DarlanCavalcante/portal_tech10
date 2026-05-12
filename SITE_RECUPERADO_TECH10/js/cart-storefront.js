@@ -11,15 +11,21 @@
 
   function getCartStorageKeys() {
     const apiConfig = global.API_CONFIG || {};
+    const fallbackKeys = [
+      PRIMARY_CART_ID_KEY,
+      LEGACY_CART_ID_KEY,
+      EXTRA_LEGACY_CART_ID_KEY
+    ];
+
+    if (typeof apiConfig.resolveCartStorageKeys === 'function') {
+      return apiConfig.resolveCartStorageKeys(fallbackKeys);
+    }
+
     const configuredKeys = Array.isArray(apiConfig.CART_STORAGE_KEYS)
       ? apiConfig.CART_STORAGE_KEYS
       : [apiConfig.CART_STORAGE_KEY, apiConfig.LEGACY_CART_STORAGE_KEY];
 
-    return Array.from(new Set(configuredKeys.concat([
-      PRIMARY_CART_ID_KEY,
-      LEGACY_CART_ID_KEY,
-      EXTRA_LEGACY_CART_ID_KEY
-    ]).filter(Boolean)));
+    return Array.from(new Set(configuredKeys.concat(fallbackKeys).filter(Boolean)));
   }
 
   function readCartId() {
