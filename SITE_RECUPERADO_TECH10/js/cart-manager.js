@@ -12,6 +12,41 @@ class CartManager {
     this.updateCallbacks = [];
   }
 
+  isQuoteOnlyRuntime() {
+    const runtimeConfig = window.__tech10_runtime_config || {};
+    const commerce = runtimeConfig.commerce || {};
+    const capabilities = commerce.capabilities || {};
+    const checkoutMode = commerce.checkoutMode
+      || (window.API_CONFIG && window.API_CONFIG.CHECKOUT_MODE)
+      || '';
+
+    return capabilities.quoteOnly === true
+      || capabilities.checkout === false
+      || checkoutMode === 'quote_only';
+  }
+
+  getCheckoutButtonLabel() {
+    return this.isQuoteOnlyRuntime()
+      ? 'Continuar fechamento assistido'
+      : 'Finalizar Compra';
+  }
+
+  getShippingSummaryLabel() {
+    return this.isQuoteOnlyRuntime()
+      ? 'Confirmar com atendimento'
+      : 'Calcular';
+  }
+
+  getEmptyStateLabel() {
+    return this.isQuoteOnlyRuntime()
+      ? 'Sua seleção está vazia'
+      : 'Seu carrinho está vazio';
+  }
+
+  goToCheckout() {
+    window.location.href = '/checkout';
+  }
+
   /**
    * Inicializar carrinho
    */
@@ -131,7 +166,7 @@ class CartManager {
     if (!this.cart || !this.cart.items || this.cart.items.length === 0) {
       container.innerHTML = `
         <div class="cart-empty">
-          <p>Seu carrinho está vazio</p>
+          <p>${this.getEmptyStateLabel()}</p>
         </div>
       `;
       return;
@@ -174,15 +209,20 @@ class CartManager {
         </div>
         <div class="cart-total-row">
           <span>Frete:</span>
-          <span>Calcular</span>
+          <span>${this.getShippingSummaryLabel()}</span>
         </div>
         <div class="cart-total-row cart-total-final">
           <span>Total:</span>
           <span>R$ ${total}</span>
         </div>
-        <button onclick="checkout()" class="btn-checkout">Finalizar Compra</button>
+        <button class="btn-checkout">${this.getCheckoutButtonLabel()}</button>
       </div>
     `;
+
+    const checkoutButton = container.querySelector('.btn-checkout');
+    if (checkoutButton) {
+      checkoutButton.addEventListener('click', () => this.goToCheckout());
+    }
   }
 
   /**
