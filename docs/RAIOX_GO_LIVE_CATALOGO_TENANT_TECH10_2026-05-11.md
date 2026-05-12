@@ -14,6 +14,16 @@ O bloqueio atual nao e mais publicar itens no catalogo central.
 Essa etapa ja foi concluida. O foco agora e **lapidar a qualidade da vitrine**
 com taxonomia, categoria e imagem, antes do dominio oficial.
 
+## Evolucao mais recente da vitrine
+
+Na rodada mais recente:
+
+- os `7` produtos publicados continuaram saudaveis na vitrine;
+- a categoria fallback `Outros` foi eliminada da experiencia publica;
+- o item `Cabo Inova Type-C para Type-C (CBO-5766)` foi recategorizado para `Cabos`;
+- a sidebar da loja passou a ser tratada como vitrine do tenant, e nao como arvore generica;
+- o consumidor standalone passou a normalizar nomes e handles de categoria para apresentacao comercial.
+
 ## O que foi confirmado
 
 ### Runtime publico Tech10
@@ -85,6 +95,13 @@ Itens com perfil comercial ja publicados:
 4. `Mouse Sem Fio Magnavox 2.4GHz`
 5. `Cabo de Dados Inova 2.4A`
 
+Categorias publicas confirmadas depois do saneamento:
+
+- `Cabos`
+- `Mouse`
+- `Redes · Equipamentos`
+- `Veículos`
+
 ## Proximo passo critico
 
 O proximo passo mais importante nao e criar mais infraestrutura.
@@ -92,7 +109,7 @@ O proximo passo mais importante nao e criar mais infraestrutura.
 E executar uma rodada controlada no ERP para:
 
 1. revisar categoria/taxonomia publica;
-2. corrigir itens que ainda caiam em `Outros` ou sem imagem ideal;
+2. revisar itens que ainda dependam de categoria tecnica ou sem taxonomia comercial ideal;
 3. validar a loja em `quote_only` com itens reais;
 4. depois decidir se o checkout continua por atendimento ou evolui para pedido transacional.
 

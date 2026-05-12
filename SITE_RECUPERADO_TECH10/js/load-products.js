@@ -51,7 +51,16 @@
 
   function toCategorySlug(cat) {
     if (!cat) return 'outros';
-    const raw = (cat.handle || cat.name || '').toLowerCase().replace(/\s+/g, '-');
+    if (global.MarketplaceAdapter && global.MarketplaceAdapter.normalizeCategoryHandle) {
+      return global.MarketplaceAdapter.normalizeCategoryHandle(cat.handle || cat.name || '');
+    }
+    const raw = (cat.handle || cat.name || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[>:]+/g, '-')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
     return raw || 'outros';
   }
 

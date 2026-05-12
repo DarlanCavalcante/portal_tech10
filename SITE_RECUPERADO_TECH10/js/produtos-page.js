@@ -19,6 +19,28 @@
   var _sortValue = 'recent';
   var _totalFromApi = 0;
 
+  function _normalizeHandle(value) {
+    if (global.MarketplaceAdapter && global.MarketplaceAdapter.normalizeCategoryHandle) {
+      return global.MarketplaceAdapter.normalizeCategoryHandle(value);
+    }
+    return String(value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[>:]+/g, '-')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'outros';
+  }
+
+  function _iconForCategory(handle) {
+    var normalized = _normalizeHandle(handle);
+    if (normalized.indexOf('cabo') !== -1) return '🔌';
+    if (normalized.indexOf('mouse') !== -1) return '🖱️';
+    if (normalized.indexOf('rede') !== -1 || normalized.indexOf('equipamento') !== -1) return '📶';
+    if (normalized.indexOf('veiculo') !== -1) return '🚗';
+    return '📦';
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Inicialização
   // ─────────────────────────────────────────────────────────────────────────
@@ -94,10 +116,25 @@
   // Carregar árvore de categorias
   // ─────────────────────────────────────────────────────────────────────────
   async function _loadCategories() {
-    var config = global.API_CONFIG || {};
-    var baseUrl = config.ACTIVE_URL || window.location.origin;
     var listEl = document.getElementById('pp-cat-list');
     var loadingEl = document.getElementById('pp-cat-loading');
+    var adapter = global.MarketplaceAdapter;
+
+    if (adapter && adapter.getCategories) {
+      try {
+        var tenantCategories = await adapter.getCategories();
+        if (tenantCategories && tenantCategories.length > 0) {
+          if (loadingEl) loadingEl.style.display = 'none';
+          _renderTenantCategoryList(tenantCategories, listEl);
+          return;
+        }
+      } catch (err) {
+        console.warn('[produtos-page] tenant categories:', err);
+      }
+    }
+
+    var config = global.API_CONFIG || {};
+    var baseUrl = config.ACTIVE_URL || window.location.origin;
 
     try {
       var res = await fetch(baseUrl + '/api/store/categories/tree');
@@ -139,6 +176,31 @@
           ]},
         ]},
       ], listEl);
+    }
+  }
+
+  function _renderTenantCategoryList(categories, listEl) {
+    var html = '';
+    categories.forEach(function (category) {
+      var handle = _normalizeHandle(category.handle || category.id || category.name);
+      var label = category.name || handle;
+      html += '<li class="pp-cat-pai" id="pai-' + handle + '">';
+      html += '<button class="pp-cat-pai-btn" data-handle="' + handle + '" data-label="' + label + '">';
+      html += '<span class="pp-cat-pai-icon">' + _iconForCategory(handle) + '</span>';
+      html += ' ' + label;
+      html += ' <span class="pp-cat-count" data-category-count="' + handle + '">–</span>';
+      html += '</button>';
+      html += '</li>';
+    });
+
+    listEl.insertAdjacentHTML('beforeend', html);
+    _attachCategoryEvents(listEl);
+
+    if (_activeHandle && _activeHandle !== 'all') {
+      var active = listEl.querySelector('[data-handle="' + _activeHandle + '"]');
+      if (active) {
+        _activeLabel = active.dataset.label || _activeLabel;
+      }
     }
   }
 
@@ -234,7 +296,7 @@
 
   function _setActiveCategory(handle, label) {
     _activeHandle = handle;
-    _activeLabel = label || handle;
+    _activeLabel = label || _findLabelByHandle(handle) || handle;
     _offset = 0;
 
     // UI: remover active de todos
@@ -277,6 +339,7 @@
     try {
       var products = await (global.loadProductsFromAPI ? global.loadProductsFromAPI({ limit: 200, offset: 0 }) : Promise.resolve([]));
       _allProducts = products || [];
+      _refreshCategoryCounts();
       _applyFilterAndRender();
     } catch (err) {
       console.error('[produtos-page] Erro ao carregar produtos:', err);
@@ -297,7 +360,7 @@
     // Filtro de categoria
     if (handle && handle !== 'all') {
       filtered = filtered.filter(function (p) {
-        var catSlug = (p.categorySlug || _slugify((p.category && (p.category.handle || p.category.name)) || '')).toLowerCase();
+        var catSlug = (p.categorySlug || _normalizeHandle((p.category && (p.category.handle || p.category.name)) || '')).toLowerCase();
         return catSlug === handle || catSlug.indexOf(handle) === 0 || handle.indexOf(catSlug) === 0;
       });
     }
@@ -336,7 +399,30 @@
   }
 
   function _slugify(str) {
-    return str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return _normalizeHandle(str);
+  }
+
+  function _findLabelByHandle(handle) {
+    if (!handle || handle === 'all') return 'Todos';
+    var node = document.querySelector('[data-handle="' + handle + '"]');
+    return node ? node.dataset.label : handle;
+  }
+
+  function _refreshCategoryCounts() {
+    var totals = {};
+
+    _allProducts.forEach(function (product) {
+      var handle = _normalizeHandle(product.categorySlug || (product.category && (product.category.handle || product.category.name)) || 'outros');
+      totals[handle] = (totals[handle] || 0) + 1;
+    });
+
+    var allCount = document.getElementById('pp-cat-all-count');
+    if (allCount) allCount.textContent = String(_allProducts.length);
+
+    document.querySelectorAll('[data-category-count]').forEach(function (node) {
+      var handle = node.getAttribute('data-category-count');
+      node.textContent = String(totals[handle] || 0);
+    });
   }
 
   function _renderPage() {

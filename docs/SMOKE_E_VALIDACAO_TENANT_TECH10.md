@@ -43,3 +43,13 @@ EXPECT_CATALOG_BACKEND=1 SMOKE_BASE_URL=https://tech10.tech10cloud.com node scri
 - `commerce.catalogSource` indica de onde os produtos vêm
 - `commerce.checkoutMode` indica se a loja fecha pedido ou opera em atendimento
 - `commerce.capabilities.cart=false` é esperado quando o catálogo está em `quote_only`
+
+## Checklist visual/comercial mínimo
+
+Depois do smoke técnico, validar também:
+
+- a loja pública não exibe categorias fallback como `Outros`
+- nomes públicos de categoria aparecem em formato comercial
+- produtos publicados carregam imagem principal
+- a sidebar mostra apenas categorias reais do tenant
+- o CTA principal continua coerente com `quote_only`
