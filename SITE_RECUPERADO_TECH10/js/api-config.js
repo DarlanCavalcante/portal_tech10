@@ -38,11 +38,13 @@
 
     LEGACY_CART_STORAGE_KEY: 'vivacommerce_cart_id',
 
+    EXTRA_LEGACY_CART_STORAGE_KEYS: ['vc_cart_id'],
+
     get CART_STORAGE_KEYS() {
       return Array.from(new Set([
         this.CART_STORAGE_KEY,
         this.LEGACY_CART_STORAGE_KEY
-      ].filter(Boolean)));
+      ].concat(this.EXTRA_LEGACY_CART_STORAGE_KEYS || []).filter(Boolean)));
     },
 
     readStoredCartId() {
