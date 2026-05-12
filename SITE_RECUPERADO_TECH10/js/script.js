@@ -625,32 +625,23 @@ function animateProductCards() {
     });
 }
 
-// Carrinho de compras - 100% Medusa
-// As funções de carrinho foram movidas para medusa-cart.js
-// Esta função apenas redireciona para a página de carrinho
-
 function toggleCart() {
-    // SEMPRE usar o carrinho do Medusa
-    // Redirecionar para página de carrinho do Medusa
+    const runtime = window.__tech10_runtime_config || {};
+    const commerce = runtime.commerce || {};
+    const capabilities = commerce.capabilities || {};
+    const quoteOnly = capabilities.quoteOnly === true || capabilities.cart === false || commerce.checkoutMode === 'quote_only';
+
+    if (quoteOnly) {
+        const tenantCompany = (window.TENANT_CONFIG && window.TENANT_CONFIG.company) || {};
+        const support = runtime.support || {};
+        const whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '55974001960').replace(/\D/g, '');
+        const message = encodeURIComponent('Olá! Vim pelo site da Tech10 e quero ajuda para escolher ou fechar um produto.');
+        window.open(`https://wa.me/${whatsapp}?text=${message}`, '_blank', 'noopener,noreferrer');
+        return;
+    }
+
     window.location.href = '/carrinho.html';
 }
-
-// Funções antigas do carrinho removidas - Agora usa página dedicada /carrinho.html
-// O modal antigo não existe mais, todos os links redirecionam para a página do carrinho
-
-// Função placeholder para compatibilidade (não faz nada)
-function closeCartModal() {
-    // Modal antigo removido - não faz nada
-}
-
-// Função renderCartItems removida - carrinho agora usa página dedicada /carrinho.html
-function renderCartItems() {
-    // Função antiga removida - não faz nada
-    // O carrinho agora é renderizado na página /carrinho.html
-}
-
-// Função showCartNotification removida - agora usa MedusaCart.showNotification()
-// As notificações são gerenciadas pelo MedusaCart
 
 function toggleFavorite(productId) {
     const button = event.target.closest('.btn-favorite');
