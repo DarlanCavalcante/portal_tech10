@@ -462,7 +462,7 @@
       for (var i = 0; i < qty; i++) {
         var cart = typeof global.getActiveStorefrontCart === 'function'
           ? global.getActiveStorefrontCart()
-          : (global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce);
+          : (global.storefrontCart || null);
         if (cart && cart.addItem) {
           await cart.addItem(variantId, productId, 1, false);
         } else if (typeof global.addToStorefrontCart === 'function') {

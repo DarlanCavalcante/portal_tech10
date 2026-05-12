@@ -914,7 +914,7 @@
             // Inicializar carrinho canônico do storefront
             var cart = (typeof window.getActiveStorefrontCart === 'function')
                 ? window.getActiveStorefrontCart()
-                : (window.storefrontCart || window.cartStorefront || window.medusaCart || window.cartVivaCommerce);
+                : (window.storefrontCart || null);
             if (cart && cart.init) cart.init().catch(function(e) { console.error('Cart init:', e); });
             // Carregar produtos do tenant via MarketplaceAdapter
             if (typeof loadProductsFromAPI === 'function' && typeof renderProductsFromAPI === 'function') {
