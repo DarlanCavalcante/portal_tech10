@@ -24,7 +24,7 @@ const categoryMapping = {
 
 // Quando o storefront standalone está ativo, load-products.js já definiu loadProductsFromAPI; não sobrescrever.
 if (!(window.API_CONFIG && typeof window.loadProductsFromAPI === 'function')) {
-// Função para carregar produtos da API (fallback quando não usa VivaCommerce)
+// Função para carregar produtos da API quando a camada canônica não assumir a listagem
 async function loadProductsFromAPI() {
     try {
         console.log('🔄 Carregando produtos da API...');
@@ -515,7 +515,7 @@ function handleFilterClick(event) {
     
     state.currentFilter = filter;
 
-    // Quando os produtos vêm da API (Tech10 / VivaCommerce), usar filtro que não esvazia a lista
+    // Quando os produtos vêm da API pública da Tech10, usar filtro que não esvazia a lista
     if (typeof window.filterTech10Products === 'function' && window.__tech10_products && window.__tech10_products.length > 0) {
         window.filterTech10Products({ category: filter, search: (document.getElementById('searchInput') && document.getElementById('searchInput').value) || '' });
         animateProductCards();
@@ -665,8 +665,8 @@ function toggleFavorite(event, productId) {
     }
 }
 
-// Armazenamento local - removido (agora usa MedusaCart)
-// O carrinho é gerenciado pelo MedusaCart que usa localStorage apenas para medusa_cart_id
+// Armazenamento local legado removido da home pública.
+// O carrinho ativo é resolvido pela camada canônica do storefront.
 
 // Formulário de contato
 function handleContactForm(event) {

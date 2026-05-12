@@ -127,7 +127,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
             : '<i class="fas fa-times-circle"></i> Indisponível';
           const buttonAction = quoteOnly
             ? `requestLegacySupport('${product.id}'); event.stopPropagation();`
-            : `addToCartMedusa('${variant?.id || ''}', '${product.id}'); event.stopPropagation();`;
+            : `addToStorefrontCart('${variant?.id || ''}', '${product.id}'); event.stopPropagation();`;
       
       return `
       <div class="product-card ${stockClass}" data-product-id="${product.id}">
