@@ -1,12 +1,21 @@
-// API Client para comunicação com o Backend
-const API_URL = 'http://localhost:9000/store';
+// Cliente legado para comunicação direta com o storefront.
+function resolveLegacyStoreApiUrl() {
+  if (window.API_CONFIG && window.API_CONFIG.STORE_API) {
+    return window.API_CONFIG.STORE_API;
+  }
+  return `${window.location.origin}/api/store`;
+}
 
 class TechAPI {
+  static get baseUrl() {
+    return resolveLegacyStoreApiUrl();
+  }
+
   // Produtos
   static async getProducts(params = {}) {
     try {
       const queryString = new URLSearchParams(params).toString();
-      const response = await fetch(`${API_URL}/products?${queryString}`);
+      const response = await fetch(`${this.baseUrl}/products?${queryString}`);
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);
@@ -16,7 +25,7 @@ class TechAPI {
 
   static async getProduct(id) {
     try {
-      const response = await fetch(`${API_URL}/products/${id}`);
+      const response = await fetch(`${this.baseUrl}/products/${id}`);
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar produto:', error);
@@ -26,7 +35,7 @@ class TechAPI {
 
   static async getFeaturedProducts() {
     try {
-      const response = await fetch(`${API_URL}/products?featured=true&limit=6`);
+      const response = await fetch(`${this.baseUrl}/products?featured=true&limit=6`);
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar produtos em destaque:', error);
@@ -38,7 +47,7 @@ class TechAPI {
   static async getCategories(params = {}) {
     try {
       const queryString = new URLSearchParams(params).toString();
-      const response = await fetch(`${API_URL}/categories?${queryString}`);
+      const response = await fetch(`${this.baseUrl}/categories?${queryString}`);
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar categorias:', error);
@@ -48,7 +57,7 @@ class TechAPI {
 
   static async getCategory(id) {
     try {
-      const response = await fetch(`${API_URL}/categories/${id}`);
+      const response = await fetch(`${this.baseUrl}/categories/${id}`);
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar categoria:', error);
@@ -58,7 +67,7 @@ class TechAPI {
 
   static async getCategoryStats(id) {
     try {
-      const response = await fetch(`${API_URL}/categories/${id}/stats`);
+      const response = await fetch(`${this.baseUrl}/categories/${id}/stats`);
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar estatísticas da categoria:', error);
@@ -69,7 +78,7 @@ class TechAPI {
   // Configurações
   static async getSettings(group = null) {
     try {
-      const url = group ? `${API_URL}/settings?group=${group}` : `${API_URL}/settings`;
+      const url = group ? `${this.baseUrl}/settings?group=${group}` : `${this.baseUrl}/settings`;
       const response = await fetch(url);
       return await response.json();
     } catch (error) {
@@ -80,7 +89,7 @@ class TechAPI {
 
   static async getPublicSettings() {
     try {
-      const response = await fetch(`${API_URL}/settings/public`);
+      const response = await fetch(`${this.baseUrl}/settings/public`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -93,7 +102,7 @@ class TechAPI {
 
   static async getSetting(key) {
     try {
-      const response = await fetch(`${API_URL}/settings/${key}`);
+      const response = await fetch(`${this.baseUrl}/settings/${key}`);
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar configuração:', error);
@@ -104,7 +113,7 @@ class TechAPI {
   // Busca
   static async searchProducts(query) {
     try {
-      const response = await fetch(`${API_URL}/products?search=${encodeURIComponent(query)}`);
+      const response = await fetch(`${this.baseUrl}/products?search=${encodeURIComponent(query)}`);
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);

@@ -209,7 +209,11 @@ class CartManager {
   clear() {
     this.cart = null;
     this.client.cartId = null;
-    localStorage.removeItem('medusa_cart_id');
+    if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
+      window.API_CONFIG.persistStoredCartId(null);
+    } else {
+      localStorage.removeItem('medusa_cart_id');
+    }
     this.updateUI();
     this.notifyUpdate();
   }
