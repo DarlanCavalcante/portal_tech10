@@ -549,6 +549,77 @@
             return lines.join('\n');
         }
 
+        function buildAssistedOrderRecord(details) {
+            const reference = 'ATD-' + String(Date.now()).slice(-8);
+            const shippingAddress = details.shippingMethod === 'pickup'
+                ? {
+                    street: 'Retirada na loja Tech10',
+                    number: '',
+                    complement: '',
+                    neighborhood: '',
+                    city: '',
+                    state: '',
+                    zip_code: ''
+                }
+                : {
+                    street: details.shippingAddressFields.street,
+                    number: details.shippingAddressFields.number,
+                    complement: details.shippingAddressFields.complement || '',
+                    neighborhood: details.shippingAddressFields.neighborhood,
+                    city: details.shippingAddressFields.city,
+                    state: details.shippingAddressFields.state,
+                    zip_code: details.shippingAddressFields.zipCode
+                };
+
+            return {
+                order_number: reference,
+                customer_name: details.customerName,
+                customer_email: details.customerEmail,
+                customer_phone: details.customerPhone,
+                customer_cpf: details.customerCpf || '',
+                shipping_method: details.shippingMethod,
+                shipping_label: details.shippingLabel,
+                shipping_address: shippingAddress,
+                shipping_address_text: details.shippingAddressText,
+                shipping_cost: 0,
+                subtotal: details.subtotal,
+                total: details.subtotal,
+                payment_method: details.paymentMethod,
+                payment_label: details.paymentLabel,
+                notes: details.notes || '',
+                quote_only: true,
+                assisted_checkout: true,
+                support_url: details.supportUrl,
+                items: (details.items || []).map(function(item) {
+                    return {
+                        product_name: item.title || 'Produto',
+                        product_image: item.thumbnail || null,
+                        quantity: item.quantity || 1,
+                        unit_price: item.unitPrice || 0,
+                        subtotal: (item.unitPrice || 0) * (item.quantity || 1)
+                    };
+                })
+            };
+        }
+
+        function redirectToAssistedConfirmation(order) {
+            localStorage.setItem('last_order', JSON.stringify(order));
+            if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
+                window.API_CONFIG.persistStoredCartId(null);
+            } else {
+                localStorage.removeItem(CART_KEY);
+                localStorage.removeItem(LEGACY_CART_KEY);
+            }
+
+            try {
+                window.open(order.support_url, '_blank', 'noopener,noreferrer');
+            } catch (err) {
+                console.warn('[CHECKOUT] Não foi possível abrir o WhatsApp automaticamente:', err);
+            }
+
+            window.location.href = '/pedido-confirmado?order=' + encodeURIComponent(order.order_number || '');
+        }
+
         function toggleDeliveryAddressFields(method) {
             const addressFields = document.getElementById('delivery-address-fields');
             const pickupHelp = document.getElementById('pickup-help');
@@ -788,6 +859,7 @@
                         const items = (cart && Array.isArray(cart.items)) ? cart.items.map(function(item) {
                             return {
                                 title: item.title || 'Produto',
+                                thumbnail: item.thumbnail || null,
                                 quantity: item.quantity || 1,
                                 unitPrice: item.unit_price || 0
                             };
@@ -797,8 +869,7 @@
                             : items.reduce(function(sum, item) {
                                 return sum + ((item.unitPrice || 0) * (item.quantity || 1));
                             }, 0);
-
-                        window.location.href = buildSupportUrl(buildAssistedCheckoutMessage({
+                        const supportUrl = buildSupportUrl(buildAssistedCheckoutMessage({
                             customerName,
                             customerEmail,
                             customerPhone,
@@ -810,6 +881,40 @@
                             items,
                             subtotal
                         }));
+
+                        const assistedOrder = buildAssistedOrderRecord({
+                            customerName,
+                            customerEmail,
+                            customerPhone,
+                            customerCpf,
+                            shippingMethod,
+                            shippingLabel,
+                            shippingAddressText: shippingAddress,
+                            shippingAddressFields: {
+                                street: checkoutPayload.shipping_address.street,
+                                number: checkoutPayload.shipping_address.number,
+                                complement: checkoutPayload.shipping_address.complement || '',
+                                neighborhood: checkoutPayload.shipping_address.neighborhood,
+                                city: checkoutPayload.shipping_address.city,
+                                state: checkoutPayload.shipping_address.state,
+                                zipCode: zipCode
+                            },
+                            paymentMethod,
+                            paymentLabel: paymentLabelMap[paymentMethod] || paymentMethod,
+                            notes,
+                            items: items.map(function(item) {
+                                return {
+                                    title: item.title,
+                                    thumbnail: item.thumbnail || null,
+                                    quantity: item.quantity,
+                                    unitPrice: item.unitPrice
+                                };
+                            }),
+                            subtotal,
+                            supportUrl
+                        });
+
+                        redirectToAssistedConfirmation(assistedOrder);
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = getSubmitButtonHtml();
                         return;
@@ -855,8 +960,12 @@
                     };
 
                     localStorage.setItem('last_order', JSON.stringify(lastOrder));
-                    localStorage.removeItem(CART_KEY);
-                    localStorage.removeItem(LEGACY_CART_KEY);
+                    if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
+                        window.API_CONFIG.persistStoredCartId(null);
+                    } else {
+                        localStorage.removeItem(CART_KEY);
+                        localStorage.removeItem(LEGACY_CART_KEY);
+                    }
                     window.location.href = '/pedido-confirmado?order=' + (lastOrder.order_number || '');
                 } catch (err) {
                     console.error('[CHECKOUT] Erro ao finalizar:', err);
