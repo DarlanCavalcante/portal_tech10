@@ -612,15 +612,62 @@
     }
     @media (max-width: 520px) {
       .pp-controls {
-        grid-template-columns: 1fr;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 8px;
+        padding: 10px 12px;
+        margin-bottom: 14px;
       }
-      .pp-mobile-filter-btn,
-      .pp-sort-select {
-        width: 100%;
+      .pp-header {
+        padding: 10px 12px;
+        gap: 8px;
+      }
+      .pp-logo img {
+        height: 28px;
+      }
+      .pp-back-link {
+        min-height: 34px;
+        padding: 0 10px;
+        font-size: 12px;
+      }
+      .pp-support-pill {
+        min-height: 36px;
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+      .pp-support-pill small {
+        display: none;
+      }
+      .pp-search-input {
+        min-height: 38px;
+        font-size: 12.5px;
+      }
+      .pp-mobile-filter-btn {
+        width: max-content;
         justify-content: center;
+        padding: 7px 10px;
+        min-height: 30px;
+      }
+      .pp-breadcrumb {
+        grid-column: 1 / -1;
+        font-size: 11.5px;
+      }
+      .pp-result-count {
+        justify-self: end;
+        align-self: center;
+        font-size: 11.5px;
       }
       .pp-sort-select {
+        grid-column: 1 / -1;
+        width: 100%;
         justify-self: stretch;
+        font-size: 12px;
+        padding: 7px 10px;
+      }
+      .pp-curation-panel {
+        margin-bottom: 14px;
+      }
+      .pp-quote-banner {
+        margin-bottom: 14px;
       }
       .pp-quote-banner-actions {
         grid-template-columns: 1fr;
