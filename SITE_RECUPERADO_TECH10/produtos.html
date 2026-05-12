@@ -13,6 +13,11 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: #f5f7fa; color: #111; }
+    body:not(.loaded),
+    body.loaded {
+      visibility: visible;
+      animation: none;
+    }
 
     /* ── Header ── */
     .pp-header {
@@ -158,24 +163,6 @@
     }
     @media (max-width: 900px) {
       .pp-layout { grid-template-columns: 1fr; }
-      .pp-sidebar {
-        display: block;
-        position: fixed;
-        top: 0;
-        left: -300px;
-        width: 280px;
-        height: 100vh;
-        max-height: 100vh;
-        border-radius: 0;
-        z-index: 500;
-        transition: left .28s cubic-bezier(.4,0,.2,1);
-        box-shadow: none;
-        overflow-y: auto;
-      }
-      .pp-sidebar.open {
-        left: 0;
-        box-shadow: 4px 0 24px rgba(0,0,0,0.18);
-      }
       .pp-sidebar-overlay {
         display: none;
         position: fixed;
@@ -440,6 +427,24 @@
       .pp-layout {
         padding: 16px 12px 24px;
         gap: 16px;
+      }
+      .pp-sidebar {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 280px;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        z-index: 500;
+        transition: left .28s cubic-bezier(.4,0,.2,1);
+        box-shadow: none;
+        overflow-y: auto;
+      }
+      .pp-sidebar.open {
+        left: 0;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.18);
       }
       .pp-header {
         height: auto;
