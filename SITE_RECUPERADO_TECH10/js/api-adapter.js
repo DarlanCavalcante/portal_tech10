@@ -9,6 +9,7 @@
     veiculos: 'Veículos',
     mouse: 'Mouse',
     cabos: 'Cabos',
+    'redes-equipamentos': 'Redes e Equipamentos',
   };
 
   function slugifyCategoryValue(value) {

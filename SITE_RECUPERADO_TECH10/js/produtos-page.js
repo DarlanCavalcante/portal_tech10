@@ -189,8 +189,8 @@
             { name: 'Nobreaks', handle: 'nobreaks', productCount: 0 },
             { name: 'Estabilizadores', handle: 'estabilizadores', productCount: 0 },
           ]},
-          { name: 'Redes & Conectividade', handle: 'redes-conectividade', children: [
-            { name: 'Roteadores Wi-Fi', handle: 'roteadores-wifi', productCount: 0 },
+          { name: 'Redes e Conectividade', handle: 'redes-conectividade', children: [
+            { name: 'Redes e Equipamentos', handle: 'redes-equipamentos', productCount: 0 },
           ]},
         ]},
       ], listEl);
