@@ -500,6 +500,22 @@
             return 'https://wa.me/' + whatsapp + '?text=' + text;
         }
 
+        function getStoredCartId() {
+            return (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function')
+                ? window.API_CONFIG.readStoredCartId()
+                : localStorage.getItem((window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id')
+                    || localStorage.getItem((window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id');
+        }
+
+        function clearStoredSelection() {
+            if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
+                window.API_CONFIG.persistStoredCartId(null);
+            }
+            if (window.API_CONFIG && typeof window.API_CONFIG.persistAssistedCart === 'function') {
+                window.API_CONFIG.persistAssistedCart(null);
+            }
+        }
+
         function getSubmitButtonHtml() {
             return isQuoteOnlyRuntime(runtimeConfigCache)
                 ? '<i class="fas fa-headset"></i> Enviar para atendimento'
@@ -604,12 +620,7 @@
 
         function redirectToAssistedConfirmation(order) {
             localStorage.setItem('last_order', JSON.stringify(order));
-            if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
-                window.API_CONFIG.persistStoredCartId(null);
-            } else {
-                localStorage.removeItem(CART_KEY);
-                localStorage.removeItem(LEGACY_CART_KEY);
-            }
+            clearStoredSelection();
 
             try {
                 window.open(order.support_url, '_blank', 'noopener,noreferrer');
@@ -753,18 +764,24 @@
 
         // Carregar carrinho para exibir no resumo
         async function loadCartSummary() {
-            cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
+            cartId = getStoredCartId();
             const summaryEl = document.getElementById('cart-summary');
             if (!cartId) {
                 if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhuma seleção ativa no momento. <a href="/loja">Explorar catálogo</a></p></div>';
                 return;
             }
             try {
-                const res = await fetch(getStoreAPI() + '/carts/' + cartId);
-                if (!res.ok) throw new Error('Carrinho não encontrado');
-                const data = await res.json();
-                cart = data.cart;
+                const adapter = window.MarketplaceAdapter;
+                if (adapter && adapter.getCart) {
+                    cart = await adapter.getCart(cartId);
+                } else {
+                    const res = await fetch(getStoreAPI() + '/carts/' + cartId);
+                    if (!res.ok) throw new Error('Carrinho não encontrado');
+                    const data = await res.json();
+                    cart = data.cart;
+                }
                 if (!cart || !cart.items || cart.items.length === 0) {
+                    clearStoredSelection();
                     if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhum item selecionado ainda. <a href="/loja">Explorar catálogo</a></p></div>';
                     return;
                 }
@@ -798,7 +815,7 @@
                     : '<i class="fas fa-spinner fa-spin"></i> Processando...';
                 if (errorDiv) errorDiv.style.display = 'none';
 
-                cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
+                cartId = getStoredCartId();
                 if (!cartId) {
                     showError(isQuoteOnlyRuntime(runtimeConfigCache)
                         ? 'Nenhuma seleção ativa no momento. Volte ao catálogo ou fale com a Tech10 para continuar o fechamento assistido.'
@@ -960,12 +977,7 @@
                     };
 
                     localStorage.setItem('last_order', JSON.stringify(lastOrder));
-                    if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
-                        window.API_CONFIG.persistStoredCartId(null);
-                    } else {
-                        localStorage.removeItem(CART_KEY);
-                        localStorage.removeItem(LEGACY_CART_KEY);
-                    }
+                    clearStoredSelection();
                     window.location.href = '/pedido-confirmado?order=' + (lastOrder.order_number || '');
                 } catch (err) {
                     console.error('[CHECKOUT] Erro ao finalizar:', err);

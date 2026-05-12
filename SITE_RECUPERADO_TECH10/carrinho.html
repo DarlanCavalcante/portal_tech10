@@ -605,6 +605,15 @@
             return localStorage.getItem(cartKey) || localStorage.getItem(legacyCartKey);
         }
 
+        function clearStoredSelection() {
+            if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
+                window.API_CONFIG.persistStoredCartId(null);
+            }
+            if (window.API_CONFIG && typeof window.API_CONFIG.persistAssistedCart === 'function') {
+                window.API_CONFIG.persistAssistedCart(null);
+            }
+        }
+
         function getStoreAPI() {
             return (window.API_CONFIG && window.API_CONFIG.STORE_API) || '/api/store';
         }
@@ -755,17 +764,25 @@
             if (!cartId) { showEmptyCart(); return; }
 
             try {
-                var res = await fetch(getStoreAPI() + '/carts/' + cartId);
-                if (res.status === 404) {
-                    localStorage.removeItem(CART_KEY);
-                    localStorage.removeItem(LEGACY_CART_KEY);
-                    showEmptyCart();
-                    return;
+                var adapter = window.MarketplaceAdapter;
+                var cart = null;
+
+                if (adapter && adapter.getCart) {
+                    cart = await adapter.getCart(cartId);
+                } else {
+                    var res = await fetch(getStoreAPI() + '/carts/' + cartId);
+                    if (res.status === 404) {
+                        clearStoredSelection();
+                        showEmptyCart();
+                        return;
+                    }
+                    if (!res.ok) throw new Error('Erro ' + res.status);
+                    var data = await res.json();
+                    cart = data.cart;
                 }
-                if (!res.ok) throw new Error('Erro ' + res.status);
-                var data = await res.json();
-                var cart = data.cart;
+
                 if (!cart || !cart.items || cart.items.length === 0) {
+                    clearStoredSelection();
                     showEmptyCart();
                 } else {
                     renderCart(cart);

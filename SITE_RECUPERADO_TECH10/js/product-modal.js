@@ -13,7 +13,21 @@
 
   function getRuntimeCommerce() {
     var runtime = global.__tech10_runtime_config || {};
-    return runtime.commerce || { capabilities: { cart: true } };
+    if (runtime.commerce) {
+      return runtime.commerce;
+    }
+    var config = global.API_CONFIG || {};
+    var quoteOnly = (config.CHECKOUT_MODE || 'quote_only') === 'quote_only';
+    return {
+      checkoutMode: config.CHECKOUT_MODE || 'quote_only',
+      capabilities: {
+        cart: !quoteOnly,
+        checkout: !quoteOnly,
+        quoteOnly: quoteOnly,
+        assistedCartBridge: quoteOnly,
+        assistedCheckoutBridge: quoteOnly
+      }
+    };
   }
 
   function isQuoteOnlyMode() {
@@ -22,7 +36,20 @@
     return capabilities.quoteOnly === true || capabilities.cart === false || commerce.checkoutMode === 'quote_only';
   }
 
+  function hasAssistedSelectionBridge() {
+    var commerce = getRuntimeCommerce();
+    var capabilities = commerce.capabilities || {};
+    return isQuoteOnlyMode() && capabilities.assistedCartBridge === true;
+  }
+
   function getModalActionLabels() {
+    if (hasAssistedSelectionBridge()) {
+      return {
+        add: '<i class="fas fa-list-check"></i> Adicionar à seleção',
+        buy: '<i class="fas fa-receipt"></i> Ver minha seleção'
+      };
+    }
+
     if (isQuoteOnlyMode()) {
       return {
         add: '<i class="fas fa-comments"></i> Pedir atendimento',
@@ -435,7 +462,7 @@
 
   async function _addToCart(buyNow) {
     if (!_currentProduct) return;
-    if (isQuoteOnlyMode()) {
+    if (isQuoteOnlyMode() && !hasAssistedSelectionBridge()) {
       var variants = _currentProduct.variants || [];
       var selectedVariant = variants[_selectedVariantIndex] || variants[0];
       var supportUrl = getSupportWhatsappUrl(_currentProduct, selectedVariant, _qty);
@@ -459,17 +486,17 @@
     activeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adicionando...';
 
     try {
-      for (var i = 0; i < qty; i++) {
-        var cart = typeof global.getActiveStorefrontCart === 'function'
-          ? global.getActiveStorefrontCart()
-          : (global.storefrontCart || null);
-        if (cart && cart.addItem) {
-          await cart.addItem(variantId, productId, 1, false);
-        } else if (typeof global.addToStorefrontCart === 'function') {
-          await global.addToStorefrontCart(variantId, productId, false);
-        }
+      var cart = typeof global.getActiveStorefrontCart === 'function'
+        ? global.getActiveStorefrontCart()
+        : (global.storefrontCart || null);
+      if (cart && cart.addItem) {
+        await cart.addItem(variantId, productId, qty, false);
+      } else if (typeof global.addToStorefrontCart === 'function') {
+        await global.addToStorefrontCart(variantId, productId, false, qty);
       }
-      activeBtn.innerHTML = '<i class="fas fa-check"></i> Adicionado!';
+      activeBtn.innerHTML = hasAssistedSelectionBridge() && !buyNow
+        ? '<i class="fas fa-check"></i> Na seleção!'
+        : '<i class="fas fa-check"></i> Adicionado!';
       activeBtn.style.background = '#10b981';
       setTimeout(function () {
         if (buyNow) {
