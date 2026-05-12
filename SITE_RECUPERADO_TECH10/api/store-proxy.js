@@ -76,6 +76,7 @@ module.exports = async function handler(req, res) {
       error: 'TECH10_CHECKOUT_DISABLED',
       message: 'O checkout está em modo quote_only. Publique o catálogo e conclua a venda por atendimento até o backend de pedidos entrar.',
       checkoutMode: env.checkoutMode,
+      assistedCheckoutBridge: capabilities.assistedCheckoutBridge === true,
       supportWhatsappUrl: env.supportWhatsappUrl,
     });
     return;

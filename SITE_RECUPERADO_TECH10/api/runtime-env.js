@@ -100,12 +100,16 @@ function getRuntimeEnv() {
 
 function buildCapabilityModel(env) {
   const browseCatalog = Boolean(env.catalogBackendUrl);
+  const quoteOnly = env.checkoutMode === 'quote_only';
   const cartEnabled = env.checkoutMode === 'store_backend' && Boolean(env.checkoutBackendUrl);
+  const supportConfigured = Boolean(env.supportWhatsapp);
   return {
     browseCatalog,
     cart: cartEnabled,
     checkout: cartEnabled,
-    quoteOnly: env.checkoutMode === 'quote_only',
+    quoteOnly,
+    assistedCartBridge: quoteOnly && browseCatalog,
+    assistedCheckoutBridge: quoteOnly && supportConfigured,
     portalBridge: Boolean(env.portalBaseUrl),
     publicStatus: Boolean(env.statusBaseUrl),
   };

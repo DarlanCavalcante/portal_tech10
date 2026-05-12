@@ -76,7 +76,11 @@
     const statusBaseUrl = integrations.statusBaseUrl || defaults.statusBaseUrl;
     const catalogBackendUrl = integrations.catalogBackendUrl || integrations.storeBackendUrl || 'não configurado';
     const commerce = runtimeConfig.commerce || {};
+    const capabilities = commerce.capabilities || {};
     const checkoutMode = commerce.checkoutMode || 'desconhecido';
+    const assistedBridgeActive = capabilities.assistedCheckoutBridge === true
+      || capabilities.assistedCartBridge === true
+      || checkoutMode === 'quote_only';
 
     note.innerHTML = [
       `Portal: <code>${portalBaseUrl}</code>`,
@@ -84,6 +88,7 @@
       `Catálogo público: <code>${catalogBackendUrl}</code>`,
       `Proxy loja: <code>/api/store/*</code>`,
       `Fluxo comercial: <strong>${checkoutMode === 'quote_only' ? 'atendimento assistido' : checkoutMode}</strong>`,
+      `Ponte assistida: <strong>${assistedBridgeActive ? 'ativa' : 'inativa'}</strong>`,
     ].join('<br>');
 
     if (whatsappButton) {
