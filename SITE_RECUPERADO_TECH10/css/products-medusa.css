@@ -727,27 +727,33 @@
   }
   .lp-card-actions {
     order: 4;
-    gap: 8px;
+    gap: 6px;
     margin: 0 0 8px;
   }
   .lp-qty-ctrl {
-    height: 36px;
+    height: 34px;
+    border-color: #dbe7f5;
+    border-radius: 10px;
+    background: #f8fbff;
   }
   .lp-qty-btn {
-    width: 28px;
-    height: 36px;
-    font-size: 16px;
+    width: 24px;
+    height: 34px;
+    font-size: 14px;
+    color: #2563eb;
+    background: transparent;
   }
   .lp-qty-val {
-    min-width: 28px;
-    font-size: 13px;
+    min-width: 20px;
+    font-size: 12px;
+    padding: 0 3px;
   }
   .lp-btn-add {
     height: 36px;
     font-size: 12px;
     font-weight: 800;
     gap: 5px;
-    padding: 0 10px;
+    padding: 0 12px;
     box-shadow: 0 8px 16px rgba(37, 99, 235, 0.18);
   }
   .lp-btn-add-label--full {
