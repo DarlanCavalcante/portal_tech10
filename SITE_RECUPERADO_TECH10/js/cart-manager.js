@@ -3,9 +3,11 @@
  * Compatibilidade legada do storefront para a Tech10.
  */
 
+const LEGACY_DEEP_CART_STORAGE_KEY = 'medusa_cart_id';
+
 class CartManager {
-  constructor(medusaClient) {
-    this.client = medusaClient;
+  constructor(legacyStorefrontClient) {
+    this.client = legacyStorefrontClient;
     this.cart = null;
     this.updateCallbacks = [];
   }
@@ -214,7 +216,7 @@ class CartManager {
     } else if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
       window.API_CONFIG.persistStoredCartId(null);
     } else {
-      localStorage.removeItem('medusa_cart_id');
+      localStorage.removeItem(LEGACY_DEEP_CART_STORAGE_KEY);
     }
     this.updateUI();
     this.notifyUpdate();

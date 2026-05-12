@@ -3,6 +3,11 @@
  * Mantida apenas como fallback profundo; a jornada principal usa cart-storefront.js.
  */
 
+const LEGACY_DEEP_CART_STORAGE_KEY = 'medusa_cart_id';
+const LEGACY_NOTIFICATION_CLASS = 'legacy-storefront-notification';
+const LEGACY_NOTIFICATION_ANIMATION_IN = 'legacy-storefront-slideIn';
+const LEGACY_NOTIFICATION_ANIMATION_OUT = 'legacy-storefront-slideOut';
+
 function readLegacyCartId() {
     const apiConfig = window.API_CONFIG || {};
     if (typeof apiConfig.readLegacyCartId === 'function') {
@@ -11,7 +16,7 @@ function readLegacyCartId() {
     if (typeof apiConfig.readStoredCartId === 'function') {
         return apiConfig.readStoredCartId();
     }
-    return localStorage.getItem('medusa_cart_id');
+    return localStorage.getItem(LEGACY_DEEP_CART_STORAGE_KEY);
 }
 
 function persistLegacyCartId(value) {
@@ -26,11 +31,11 @@ function persistLegacyCartId(value) {
     }
 
     if (!value) {
-        localStorage.removeItem('medusa_cart_id');
+        localStorage.removeItem(LEGACY_DEEP_CART_STORAGE_KEY);
         return;
     }
 
-    localStorage.setItem('medusa_cart_id', value);
+    localStorage.setItem(LEGACY_DEEP_CART_STORAGE_KEY, value);
 }
 
 class LegacyStorefrontCart {
@@ -276,12 +281,12 @@ class LegacyStorefrontCart {
      */
     showNotification(message, type = 'success') {
         // Remover notificações anteriores
-        const existing = document.querySelectorAll('.medusa-notification');
+        const existing = document.querySelectorAll(`.${LEGACY_NOTIFICATION_CLASS}`);
         existing.forEach(n => n.remove());
         
         // Criar notificação
         const notification = document.createElement('div');
-        notification.className = `medusa-notification ${type}`;
+        notification.className = `${LEGACY_NOTIFICATION_CLASS} ${type}`;
         notification.innerHTML = `
             <div class="notification-content">
                 <span>${message}</span>
@@ -299,7 +304,7 @@ class LegacyStorefrontCart {
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 99999;
-            animation: medusa-slideIn 0.3s ease;
+            animation: ${LEGACY_NOTIFICATION_ANIMATION_IN} 0.3s ease;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
             font-weight: 500;
@@ -310,7 +315,7 @@ class LegacyStorefrontCart {
         
         // Remover após 3 segundos
         setTimeout(() => {
-            notification.style.animation = 'medusa-slideOut 0.3s ease';
+            notification.style.animation = `${LEGACY_NOTIFICATION_ANIMATION_OUT} 0.3s ease`;
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
