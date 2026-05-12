@@ -1,4 +1,11 @@
 // Estado global da aplicação
+function resolveLegacyStoreApiBaseUrl() {
+    if (window.API_CONFIG && window.API_CONFIG.STORE_API) {
+        return window.API_CONFIG.STORE_API;
+    }
+    return `${window.location.origin}/api/store`;
+}
+
 const state = {
     cart: [],
     products: [],
@@ -8,7 +15,7 @@ const state = {
     currentDicaPage: 0,
     dicasPerPage: 3,
     currentScreenSize: 'desktop',
-    apiBaseUrl: window.location.hostname === 'localhost' ? 'http://localhost:9000/store' : '/api'
+    apiBaseUrl: resolveLegacyStoreApiBaseUrl()
 };
 
 // Mapeamento de categorias do banco para slugs do frontend
