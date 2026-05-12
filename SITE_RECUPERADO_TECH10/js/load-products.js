@@ -222,6 +222,10 @@
     return count === 1 ? '1 item' : count + ' itens';
   }
 
+  function formatCatalogCategoryCountLine(count) {
+    return count === 1 ? '1 item público' : count + ' itens públicos';
+  }
+
   function getHomeCatalogIconClass(slug) {
     if (!slug) return 'fas fa-box-open';
     if (slug.indexOf('cabo') !== -1) return 'fas fa-plug';
@@ -250,6 +254,34 @@
       .toLowerCase();
 
     return haystack.indexOf(search) !== -1;
+  }
+
+  function getActiveHomeCatalogFilterSlug(filtersRoot) {
+    var activeButton = filtersRoot && filtersRoot.querySelector('.filter-btn.active');
+    if (activeButton && activeButton.getAttribute('data-filter')) {
+      return activeButton.getAttribute('data-filter');
+    }
+    return 'all';
+  }
+
+  function getHomeCatalogSearchTerm() {
+    var searchInput = global.document && global.document.getElementById('searchInput');
+    return searchInput ? String(searchInput.value || '').trim() : '';
+  }
+
+  function buildHomeCatalogStoreHref(categorySlug, searchTerm) {
+    var tenantRoutes = global.TenantRoutes || {};
+    var shopHome = tenantRoutes.shopHome || '/loja';
+    var url = new URL(shopHome, global.location && global.location.origin ? global.location.origin : 'https://tech10.loja.tech10cloud.com');
+
+    if (categorySlug && categorySlug !== 'all') {
+      url.searchParams.set('category', categorySlug);
+    }
+    if (searchTerm) {
+      url.searchParams.set('search', searchTerm);
+    }
+
+    return url.pathname + url.search;
   }
 
   function syncHomeCatalogFilters(products, containerId) {
@@ -295,6 +327,73 @@
     categories.forEach(function (category) {
       appendButton(category.label, category.slug, currentActive === category.slug, category.count);
     });
+  }
+
+  function syncHomeCatalogFilterContext(products, containerId) {
+    if ((containerId || 'produtosGrid') !== 'produtosGrid') return;
+    if (!global.document) return;
+
+    var contextRoot = global.document.querySelector('[data-home-filter-context]');
+    var filtersRoot = global.document.querySelector('section#produtos .filters');
+    if (!contextRoot || !filtersRoot) return;
+
+    var sourceProducts = getHomeCatalogSourceProducts(products);
+    if (!sourceProducts.length) return;
+
+    var currentFilter = getActiveHomeCatalogFilterSlug(filtersRoot);
+    var currentSearch = getHomeCatalogSearchTerm();
+    var categories = getHomeCatalogCategorySummary(sourceProducts, 8);
+    var activeCategory = currentFilter !== 'all'
+      ? categories.find(function (category) { return category.slug === currentFilter; })
+      : null;
+    var resultCount = Array.isArray(products) ? products.length : 0;
+
+    var eyebrowNode = contextRoot.querySelector('[data-home-filter-context-eyebrow]');
+    var titleNode = contextRoot.querySelector('[data-home-filter-context-title]');
+    var metaNode = contextRoot.querySelector('[data-home-filter-context-meta]');
+    var primaryNode = contextRoot.querySelector('[data-home-filter-context-primary]');
+    var secondaryNode = contextRoot.querySelector('[data-home-filter-context-secondary]');
+
+    var eyebrow = 'Catálogo vivo';
+    var title = formatCatalogCategoryCountLine(sourceProducts.length) + ' em destaque agora';
+    var meta = 'Filtre por categoria na home ou abra a loja completa para seguir com a seleção assistida.';
+    var primaryLabel = 'Ver catálogo completo';
+    var primaryHref = buildHomeCatalogStoreHref(null, currentSearch);
+    var supportMessage = 'Olá! Vim pela home da Tech10 e quero ajuda para escolher um item do catálogo público.';
+
+    if (currentSearch) {
+      eyebrow = 'Busca ativa';
+      title = 'Resultado para "' + currentSearch + '"';
+      meta = formatCatalogCategoryCountLine(resultCount)
+        + (activeCategory ? ' em ' + activeCategory.label : '')
+        + ' para seguir com a seleção assistida na loja.';
+      primaryLabel = resultCount === 1 ? 'Ver item na loja' : 'Ver resultados na loja';
+      primaryHref = buildHomeCatalogStoreHref(activeCategory ? activeCategory.slug : null, currentSearch);
+      supportMessage = 'Olá! Vim pela home da Tech10 e quero ajuda para encontrar "' + currentSearch + '"'
+        + (activeCategory ? ' em ' + activeCategory.label : '')
+        + ' no catálogo público.';
+    } else if (activeCategory) {
+      eyebrow = 'Filtro ativo';
+      title = activeCategory.label + ' em destaque agora';
+      meta = formatCatalogCategoryCountLine(resultCount) + ' em ' + activeCategory.label + ' para seguir com a seleção assistida na loja.';
+      primaryLabel = 'Ver ' + formatCatalogCategoryItemCount(resultCount) + ' de ' + activeCategory.label + ' na loja';
+      primaryHref = buildHomeCatalogStoreHref(activeCategory.slug, null);
+      supportMessage = 'Olá! Vim pela home da Tech10 e quero ajuda para escolher um item de ' + activeCategory.label + ' com atendimento assistido.';
+    }
+
+    if (eyebrowNode) eyebrowNode.textContent = eyebrow;
+    if (titleNode) titleNode.textContent = title;
+    if (metaNode) metaNode.textContent = meta;
+    if (primaryNode) {
+      primaryNode.textContent = primaryLabel;
+      primaryNode.setAttribute('href', primaryHref);
+    }
+    if (secondaryNode) {
+      secondaryNode.setAttribute('data-support-message', supportMessage);
+      if (global.TenantRoutes && typeof global.TenantRoutes.supportUrl === 'function') {
+        secondaryNode.setAttribute('href', global.TenantRoutes.supportUrl(supportMessage));
+      }
+    }
   }
 
   function syncHomeCatalogEntryPoints(products, containerId) {
@@ -828,6 +927,7 @@
       : products;
 
     syncHomeCatalogFilters(products, containerId);
+    syncHomeCatalogFilterContext(renderList, containerId);
     syncHomeCatalogEntryPoints(products, containerId);
     syncHomeCatalogLiveSummary(products, containerId);
     syncHomeCatalogFeaturedProducts(products, containerId);
