@@ -365,6 +365,24 @@
       leaderNode.setAttribute('href', '/loja?category=' + encodeURIComponent(categories[0].slug));
     }
 
+    var primaryCtaNode = global.document.querySelector('[data-home-catalog-primary-cta]');
+    var primaryCtaLabelNode = global.document.querySelector('[data-home-catalog-primary-cta-label]');
+    if (primaryCtaNode) {
+      primaryCtaNode.setAttribute('href', '/loja?category=' + encodeURIComponent(categories[0].slug));
+    }
+    if (primaryCtaLabelNode) {
+      primaryCtaLabelNode.textContent = 'Explorar ' + categories[0].label;
+    }
+
+    var supportCtaNode = global.document.querySelector('[data-home-catalog-support-cta]');
+    if (supportCtaNode) {
+      var supportMessage = 'Olá! Vim pelo catálogo da Tech10 e quero ajuda para escolher um item de ' + categories[0].label + ' com atendimento assistido.';
+      supportCtaNode.setAttribute('data-support-message', supportMessage);
+      if (global.TenantRoutes && typeof global.TenantRoutes.supportUrl === 'function') {
+        supportCtaNode.setAttribute('href', global.TenantRoutes.supportUrl(supportMessage));
+      }
+    }
+
     var summaryNode = global.document.querySelector('[data-home-catalog-summary]');
     if (summaryNode) {
       var categoryNames = categories.map(function (category) { return category.label; });

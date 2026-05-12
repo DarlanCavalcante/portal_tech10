@@ -3089,6 +3089,26 @@ body.loaded {
     transform: scale(1.04);
 }
 
+.cta-banner__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.cta-banner__btn--secondary {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.cta-banner__btn--secondary:hover,
+.cta-banner__btn--secondary:focus-visible {
+    background: rgba(255, 255, 255, 0.22);
+    outline: none;
+}
+
 /* ===================== Produtos Header ===================== */
 .section-header {
     display: flex;
@@ -3839,6 +3859,16 @@ body.loaded {
 
     .cta-banner__meta {
         gap: 8px;
+    }
+
+    .cta-banner__actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .cta-banner__btn {
+        flex: 1 1 220px;
+        justify-content: center;
     }
 
     .cta-banner__pill {
