@@ -349,7 +349,7 @@ function setupEventListeners() {
         searchInput.addEventListener('input', handleSearch);
     }
     
-    // Carrinho - SEMPRE usar carrinho do Medusa
+    // Carrinho - sempre usar a rota canônica do storefront
     const cartIcon = document.getElementById('cartIcon');
     if (cartIcon) {
         const explicitSupportMode = cartIcon.getAttribute('data-cart-link-mode') === 'support';

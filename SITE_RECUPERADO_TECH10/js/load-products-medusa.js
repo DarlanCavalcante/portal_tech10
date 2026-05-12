@@ -213,12 +213,18 @@ function renderProducts(products, containerId = 'produtosGrid') {
       } else if (window.MarketplaceAdapter) {
         // Fallback via adapter storefront
         console.warn('⚠️ Carrinho do storefront não disponível, usando MarketplaceAdapter');
-        let cartId = localStorage.getItem('tech10_storefront_cart_id') || localStorage.getItem('vc_cart_id');
+        let cartId = (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function')
+          ? window.API_CONFIG.readStoredCartId()
+          : localStorage.getItem('tech10_storefront_cart_id') || localStorage.getItem('vc_cart_id');
         if (!cartId) {
           const created = await window.MarketplaceAdapter.createCart();
           cartId = created.cart?.id;
           if (cartId) {
-            localStorage.setItem('tech10_storefront_cart_id', cartId);
+            if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
+              window.API_CONFIG.persistStoredCartId(cartId);
+            } else {
+              localStorage.setItem('tech10_storefront_cart_id', cartId);
+            }
             localStorage.setItem('vc_cart_id', cartId);
           }
         }

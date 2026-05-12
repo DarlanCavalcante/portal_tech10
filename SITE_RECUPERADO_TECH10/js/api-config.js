@@ -38,6 +38,33 @@
 
     LEGACY_CART_STORAGE_KEY: 'vivacommerce_cart_id',
 
+    get CART_STORAGE_KEYS() {
+      return Array.from(new Set([
+        this.CART_STORAGE_KEY,
+        this.LEGACY_CART_STORAGE_KEY
+      ].filter(Boolean)));
+    },
+
+    readStoredCartId() {
+      if (typeof localStorage === 'undefined') return null;
+      for (const key of this.CART_STORAGE_KEYS) {
+        const value = localStorage.getItem(key);
+        if (value) return value;
+      }
+      return null;
+    },
+
+    persistStoredCartId(value) {
+      if (typeof localStorage === 'undefined') return;
+      for (const key of this.CART_STORAGE_KEYS) {
+        if (!value) {
+          localStorage.removeItem(key);
+        } else {
+          localStorage.setItem(key, value);
+        }
+      }
+    },
+
     get ACTIVE_URL() {
       return this.RUNTIME_BASE_URL;
     },

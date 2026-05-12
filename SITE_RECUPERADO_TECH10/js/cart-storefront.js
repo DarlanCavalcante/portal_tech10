@@ -8,24 +8,46 @@
   const PRIMARY_CART_ID_KEY = 'tech10_storefront_cart_id';
   const LEGACY_CART_ID_KEY = 'vivacommerce_cart_id';
 
+  function getCartStorageKeys() {
+    const apiConfig = global.API_CONFIG || {};
+    const configuredKeys = Array.isArray(apiConfig.CART_STORAGE_KEYS)
+      ? apiConfig.CART_STORAGE_KEYS
+      : [apiConfig.CART_STORAGE_KEY, apiConfig.LEGACY_CART_STORAGE_KEY];
+
+    return Array.from(new Set(configuredKeys.concat([PRIMARY_CART_ID_KEY, LEGACY_CART_ID_KEY]).filter(Boolean)));
+  }
+
   function readCartId() {
     try {
-      return localStorage.getItem(PRIMARY_CART_ID_KEY) || localStorage.getItem(LEGACY_CART_ID_KEY);
+      const apiConfig = global.API_CONFIG || {};
+      if (typeof apiConfig.readStoredCartId === 'function') {
+        return apiConfig.readStoredCartId();
+      }
+
+      for (const key of getCartStorageKeys()) {
+        const value = localStorage.getItem(key);
+        if (value) return value;
+      }
     } catch (_) {
-      return null;
     }
+    return null;
   }
 
   function persistCartId(value) {
     try {
-      if (!value) {
-        localStorage.removeItem(PRIMARY_CART_ID_KEY);
-        localStorage.removeItem(LEGACY_CART_ID_KEY);
+      const apiConfig = global.API_CONFIG || {};
+      if (typeof apiConfig.persistStoredCartId === 'function') {
+        apiConfig.persistStoredCartId(value);
         return;
       }
 
-      localStorage.setItem(PRIMARY_CART_ID_KEY, value);
-      localStorage.setItem(LEGACY_CART_ID_KEY, value);
+      for (const key of getCartStorageKeys()) {
+        if (!value) {
+          localStorage.removeItem(key);
+        } else {
+          localStorage.setItem(key, value);
+        }
+      }
     } catch (_) {}
   }
 
