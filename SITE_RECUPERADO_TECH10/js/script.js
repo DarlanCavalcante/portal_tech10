@@ -482,8 +482,15 @@ function createProductCard(product) {
     
     // Determinar caminho da imagem
     let imagePath = product.image;
-    if (product.image && !product.image.startsWith('http') && !product.image.startsWith('/uploads') && !product.image.startsWith('/imagem')) {
-        // Se a imagem não é URL completa e não está em /uploads ou /imagem, assume que está em imagem/
+    const isEmbeddedOrAbsoluteImage = product.image && (
+        product.image.startsWith('http') ||
+        product.image.startsWith('//') ||
+        product.image.startsWith('data:') ||
+        product.image.startsWith('blob:')
+    );
+
+    if (product.image && !isEmbeddedOrAbsoluteImage && !product.image.startsWith('/uploads') && !product.image.startsWith('/imagem')) {
+        // Se a imagem não é URL completa/embutida e não está em /uploads ou /imagem, assume que está em imagem/
         imagePath = `imagem/${product.image}`;
     } else if (product.image && product.image.startsWith('/uploads')) {
         // Imagem já está no formato correto (/uploads/products/...)
@@ -1331,7 +1338,14 @@ function openProductModal(productId) {
     
     // Definir imagem
     let imagePath = product.image || '';
-    if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('/uploads') && !imagePath.startsWith('/imagem')) {
+    const isEmbeddedOrAbsoluteModalImage = imagePath && (
+        imagePath.startsWith('http') ||
+        imagePath.startsWith('//') ||
+        imagePath.startsWith('data:') ||
+        imagePath.startsWith('blob:')
+    );
+
+    if (imagePath && !isEmbeddedOrAbsoluteModalImage && !imagePath.startsWith('/uploads') && !imagePath.startsWith('/imagem')) {
         imagePath = `imagem/${imagePath}`;
     } else if (imagePath && imagePath.startsWith('/imagem')) {
         // Remove a barra inicial se já começa com /imagem
