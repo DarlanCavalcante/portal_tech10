@@ -414,6 +414,14 @@ function setupEventListeners() {
     // Carrinho - SEMPRE usar carrinho do Medusa
     const cartIcon = document.getElementById('cartIcon');
     if (cartIcon) {
+        const explicitSupportMode = cartIcon.getAttribute('data-cart-link-mode') === 'support';
+        const href = cartIcon.getAttribute('href') || '';
+        const isWhatsappSupport = /wa\.me\//i.test(href);
+
+        if (explicitSupportMode || isWhatsappSupport) {
+            return;
+        }
+
         // Remover qualquer handler anterior
         cartIcon.onclick = null;
         // Adicionar nosso handler que sempre redireciona para carrinho Medusa
