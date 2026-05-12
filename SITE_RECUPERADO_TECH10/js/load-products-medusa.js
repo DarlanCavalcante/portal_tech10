@@ -6,7 +6,7 @@
 // Usa MarketplaceAdapter (api-adapter.js) com slug definido em api-config.js
 // A URL base e o slug vêm de window.API_CONFIG — não usar URL legada de storefront.
 
-async function loadProductsFromMedusa() {
+async function loadProductsFromLegacyStorefront() {
   try {
     if (!window.MarketplaceAdapter) {
       throw new Error('MarketplaceAdapter não carregado. Verifique ordem dos scripts.');
@@ -250,8 +250,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
     }
   };
 
-  // Alias legado preservado para superfícies antigas
-  window.addToCartMedusa = window.addToStorefrontCart;
+  publishLegacyStorefrontAliases();
 
   window.requestLegacySupport = function(productId, quantity = 1) {
     const products = window.__tech10_legacy_products || [];
@@ -265,7 +264,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
   // Função para abrir modal do produto
   window.openProductModal = async function(productId) {
     console.log('🖼️ Abrindo modal do produto:', productId);
-    // Buscar produto via adapter (sem URL legada Medusa)
+    // Buscar produto via adapter, sem depender de endpoint legado específico.
     Promise.resolve(window.MarketplaceAdapter
       ? window.MarketplaceAdapter.getProductById(productId)
       : fetch(`${window.API_CONFIG?.STORE_API || '/api/store'}/products/${productId}`).then(r => r.json()).then(d => d.product ? d.product : null)
@@ -462,7 +461,7 @@ if (document.readyState === 'loading') {
 async function init() {
   console.log('🛍️ Carregando produtos via adapter canônico do tenant...');
   
-  const products = await loadProductsFromMedusa();
+  const products = await loadProductsFromLegacyStorefront();
   console.log(`✅ ${products.length} produtos carregados`);
   
   if (products.length === 0) {
@@ -523,6 +522,12 @@ async function init() {
   }, 500);
 }
 
+function publishLegacyStorefrontAliases() {
+  window.addToCartMedusa = window.addToStorefrontCart;
+  window.loadProductsFromMedusa = loadProductsFromLegacyStorefront;
+}
+
 // Exportar para uso global
-window.loadProductsFromMedusa = loadProductsFromMedusa;
+window.loadProductsFromLegacyStorefront = loadProductsFromLegacyStorefront;
+window.loadProductsFromMedusa = loadProductsFromLegacyStorefront;
 window.renderProducts = renderProducts;
