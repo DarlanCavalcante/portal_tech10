@@ -334,7 +334,7 @@
       btn.disabled = true;
       setTimeout(function () {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-comments"></i> Pedir atendimento';
+        btn.innerHTML = '<i class="fab fa-whatsapp"></i> Falar com a Tech10';
       }, 1800);
     }
 
