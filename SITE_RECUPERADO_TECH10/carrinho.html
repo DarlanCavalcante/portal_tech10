@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrinho de Compras - Tech10</title>
+    <title>Compra Assistida - Tech10</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/medusa-cart.css">
     <!-- Desabilitar Service Worker para esta página -->
@@ -140,6 +140,27 @@
         
         .continue-shopping:hover {
             background-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .header-support {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            background: #ecfeff;
+            border: 1px solid rgba(15, 118, 110, 0.18);
+            color: #0f766e;
+        }
+
+        .header-support small {
+            display: block;
+            font-size: 11px;
+            line-height: 1.1;
+            opacity: 0.8;
         }
         
         .cart-item {
@@ -451,17 +472,17 @@
     <div class="checkout-steps">
         <div class="checkout-step active">
             <div class="checkout-step-num">1</div>
-            <span class="checkout-step-label">Carrinho</span>
+            <span class="checkout-step-label">Seleção</span>
         </div>
         <div class="checkout-step-sep"></div>
         <div class="checkout-step">
             <div class="checkout-step-num">2</div>
-            <span class="checkout-step-label">Seus Dados</span>
+            <span class="checkout-step-label">Atendimento</span>
         </div>
         <div class="checkout-step-sep"></div>
         <div class="checkout-step">
             <div class="checkout-step-num">3</div>
-            <span class="checkout-step-label">Confirmação</span>
+            <span class="checkout-step-label">Fechamento</span>
         </div>
     </div>
 
@@ -477,9 +498,9 @@
                 <a href="/portal" class="continue-shopping" style="font-size:14px;" data-tenant-portal-link>
                     <i class="fas fa-receipt"></i> Portal
                 </a>
-                <a href="/carrinho" class="cart-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
+                <a href="/#contato" class="header-support" data-tenant-support-link data-support-primary="true" data-support-message="Olá! Vim pela loja da Tech10 e quero atendimento para concluir uma compra.">
+                    <i class="fab fa-whatsapp"></i>
+                    <span><small>Compra assistida</small>Falar com a Tech10</span>
                 </a>
             </div>
         </div>
@@ -487,16 +508,16 @@
     
     <div class="container">
         <div class="cart-header">
-            <h1><i class="fas fa-shopping-cart"></i> Meu Carrinho</h1>
+            <h1><i class="fas fa-headset"></i> Compra assistida</h1>
             <a href="/loja" class="continue-shopping">
-                <i class="fas fa-arrow-left"></i> Continuar Comprando
+                <i class="fas fa-store"></i> Explorar catálogo
             </a>
         </div>
         
         <div id="cart-content" style="display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start;">
             <div class="loading" style="grid-column:1/-1">
                 <i class="fas fa-spinner"></i>
-                <p style="margin-top: 15px; color: #6b7280;">Carregando carrinho...</p>
+                <p style="margin-top: 15px; color: #6b7280;">Preparando o fluxo de atendimento assistido...</p>
             </div>
         </div>
     </div>
@@ -590,14 +611,17 @@
             var el = getCartEl();
             if (!el) return;
             el.style.display = 'block';
+            var quoteOnly = isQuoteOnlyRuntime(runtimeConfigCache);
+            var supportUrl = buildSupportUrl('Olá! Vim pela loja da Tech10 e quero atendimento para escolher um produto.');
             el.innerHTML = `
                 <div class="empty-cart">
-                    <div class="empty-cart-icon"><i class="fas fa-shopping-cart"></i></div>
-                    <h2>Seu carrinho está vazio</h2>
-                    <p>Explore nossos produtos e encontre o que você precisa!</p>
+                    <div class="empty-cart-icon"><i class="fas fa-headset"></i></div>
+                    <h2>${quoteOnly ? 'Nenhum item selecionado ainda' : 'Seu carrinho está vazio'}</h2>
+                    <p>${quoteOnly ? 'Escolha um produto no catálogo e fale com a Tech10 para confirmar disponibilidade, entrega e pagamento.' : 'Explore nossos produtos e encontre o que você precisa!'}</p>
                     <a href="produtos.html" class="continue-shopping" style="display:inline-flex;margin-top:10px;">
-                        <i class="fas fa-store"></i> Ver Todos os Produtos
+                        <i class="fas fa-store"></i> Explorar catálogo
                     </a>
+                    ${quoteOnly ? `<a href="${supportUrl}" target="_blank" rel="noopener noreferrer" class="continue-shopping" style="display:inline-flex;margin-top:8px;background:#ecfeff;color:#0f766e;"><i class="fab fa-whatsapp"></i> Falar com a Tech10</a>` : ''}
                     <a href="index.html" class="continue-shopping" style="display:inline-flex;margin-top:8px;color:#6b7280;">
                         <i class="fas fa-home"></i> Voltar ao Início
                     </a>
@@ -609,6 +633,7 @@
         function showError(message) {
             var el = getCartEl();
             if (!el) return;
+            var supportUrl = buildSupportUrl('Olá! Vim pela loja da Tech10 e preciso de ajuda para concluir uma compra.');
             el.innerHTML = `
                 <div class="error">
                     <i class="fas fa-exclamation-triangle"></i>
@@ -619,6 +644,7 @@
                     </button>
                     <div style="margin-top:15px;">
                         <a href="index.html" class="continue-shopping">Voltar para Loja</a>
+                        <a href="${supportUrl}" target="_blank" rel="noopener noreferrer" class="continue-shopping" style="background:#ecfeff;color:#0f766e;">Falar com a Tech10</a>
                     </div>
                 </div>
             `;
@@ -628,6 +654,7 @@
             var el = getCartEl();
             if (!el) return;
             if (!cart || !cart.items || cart.items.length === 0) { showEmptyCart(); return; }
+            var quoteOnly = isQuoteOnlyRuntime(runtimeConfigCache);
 
             var subtotal = 0;
             var itemsHtml = '';
@@ -683,22 +710,22 @@
                     </div>
                     <div class="summary-row">
                         <span>Frete:</span>
-                        <span style="color:#10b981;font-weight:600;">Calculado no checkout</span>
+                        <span style="color:#10b981;font-weight:600;">${quoteOnly ? 'Confirmado no atendimento' : 'Calculado no checkout'}</span>
                     </div>
                     <div class="summary-row summary-total">
                         <span>Total estimado:</span>
                         <span>R$ ${formatPrice(total)}</span>
                     </div>
                     <button class="checkout-btn" onclick="proceedToCheckout()">
-                        <i class="fas fa-lock"></i> Finalizar Compra com Segurança
+                        <i class="fas ${quoteOnly ? 'fa-headset' : 'fa-lock'}"></i> ${quoteOnly ? 'Fechar com atendimento' : 'Finalizar Compra com Segurança'}
                     </button>
                     <div class="trust-seals">
-                        <div class="trust-seal"><i class="fas fa-lock"></i> SSL Seguro</div>
-                        <div class="trust-seal"><i class="fas fa-shield-alt"></i> Compra Protegida</div>
-                        <div class="trust-seal"><i class="fas fa-undo"></i> 7 dias devolução</div>
+                        <div class="trust-seal"><i class="fas ${quoteOnly ? 'fa-comments' : 'fa-lock'}"></i> ${quoteOnly ? 'Atendimento assistido' : 'SSL Seguro'}</div>
+                        <div class="trust-seal"><i class="fas fa-shield-alt"></i> ${quoteOnly ? 'Confirmação de estoque' : 'Compra Protegida'}</div>
+                        <div class="trust-seal"><i class="fas ${quoteOnly ? 'fa-credit-card' : 'fa-undo'}"></i> ${quoteOnly ? 'Pagamento alinhado com a Tech10' : '7 dias devolução'}</div>
                     </div>
                     <a href="produtos.html" style="display:block;text-align:center;margin-top:14px;color:#6b7280;font-size:13px;text-decoration:none;">
-                        <i class="fas fa-arrow-left"></i> Continuar Comprando
+                        <i class="fas fa-store"></i> Explorar catálogo
                     </a>
                 </div>
             `;
