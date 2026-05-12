@@ -45,6 +45,18 @@
     return chips;
   }
 
+  function getProductTitleKey(product) {
+    return String(product && product.title ? product.title : '')
+      .trim()
+      .toLowerCase();
+  }
+
+  function isDuplicateTitleProduct(product) {
+    var titleKey = getProductTitleKey(product);
+    var counts = global.__tech10_product_title_counts || {};
+    return Boolean(titleKey && counts[titleKey] > 1);
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Helpers internos
   // ─────────────────────────────────────────────────────────────────────────
@@ -145,6 +157,13 @@
     products = (products || []).map(function (p) {
       return p ? Object.assign({}, p, { categorySlug: toCategorySlug(p.category) }) : p;
     });
+    var titleCounts = {};
+    products.forEach(function (product) {
+      var key = getProductTitleKey(product);
+      if (!key) return;
+      titleCounts[key] = (titleCounts[key] || 0) + 1;
+    });
+    global.__tech10_product_title_counts = titleCounts;
     global.__tech10_products = (global.__tech10_products || []);
     if (offset === 0) {
       global.__tech10_products = products;
@@ -196,6 +215,9 @@
               return '<span class="lp-card-meta-chip"><strong>' + chip.label + ':</strong> ' + String(chip.value).replace(/</g, '&lt;') + '</span>';
             }).join('') + '</div>'
           : '';
+        var duplicateIdentityHtml = isDuplicateTitleProduct(product) && product.metadata && product.metadata.sku
+          ? '<div class="lp-card-identity-note"><i class="fas fa-fingerprint"></i> Identifique este item pelo SKU <strong>' + String(product.metadata.sku).replace(/</g, '&lt;') + '</strong></div>'
+          : '';
         var buttonLabel = cartEnabled
           ? '<i class="fas fa-shopping-cart"></i> Adicionar'
           : '<i class="fas fa-comments"></i> Pedir atendimento';
@@ -211,6 +233,7 @@
             (catName ? '<span class="lp-card-cat">' + catName + '</span>' : '') +
             '<h3 class="lp-card-title" onclick="window.__openProductModal && window.__openProductModal(\'' + pid + '\')">' + (product.title || '').replace(/</g, '&lt;') + '</h3>' +
             metaHtml +
+            duplicateIdentityHtml +
             '<p class="lp-card-desc">' + description.replace(/</g, '&lt;') + '</p>' +
             '<div class="lp-card-price">R$ ' + priceFormatted + '</div>' +
             '<div class="lp-card-stock ' + stockClass + '">' +
