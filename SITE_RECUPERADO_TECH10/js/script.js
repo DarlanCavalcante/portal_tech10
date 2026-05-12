@@ -523,12 +523,14 @@ function formatPrice(price) {
 
 // Filtros
 function handleFilterClick(event) {
-    const filter = event.target.dataset.filter;
+    const button = event.target.closest('.filter-btn');
+    if (!button) return;
+    const filter = button.dataset.filter;
     
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
+    button.classList.add('active');
     
     state.currentFilter = filter;
 
