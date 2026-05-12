@@ -67,6 +67,14 @@
       }
     },
 
+    readLegacyCartId() {
+      return this.readStoredCartId();
+    },
+
+    persistLegacyCartId(value) {
+      this.persistStoredCartId(value);
+    },
+
     get ACTIVE_URL() {
       return this.RUNTIME_BASE_URL;
     },
@@ -81,6 +89,10 @@
 
     get HEALTH() {
       return this.RUNTIME_BASE_URL + (tenantStore.healthPath || '/api/health');
+    },
+
+    resolveLegacyStoreApiBaseUrl() {
+      return this.STORE_API;
     }
   };
 

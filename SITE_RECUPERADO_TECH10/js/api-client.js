@@ -1,5 +1,8 @@
 // Cliente legado para comunicação direta com o storefront.
 function resolveLegacyStoreApiUrl() {
+  if (window.API_CONFIG && typeof window.API_CONFIG.resolveLegacyStoreApiBaseUrl === 'function') {
+    return window.API_CONFIG.resolveLegacyStoreApiBaseUrl();
+  }
   if (window.API_CONFIG && window.API_CONFIG.STORE_API) {
     return window.API_CONFIG.STORE_API;
   }

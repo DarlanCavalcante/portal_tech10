@@ -1,6 +1,6 @@
 /**
  * Cart Manager - Gerenciador de Carrinho
- * Integração com Medusa para Tech10
+ * Compatibilidade legada do storefront para a Tech10.
  */
 
 class CartManager {
@@ -209,7 +209,9 @@ class CartManager {
   clear() {
     this.cart = null;
     this.client.cartId = null;
-    if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
+    if (window.API_CONFIG && typeof window.API_CONFIG.persistLegacyCartId === 'function') {
+      window.API_CONFIG.persistLegacyCartId(null);
+    } else if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
       window.API_CONFIG.persistStoredCartId(null);
     } else {
       localStorage.removeItem('medusa_cart_id');
