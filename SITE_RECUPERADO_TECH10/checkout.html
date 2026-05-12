@@ -644,13 +644,21 @@
             const subtotal = cart.subtotal || cart.items.reduce(function(s,i){ return s + (i.unit_price||0)*(i.quantity||1); }, 0);
             const shippingCost = selectedShippingOption ? selectedShippingOption.cost : 0;
             const total = subtotal + shippingCost;
+            const shippingLabel = selectedShippingOption && selectedShippingOption.method === 'pickup'
+                ? 'Retirada'
+                : 'Entrega';
+            const shippingValue = selectedShippingOption
+                ? (selectedShippingOption.method === 'pickup'
+                    ? 'Retirada na loja'
+                    : (selectedShippingOption.is_free ? 'Grátis' : 'R$ ' + formatPrice(shippingCost)))
+                : 'R$ 0,00';
 
             summaryEl.innerHTML = `
                 <div class="cart-items-list">${itemsHtml}</div>
                 <div class="summary-item"><span>Subtotal</span><span>R$ ${formatPrice(subtotal)}</span></div>
                 <div class="summary-item">
-                    <span>Frete</span>
-                    <span id="shipping-cost-display">${selectedShippingOption ? (selectedShippingOption.is_free ? 'Grátis' : 'R$ ' + formatPrice(shippingCost)) : 'R$ 0,00'}</span>
+                    <span>${shippingLabel}</span>
+                    <span id="shipping-cost-display">${shippingValue}</span>
                 </div>
                 <div class="summary-item summary-total"><span>Total</span><span>R$ ${formatPrice(total)}</span></div>
             `;
