@@ -222,6 +222,23 @@
             font-size: 12px;
             color: #6b7280;
         }
+        .item-context-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .item-context-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 11px;
+            font-weight: 600;
+        }
         .checkout-steps-bar {
             display: flex;
             align-items: center;
@@ -556,7 +573,11 @@
             if (details.items && details.items.length > 0) {
                 lines.push('', '*Seleção*');
                 details.items.forEach(function(item) {
-                    lines.push('- ' + item.title + ' | Qtd: ' + item.quantity + ' | ' + formatCurrencyForMessage(item.unitPrice));
+                    const context = [
+                        item.brand ? 'Marca: ' + item.brand : '',
+                        item.sku ? 'SKU: ' + item.sku : ''
+                    ].filter(Boolean).join(' | ');
+                    lines.push('- ' + item.title + (context ? ' | ' + context : '') + ' | Qtd: ' + item.quantity + ' | ' + formatCurrencyForMessage(item.unitPrice));
                 });
                 lines.push('- Subtotal estimado: ' + formatCurrencyForMessage(details.subtotal));
             }
@@ -610,6 +631,8 @@
                     return {
                         product_name: item.title || 'Produto',
                         product_image: item.thumbnail || null,
+                        brand: item.brand || '',
+                        sku: item.sku || '',
                         quantity: item.quantity || 1,
                         unit_price: item.unitPrice || 0,
                         subtotal: (item.unitPrice || 0) * (item.quantity || 1)
@@ -671,6 +694,26 @@
             return (amount / 100).toFixed(2).replace('.', ',');
         }
 
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderItemContextHtml(item) {
+            const chips = [];
+            if (item && item.brand) {
+                chips.push('<span class="item-context-chip"><strong>Marca:</strong> ' + escapeHtml(item.brand) + '</span>');
+            }
+            if (item && item.sku) {
+                chips.push('<span class="item-context-chip"><strong>SKU:</strong> ' + escapeHtml(item.sku) + '</span>');
+            }
+            return chips.length ? '<div class="item-context-line">' + chips.join('') + '</div>' : '';
+        }
+
         // Buscar CEP via ViaCEP
         async function buscarCEP() {
             const cepInput = document.getElementById('zip_code');
@@ -729,11 +772,16 @@
                     (item.variant && item.variant.product && item.variant.product.images && item.variant.product.images[0] && item.variant.product.images[0].url) ||
                     imgFallback;
                 const itemSubtotal = (item.unit_price || 0) * (item.quantity || 1);
+                const itemContextHtml = renderItemContextHtml({
+                    brand: item.metadata && item.metadata.brand,
+                    sku: item.metadata && item.metadata.sku
+                });
                 return `<div class="cart-item-summary">
                     <img src="${thumb}" alt="${(item.title||'').replace(/"/g,'&quot;')}" onerror="this.src='${imgFallback}'">
                     <div class="cart-item-summary-info">
                         <h4>${item.title || 'Produto'}</h4>
                         <p>Qtd: ${item.quantity} x R$ ${formatPrice(item.unit_price || 0)}</p>
+                        ${itemContextHtml}
                     </div>
                     <div style="font-weight:600;">R$ ${formatPrice(itemSubtotal)}</div>
                 </div>`;
@@ -877,6 +925,8 @@
                             return {
                                 title: item.title || 'Produto',
                                 thumbnail: item.thumbnail || null,
+                                brand: item.metadata && item.metadata.brand ? item.metadata.brand : '',
+                                sku: item.metadata && item.metadata.sku ? item.metadata.sku : '',
                                 quantity: item.quantity || 1,
                                 unitPrice: item.unit_price || 0
                             };
@@ -923,6 +973,8 @@
                                 return {
                                     title: item.title,
                                     thumbnail: item.thumbnail || null,
+                                    brand: item.brand || '',
+                                    sku: item.sku || '',
                                     quantity: item.quantity,
                                     unitPrice: item.unitPrice
                                 };

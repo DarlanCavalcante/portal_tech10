@@ -199,6 +199,25 @@
             color: #10b981;
             margin-bottom: 10px;
         }
+
+        .cart-item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .cart-item-meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 600;
+        }
         
         .quantity-controls {
             display: flex;
@@ -623,6 +642,27 @@
             return (amount / 100).toFixed(2).replace('.', ',');
         }
 
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderItemContextChips(item) {
+            const metadata = (item && item.metadata) || {};
+            const chips = [];
+            if (metadata.brand) {
+                chips.push('<span class="cart-item-meta-chip"><strong>Marca:</strong> ' + escapeHtml(metadata.brand) + '</span>');
+            }
+            if (metadata.sku) {
+                chips.push('<span class="cart-item-meta-chip"><strong>SKU:</strong> ' + escapeHtml(metadata.sku) + '</span>');
+            }
+            return chips.length ? '<div class="cart-item-meta">' + chips.join('') + '</div>' : '';
+        }
+
         function getCartEl() { return document.getElementById('cart-content'); }
         function getCountEl() { return document.getElementById('cartCount'); }
 
@@ -692,6 +732,7 @@
                 subtotal += itemTotal;
                 var itemId = String(item.id || ('item_' + index)).replace(/'/g, "\\'");
                 var itemTitle = String(item.title || 'Produto sem nome').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                var itemMetaHtml = renderItemContextChips(item);
                 var thumbnail = item.thumbnail ||
                     (item.variant && item.variant.product && item.variant.product.images && item.variant.product.images[0] && item.variant.product.images[0].url) ||
                     'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22120%22 height=%22120%22/%3E%3Ctext fill=%22%23999%22 x=%2260%22 y=%2260%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22%3ESem imagem%3C/text%3E%3C/svg%3E';
@@ -701,6 +742,7 @@
                              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22120%22 height=%22120%22/%3E%3Ctext fill=%22%23999%22 x=%2260%22 y=%2260%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22%3ESem imagem%3C/text%3E%3C/svg%3E'">
                         <div class="cart-item-details">
                             <div class="cart-item-title">${itemTitle}</div>
+                            ${itemMetaHtml}
                             <div class="cart-item-price">R$ ${formatPrice(unitPrice)}</div>
                             <div class="quantity-controls">
                                 <button class="quantity-btn" onclick="updateQuantity('${itemId}', ${quantity - 1})" ${quantity <= 1 ? 'disabled' : ''}>
