@@ -574,7 +574,8 @@
 
         function buildSupportUrl(message) {
             const support = (runtimeConfigCache && runtimeConfigCache.support) || {};
-            const whatsapp = support.whatsapp || '55974001960';
+            const company = (window.TenantRoutes && window.TenantRoutes.company) || {};
+            const whatsapp = company.whatsapp || support.whatsapp || '55974001960';
             const text = encodeURIComponent(message || 'Olá! Vim pela loja da Tech10 e preciso de atendimento para concluir minha compra.');
             return 'https://wa.me/' + whatsapp + '?text=' + text;
         }
