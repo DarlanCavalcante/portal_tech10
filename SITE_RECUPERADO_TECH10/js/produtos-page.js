@@ -451,7 +451,9 @@
   }
 
   function _buildCurationPanelState() {
-    var searchTerm = _getCurrentSearchTerm();
+    var searchInput = _getSearchInput();
+    var searchDisplayTerm = searchInput ? String(searchInput.value || '').trim() : '';
+    var searchTerm = searchDisplayTerm.toLowerCase();
     var currentCount = _currentProducts.length;
     var collections = (typeof global.getTech10EditorialCatalogCollections === 'function')
       ? global.getTech10EditorialCatalogCollections(_currentProducts, { useInput: true })
@@ -485,7 +487,7 @@
 
     if (searchTerm) {
       panelState.eyebrow = 'Busca ativa';
-      panelState.title = 'Resultado para "' + searchTerm + '" no catálogo público.';
+      panelState.title = 'Resultado para "' + searchDisplayTerm + '" no catálogo público.';
       panelState.desc = 'Exibindo ' + _formatProductCount(currentCount) + ' com confirmação assistida da Tech10 para disponibilidade, orientação e fechamento seguro.';
       panelState.chips = [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories);
       return panelState;
