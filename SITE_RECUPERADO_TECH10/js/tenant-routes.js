@@ -173,6 +173,16 @@
     });
   }
 
+  function bindSupportLinks() {
+    document.querySelectorAll('[data-tenant-support-link]').forEach(function (link) {
+      const message = link.getAttribute('data-support-message')
+        || 'Olá! Vim pela loja da Tech10 e gostaria de atendimento para concluir uma compra.';
+      link.setAttribute('href', buildSupportUrl(message));
+      link.setAttribute('target', '_blank');
+      link.setAttribute('rel', 'noopener noreferrer');
+    });
+  }
+
   function fetchRuntimeConfig() {
     if (global.__tech10_runtime_config) {
       return Promise.resolve(global.__tech10_runtime_config);
@@ -348,10 +358,15 @@
     const cartEnabled = capabilities.cart !== false;
     const checkoutEnabled = capabilities.checkout !== false;
     const quoteOnly = capabilities.quoteOnly === true || runtimeConfig.commerce.checkoutMode === 'quote_only';
+    const hasPrimarySupportEntry = document.querySelector('[data-tenant-support-link][data-support-primary="true"]');
 
     if (!cartEnabled) {
       document.querySelectorAll('.cart-count, .pp-cart-count').forEach(hideElement);
       document.querySelectorAll('.pp-cart-btn').forEach(function (element) {
+        if (hasPrimarySupportEntry) {
+          hideElement(element);
+          return;
+        }
         convertElementToSupportEntry(
           element,
           'Olá! Vim pela loja da Tech10 e gostaria de atendimento para fechar uma compra.',
@@ -408,6 +423,7 @@
     document.querySelectorAll('[onclick]').forEach(rewriteOnclick);
     rewriteImages();
     bindPortalLinks();
+    bindSupportLinks();
 
     fetchRuntimeConfig().then(function (runtimeConfig) {
       applyCommerceRuntime(runtimeConfig);

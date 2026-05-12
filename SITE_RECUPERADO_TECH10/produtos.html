@@ -107,6 +107,43 @@
       transition: color .15s;
     }
     .pp-back-link:hover { color: #2563eb; }
+    .pp-support-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      height: 44px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ecfeff 0%, #d1fae5 100%);
+      border: 1px solid rgba(15,118,110,0.18);
+      color: #0f766e;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      transition: transform .15s, box-shadow .15s, background .15s;
+      box-shadow: 0 8px 24px rgba(15,118,110,0.08);
+    }
+    .pp-support-pill:hover {
+      background: linear-gradient(135deg, #d1fae5 0%, #bbf7d0 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(15,118,110,0.14);
+      color: #0f766e;
+    }
+    .pp-support-pill small {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #0f766e;
+      opacity: 0.78;
+    }
+    .pp-support-pill span {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
 
     /* ── Layout ── */
     .pp-layout {
@@ -333,6 +370,32 @@
       cursor: pointer;
     }
     @media (max-width: 900px) { .pp-mobile-filter-btn { display: flex; } }
+    @media (max-width: 900px) {
+      .pp-header {
+        height: auto;
+        padding: 14px 16px;
+        align-items: flex-start;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .pp-header-right {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .pp-search-wrap {
+        order: 3;
+        width: 100%;
+      }
+      .pp-search-input {
+        width: 100%;
+      }
+      .pp-support-pill {
+        order: 2;
+        width: 100%;
+        justify-content: center;
+      }
+    }
 
     /* Skeleton loader */
     .pp-skeleton-grid {
@@ -413,6 +476,37 @@
       font-size: 13px;
       line-height: 1.5;
       margin: 0;
+    }
+    .pp-quote-banner-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .pp-quote-banner-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 800;
+      transition: transform .15s, box-shadow .15s, background .15s;
+    }
+    .pp-quote-banner-action.primary {
+      background: #2563eb;
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(37,99,235,0.2);
+    }
+    .pp-quote-banner-action.secondary {
+      background: rgba(255,255,255,0.72);
+      color: #0f766e;
+      border: 1px solid rgba(15,118,110,0.18);
+    }
+    .pp-quote-banner-action:hover {
+      transform: translateY(-1px);
     }
 
     .lp-card-meta {
@@ -516,6 +610,19 @@
       <a href="/portal" class="pp-back-link" data-tenant-portal-link>
         <i class="fas fa-receipt"></i> Portal
       </a>
+      <a
+        href="https://wa.me/55974001960?text=Olá!%20Vim%20pela%20loja%20da%20Tech10%20e%20quero%20ajuda%20para%20escolher%20e%20fechar%20um%20produto."
+        class="pp-support-pill"
+        data-tenant-support-link
+        data-support-primary="true"
+        data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
+      >
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+        <span>
+          <small>Compra assistida</small>
+          Falar com a Tech10
+        </span>
+      </a>
       <div class="pp-search-wrap">
         <i class="fas fa-search pp-search-icon"></i>
         <input type="text" class="pp-search-input" id="pp-search" placeholder="Buscar por produto, marca ou SKU...">
@@ -570,6 +677,21 @@
         <div>
           <strong>Loja em atendimento assistido</strong>
           <p>Os produtos já refletem o estoque público da Tech10. Nesta fase, a confirmação da venda continua pelo atendimento para garantir disponibilidade, orientação técnica e fechamento seguro do pedido.</p>
+          <div class="pp-quote-banner-actions">
+            <a
+              href="https://wa.me/55974001960?text=Olá!%20Vim%20pela%20loja%20da%20Tech10%20e%20quero%20ajuda%20para%20escolher%20e%20fechar%20um%20produto."
+              class="pp-quote-banner-action primary"
+              data-tenant-support-link
+              data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
+            >
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+              Falar com a Tech10
+            </a>
+            <a href="/portal" class="pp-quote-banner-action secondary" data-tenant-portal-link>
+              <i class="fas fa-receipt" aria-hidden="true"></i>
+              Acompanhar minha O.S.
+            </a>
+          </div>
         </div>
       </div>
 
