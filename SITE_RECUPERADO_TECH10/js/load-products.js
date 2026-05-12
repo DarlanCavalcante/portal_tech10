@@ -764,13 +764,18 @@
   function renderProducts(products, containerId) {
     var container = document.getElementById(containerId || 'produtosGrid');
     if (!container) return;
+    var isHomeCatalogGrid = (containerId || 'produtosGrid') === 'produtosGrid'
+      && !!(global.document && global.document.querySelector('[data-home-catalog-featured]'));
+    var renderList = isHomeCatalogGrid && typeof global.getTech10EditorialCatalogCollections === 'function'
+      ? global.getTech10EditorialCatalogCollections(products, { useInput: true }).orderedProducts
+      : products;
 
     syncHomeCatalogFilters(products, containerId);
     syncHomeCatalogEntryPoints(products, containerId);
     syncHomeCatalogLiveSummary(products, containerId);
     syncHomeCatalogFeaturedProducts(products, containerId);
 
-    if (!products || !Array.isArray(products) || products.length === 0) {
+    if (!renderList || !Array.isArray(renderList) || renderList.length === 0) {
       var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';
       container.innerHTML = '<div class="lp-empty"><i class="fas fa-box-open"></i><p>Nenhum produto encontrado nesta categoria.</p><a href="' + emptyShopHref + '" class="lp-empty-link">Ver todos os produtos</a></div>';
       return;
@@ -783,7 +788,7 @@
     var assistedSelectionEnabled = hasAssistedSelectionBridge();
     var cartEnabled = assistedSelectionEnabled || !(capabilities && capabilities.cart === false);
 
-    var html = products
+    var html = renderList
       .filter(function (p) { return p && p.id && p.title; })
       .map(function (product) {
         var variant = product.variants && product.variants[0];
