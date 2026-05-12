@@ -350,6 +350,19 @@
 .lp-card-stock.in-stock { color: #10b981; }
 .lp-card-stock.out-of-stock { color: #ef4444; }
 
+.lp-card-mode-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 /* Ações: qty + botão */
 .lp-card-actions {
   display: flex;
@@ -426,6 +439,14 @@
 .lp-btn-add:disabled {
   background: #9ca3af;
   cursor: not-allowed;
+}
+
+.lp-card-actions.quote-mode {
+  gap: 0;
+}
+
+.lp-card-actions.quote-mode .lp-btn-add {
+  width: 100%;
 }
 
 /* Estado vazio */
