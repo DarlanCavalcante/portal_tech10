@@ -67,7 +67,7 @@
     window.medusaCart = window.medusaCart || cart;
   }
 
-  class CartVivaCommerce {
+  class LegacyCompatibilityCart {
     constructor() {
       this.adapter = global.MarketplaceAdapter;
       this.cartId = readCartId();
@@ -98,7 +98,7 @@
         }
         await this.updateCartCount();
       } catch (err) {
-        console.error('CartVivaCommerce init:', err);
+        console.error('LegacyCompatibilityCart init:', err);
       }
     }
 
@@ -170,6 +170,11 @@
     }
   }
 
-  const cart = new CartVivaCommerce();
+  if (typeof window !== 'undefined') {
+    window.LegacyCompatibilityCart = LegacyCompatibilityCart;
+    window.CartVivaCommerce = window.CartVivaCommerce || LegacyCompatibilityCart;
+  }
+
+  const cart = new LegacyCompatibilityCart();
   publishCompatibilityAliases(cart);
 })(typeof window !== 'undefined' ? window : this);

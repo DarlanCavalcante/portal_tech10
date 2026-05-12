@@ -41,7 +41,7 @@ function persistLegacyCartId(value) {
   localStorage.setItem('medusa_cart_id', value);
 }
 
-class MedusaClient {
+class LegacyStorefrontClient {
   constructor(baseUrl = resolveLegacyStoreApiBaseUrl()) {
     this.baseUrl = baseUrl;
     this.cartId = readLegacyCartId();
@@ -319,7 +319,8 @@ class MedusaClient {
 
 // Exportar para uso global ou módulo
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = MedusaClient;
+  module.exports = LegacyStorefrontClient;
 } else {
-  window.MedusaClient = MedusaClient;
+  window.LegacyStorefrontClient = LegacyStorefrontClient;
+  window.MedusaClient = LegacyStorefrontClient;
 }
