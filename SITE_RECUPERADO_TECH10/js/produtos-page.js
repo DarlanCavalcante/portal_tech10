@@ -421,6 +421,7 @@
     _currentProducts = filtered;
     _offset = 0;
     _syncListingUrlState();
+    _syncCurationPanel();
     _renderPage();
   }
 
@@ -443,6 +444,111 @@
   function _getPrice(p) {
     var v = p.variants && p.variants[0];
     return (v && v.prices && v.prices[0]) ? (v.prices[0].amount || 0) : 0;
+  }
+
+  function _formatProductCount(count) {
+    return count + (count === 1 ? ' produto' : ' produtos');
+  }
+
+  function _buildCurationPanelState() {
+    var searchTerm = _getCurrentSearchTerm();
+    var currentCount = _currentProducts.length;
+    var collections = (typeof global.getTech10EditorialCatalogCollections === 'function')
+      ? global.getTech10EditorialCatalogCollections(_currentProducts, { useInput: true })
+      : { categories: [], featured: [], orderedProducts: _currentProducts.slice() };
+    var categories = collections.categories || [];
+    var featured = collections.featured || [];
+    var topCategories = categories.slice(0, 3).map(function (category) {
+      return category.label + ' · ' + category.count;
+    });
+    var featuredNames = featured
+      .map(function (entry) { return entry && entry.product && entry.product.title; })
+      .filter(Boolean)
+      .slice(0, 2);
+
+    var panelState = {
+      eyebrow: 'Destaques Tech10',
+      title: 'Vitrine editorial baseada no estoque público da Tech10.',
+      desc: 'Abrimos a loja com uma leitura mais diversa do catálogo real para reduzir repetição na primeira dobra e facilitar a triagem comercial.',
+      chips: [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories)
+    };
+
+    if (currentCount === 0) {
+      panelState.eyebrow = searchTerm ? 'Busca sem resultado' : 'Catálogo vazio';
+      panelState.title = searchTerm
+        ? 'Nenhum item público encontrado para "' + searchTerm + '".'
+        : 'Nenhum item público encontrado nesta combinação de filtros.';
+      panelState.desc = 'A Tech10 continua atendendo de forma assistida. Ajuste a busca, volte para outra categoria ou fale com a equipe para confirmar alternativas.';
+      panelState.chips = ['Seleção assistida', 'Atendimento Tech10'];
+      return panelState;
+    }
+
+    if (searchTerm) {
+      panelState.eyebrow = 'Busca ativa';
+      panelState.title = 'Resultado para "' + searchTerm + '" no catálogo público.';
+      panelState.desc = 'Exibindo ' + _formatProductCount(currentCount) + ' com confirmação assistida da Tech10 para disponibilidade, orientação e fechamento seguro.';
+      panelState.chips = [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories);
+      return panelState;
+    }
+
+    if (_activeHandle && _activeHandle !== 'all') {
+      panelState.eyebrow = 'Categoria em foco';
+      panelState.title = _activeLabel + ' com estoque público agora.';
+      panelState.desc = 'Esta leitura mantém a seleção assistida da Tech10 e prioriza os itens mais claros comercialmente dentro da categoria ativa.';
+      panelState.chips = [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories);
+      return panelState;
+    }
+
+    if (_sortValue === 'price-asc') {
+      panelState.eyebrow = 'Menor preço';
+      panelState.title = 'Vitrine ordenada do menor para o maior preço.';
+      panelState.desc = 'Boa para triagem rápida por orçamento, mantendo o mesmo estoque público e o atendimento assistido da Tech10.';
+      return panelState;
+    }
+
+    if (_sortValue === 'price-desc') {
+      panelState.eyebrow = 'Maior preço';
+      panelState.title = 'Vitrine ordenada do maior para o menor preço.';
+      panelState.desc = 'Boa para puxar primeiro os itens de ticket mais alto, sem perder a confirmação assistida no fechamento.';
+      return panelState;
+    }
+
+    if (_sortValue === 'name') {
+      panelState.eyebrow = 'Nome A-Z';
+      panelState.title = 'Vitrine ordenada alfabeticamente.';
+      panelState.desc = 'Boa para localização direta de produto, marca ou SKU, mantendo a mesma leitura do estoque público da Tech10.';
+      return panelState;
+    }
+
+    if (featuredNames.length) {
+      panelState.desc = 'A abertura da vitrine começa com ' + featuredNames.join(' e ') + ' e depois distribui outras categorias ativas para deixar a dobra inicial mais útil e menos repetitiva.';
+    }
+
+    return panelState;
+  }
+
+  function _syncCurationPanel() {
+    var panel = document.getElementById('pp-curation-panel');
+    if (!panel) return;
+
+    var state = _buildCurationPanelState();
+    var eyebrowEl = panel.querySelector('[data-pp-curation-eyebrow]');
+    var titleEl = panel.querySelector('[data-pp-curation-title]');
+    var descEl = panel.querySelector('[data-pp-curation-desc]');
+    var chipsEl = panel.querySelector('[data-pp-curation-chips]');
+
+    if (eyebrowEl) eyebrowEl.textContent = state.eyebrow;
+    if (titleEl) titleEl.textContent = state.title;
+    if (descEl) descEl.textContent = state.desc;
+    if (chipsEl) {
+      chipsEl.innerHTML = '';
+      (state.chips || []).filter(Boolean).forEach(function (chip) {
+        var span = document.createElement('span');
+        span.className = 'pp-curation-chip';
+        span.textContent = chip;
+        chipsEl.appendChild(span);
+      });
+    }
   }
 
   function _slugify(str) {
