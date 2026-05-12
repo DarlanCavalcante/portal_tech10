@@ -446,6 +446,16 @@
     var sourceProducts = getHomeCatalogSourceProducts(products);
     var categories = getHomeCatalogCategorySummary(sourceProducts, 4);
     if (!sourceProducts.length || !categories.length) return;
+    var filtersRoot = global.document.querySelector('section#produtos .filters');
+    var currentFilter = getActiveHomeCatalogFilterSlug(filtersRoot);
+    var currentSearch = getHomeCatalogSearchTerm();
+    var visibleProducts = Array.isArray(products) ? products : [];
+    var visibleCategories = getHomeCatalogCategorySummary(visibleProducts, 4);
+    var activeCategory = currentFilter !== 'all'
+      ? categories.find(function (category) { return category.slug === currentFilter; })
+      : null;
+    var contextualCategory = activeCategory || (currentSearch ? visibleCategories[0] : null);
+    var visibleCount = visibleProducts.length;
 
     var totalItemsNode = global.document.querySelector('[data-home-catalog-total]');
     if (totalItemsNode) {
@@ -498,20 +508,55 @@
 
     var summaryNode = global.document.querySelector('[data-home-catalog-summary]');
     if (summaryNode) {
-      var categoryNames = categories.map(function (category) { return category.label; });
-      summaryNode.textContent = sourceProducts.length + ' itens públicos em ' + categories.length + (categories.length === 1 ? ' categoria' : ' categorias') + '. Destaque agora para ' + categoryNames.join(', ') + '.';
+      if (currentSearch) {
+        summaryNode.textContent = (visibleCount === 0
+          ? 'Nenhum item público encontrado para "' + currentSearch + '". Abra a loja completa ou ajuste a busca para seguir com a seleção assistida.'
+          : formatCatalogCategoryCountLine(visibleCount)
+            + (contextualCategory ? ' em ' + contextualCategory.label : '')
+            + ' para "' + currentSearch + '" no catálogo público. Abra a loja completa ou fale com a Tech10 para seguir com a seleção assistida.');
+      } else if (activeCategory) {
+        summaryNode.textContent = activeCategory.label + ' com ' + formatCatalogCategoryCountLine(visibleCount)
+          + ' em destaque agora. Continue pela home ou abra a loja completa dessa categoria para seguir com a seleção assistida.';
+      } else {
+        var categoryNames = categories.map(function (category) { return category.label; });
+        summaryNode.textContent = sourceProducts.length + ' itens públicos em ' + categories.length + (categories.length === 1 ? ' categoria' : ' categorias') + '. Destaque agora para ' + categoryNames.join(', ') + '.';
+      }
     }
 
     var tagsNode = global.document.querySelector('[data-home-catalog-tags]');
     if (tagsNode) {
       tagsNode.innerHTML = '';
-      categories.forEach(function (category) {
-        var tag = global.document.createElement('a');
-        tag.className = 'catalog-live-tag catalog-live-tag--link';
-        tag.setAttribute('href', '/loja?category=' + encodeURIComponent(category.slug));
-        tag.textContent = category.label + ' · ' + category.count;
+
+      function appendTag(label, href, isActive) {
+        var tag = global.document.createElement(href ? 'a' : 'span');
+        tag.className = 'catalog-live-tag' + (href ? ' catalog-live-tag--link' : '') + (isActive ? ' catalog-live-tag--active' : '');
+        tag.textContent = label;
+        if (href) {
+          tag.setAttribute('href', href);
+        }
         tagsNode.appendChild(tag);
-      });
+      }
+
+      if (currentSearch) {
+        appendTag('Busca ativa · ' + visibleCount, buildHomeCatalogStoreHref(contextualCategory && contextualCategory.slug, currentSearch), true);
+        if (contextualCategory) {
+          appendTag(contextualCategory.label + ' · ' + visibleCount, buildHomeCatalogStoreHref(contextualCategory.slug, currentSearch), false);
+        }
+        appendTag('Catálogo completo · ' + sourceProducts.length, buildHomeCatalogStoreHref(null, null), false);
+      } else if (activeCategory) {
+        appendTag(activeCategory.label + ' · ' + visibleCount, buildHomeCatalogStoreHref(activeCategory.slug, null), true);
+        appendTag('Catálogo completo · ' + sourceProducts.length, buildHomeCatalogStoreHref(null, null), false);
+        categories
+          .filter(function (category) { return category.slug !== activeCategory.slug; })
+          .slice(0, 2)
+          .forEach(function (category) {
+            appendTag(category.label + ' · ' + category.count, buildHomeCatalogStoreHref(category.slug, null), false);
+          });
+      } else {
+        categories.forEach(function (category) {
+          appendTag(category.label + ' · ' + category.count, buildHomeCatalogStoreHref(category.slug, null), false);
+        });
+      }
     }
   }
 
