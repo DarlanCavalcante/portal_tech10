@@ -476,8 +476,12 @@
     var primaryCtaNode = global.document.querySelector('[data-home-catalog-primary-cta]');
     var primaryCtaLabelNode = global.document.querySelector('[data-home-catalog-primary-cta-label]');
     var supportCtaNode = global.document.querySelector('[data-home-catalog-support-cta]');
+    var bannerTitleNode = global.document.querySelector('[data-home-catalog-banner-title]');
+    var sectionTitleNode = global.document.querySelector('[data-home-catalog-section-title]');
     var bannerDescNode = global.document.querySelector('[data-home-catalog-banner-desc]');
     var subtitleNode = global.document.querySelector('[data-home-catalog-subtitle]');
+    var bannerTitle = 'Catálogo Tech10 disponível';
+    var sectionTitle = 'Produtos em Destaque';
     var bannerDesc = categories[0].label + ' lidera o catálogo agora, com ' + formatCatalogCategoryItemCount(categories[0].count) + ' e fechamento assistido para concluir com segurança.';
     var subtitle = 'Comece por ' + categories[0].label + ' ou filtre o catálogo público para seguir com a seleção assistida da Tech10.';
     var leaderLabel = 'Categoria em foco: ' + categories[0].label;
@@ -488,6 +492,8 @@
 
     if (currentSearch) {
       var resolvedSearchCategory = contextualCategory ? contextualCategory.label : 'Catálogo';
+      bannerTitle = 'Busca ativa no catálogo';
+      sectionTitle = visibleCount === 1 ? 'Resultado em Destaque' : 'Resultados em Destaque';
       bannerDesc = 'Busca ativa para "' + currentSearch + '" com ' + formatCatalogCategoryItemCount(visibleCount) + ' no catálogo público'
         + (contextualCategory ? ' em ' + resolvedSearchCategory : '')
         + ' e seleção assistida para seguir com segurança.';
@@ -508,6 +514,8 @@
         categoryCountNode.textContent = contextualCategory ? contextualCategory.label : 'Busca no catálogo';
       }
     } else if (activeCategory) {
+      bannerTitle = activeCategory.label + ' em foco';
+      sectionTitle = activeCategory.label + ' em Destaque';
       bannerDesc = activeCategory.label + ' está em foco agora, com ' + formatCatalogCategoryItemCount(visibleCount) + ' no catálogo público e atendimento assistido para seguir com segurança.';
       subtitle = 'Veja os ' + formatCatalogCategoryItemCount(visibleCount) + ' de ' + activeCategory.label + ' ou abra a loja completa dessa categoria para continuar com a seleção assistida da Tech10.';
       leaderLabel = activeCategory.label + ' em foco';
@@ -523,6 +531,12 @@
       }
     }
 
+    if (bannerTitleNode) {
+      bannerTitleNode.textContent = bannerTitle;
+    }
+    if (sectionTitleNode) {
+      sectionTitleNode.textContent = sectionTitle;
+    }
     if (leaderNode) {
       leaderNode.textContent = leaderLabel;
       leaderNode.setAttribute('href', leaderHref);
