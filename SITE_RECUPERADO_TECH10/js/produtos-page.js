@@ -422,6 +422,7 @@
     _offset = 0;
     _syncListingUrlState();
     _syncCurationPanel();
+    _syncQuoteBanner();
     _renderPage();
   }
 
@@ -529,6 +530,46 @@
     return panelState;
   }
 
+  function _buildQuoteBannerState() {
+    var searchInput = _getSearchInput();
+    var searchDisplayTerm = searchInput ? String(searchInput.value || '').trim() : '';
+    var searchTerm = searchDisplayTerm.toLowerCase();
+    var currentCount = _currentProducts.length;
+    var state = {
+      eyebrow: 'Próximo passo',
+      title: 'Feche com atendimento assistido da Tech10',
+      desc: 'Escolha o item na vitrine e confirme pelo WhatsApp para disponibilidade, orientação técnica e fechamento seguro. Se já tem O.S., acompanhe tudo pelo portal.',
+      primaryLabel: 'Falar com a Tech10',
+      supportMessage: 'Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto.'
+    };
+
+    if (searchTerm) {
+      state.eyebrow = 'Resultado em atendimento';
+      state.title = currentCount === 1
+        ? 'Confirme este item com a Tech10'
+        : 'Confirme estes resultados com a Tech10';
+      state.desc = 'Use o WhatsApp para validar disponibilidade, orientação técnica e fechamento assistido'
+        + (searchDisplayTerm ? ' para "' + searchDisplayTerm + '"' : '')
+        + (currentCount ? ', com ' + _formatProductCount(currentCount) + ' visíveis na vitrine.' : '.');
+      state.primaryLabel = currentCount === 1 ? 'Falar sobre este item' : 'Falar sobre estes itens';
+      state.supportMessage = 'Olá! Vim pela loja da Tech10 e quero ajuda para confirmar'
+        + (searchDisplayTerm ? ' "' + searchDisplayTerm + '"' : ' um item da vitrine')
+        + ' com atendimento assistido.';
+      return state;
+    }
+
+    if (_activeHandle && _activeHandle !== 'all') {
+      state.eyebrow = 'Categoria ativa';
+      state.title = 'Feche ' + _activeLabel + ' com a Tech10';
+      state.desc = 'A categoria ' + _activeLabel + ' está em foco com ' + _formatProductCount(currentCount)
+        + ' visíveis. Use o WhatsApp para confirmar disponibilidade, orientação técnica e fechamento assistido.';
+      state.primaryLabel = 'Falar sobre ' + _activeLabel;
+      state.supportMessage = 'Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um item de ' + _activeLabel + '.';
+    }
+
+    return state;
+  }
+
   function _syncCurationPanel() {
     var panel = document.getElementById('pp-curation-panel');
     if (!panel) return;
@@ -550,6 +591,29 @@
         span.textContent = chip;
         chipsEl.appendChild(span);
       });
+    }
+  }
+
+  function _syncQuoteBanner() {
+    var banner = document.getElementById('pp-quote-banner');
+    if (!banner) return;
+
+    var state = _buildQuoteBannerState();
+    var eyebrowEl = banner.querySelector('[data-pp-quote-eyebrow]');
+    var titleEl = banner.querySelector('[data-pp-quote-title]');
+    var descEl = banner.querySelector('[data-pp-quote-desc]');
+    var primaryLink = banner.querySelector('[data-tenant-support-link]');
+    var primaryLabelEl = banner.querySelector('[data-pp-quote-primary-label]');
+
+    if (eyebrowEl) eyebrowEl.textContent = state.eyebrow;
+    if (titleEl) titleEl.textContent = state.title;
+    if (descEl) descEl.textContent = state.desc;
+    if (primaryLabelEl) primaryLabelEl.textContent = state.primaryLabel;
+    if (primaryLink) {
+      primaryLink.setAttribute('data-support-message', state.supportMessage);
+      if (global.TenantRoutes && typeof global.TenantRoutes.supportUrl === 'function') {
+        primaryLink.setAttribute('href', global.TenantRoutes.supportUrl(state.supportMessage));
+      }
     }
   }
 
