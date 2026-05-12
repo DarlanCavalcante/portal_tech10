@@ -648,18 +648,23 @@
   }
   .lp-card-body {
     padding: 12px 12px 14px;
+    display: flex;
+    flex-direction: column;
   }
   .lp-card-cat {
+    order: 1;
     margin-bottom: 8px;
     padding: 4px 8px;
     font-size: 10px;
   }
   .lp-card-title {
+    order: 2;
     font-size: 14px;
     min-height: 36px;
     margin-bottom: 6px;
   }
   .lp-card-meta {
+    order: 6;
     gap: 4px;
     margin: 0 0 8px;
   }
@@ -680,14 +685,18 @@
     letter-spacing: -0.01em;
   }
   .lp-card-identity-note {
+    order: 7;
     margin: 0 0 8px;
     padding: 6px 8px;
     font-size: 10px;
   }
   .lp-card-desc {
+    order: 5;
+    flex: 0 0 auto;
     font-size: 12px;
-    line-height: 1.4;
-    min-height: 18px;
+    line-height: 1.3;
+    min-height: auto;
+    max-height: calc(1.3em + 1px);
     -webkit-line-clamp: 1;
     margin: 0 0 8px;
   }
@@ -696,15 +705,17 @@
     padding: 6px 8px;
   }
   .lp-card-commerce {
+    order: 3;
     gap: 6px;
-    margin: 2px 0 6px;
+    margin: 0 0 8px;
   }
   .lp-card-stock {
     font-size: 10.5px;
   }
   .lp-card-mode-note {
+    order: 8;
     gap: 5px;
-    margin: 0 0 10px;
+    margin: 0;
     padding: 6px 8px;
     font-size: 10.5px;
     white-space: nowrap;
@@ -712,7 +723,9 @@
     text-overflow: ellipsis;
   }
   .lp-card-actions {
+    order: 4;
     gap: 8px;
+    margin: 0 0 8px;
   }
   .lp-qty-ctrl {
     height: 36px;
