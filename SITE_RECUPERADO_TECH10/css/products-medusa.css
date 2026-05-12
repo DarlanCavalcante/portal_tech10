@@ -615,6 +615,105 @@
   .lp-qty-btn { width: 30px; }
 }
 
+@media (max-width: 520px) {
+  #produtosGrid,
+  .lp-grid {
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .lp-card {
+    border-radius: 14px;
+  }
+  .lp-card-img {
+    height: 148px;
+    padding: 8px;
+  }
+  .lp-card-img::after {
+    inset: 8px;
+    border-radius: 12px;
+  }
+  .lp-card-img--portrait img {
+    padding: 6px 14px;
+  }
+  .lp-card-img--square img {
+    padding: 8px 12px;
+  }
+  .lp-card-body {
+    padding: 12px 12px 14px;
+  }
+  .lp-card-cat {
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  .lp-card-title {
+    font-size: 14px;
+    min-height: 36px;
+    margin-bottom: 6px;
+  }
+  .lp-card-meta {
+    gap: 4px;
+    margin: 0 0 8px;
+  }
+  .lp-card-meta-chip {
+    max-width: 100%;
+    font-size: 10px;
+    padding: 3px 6px;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .lp-card-identity-note {
+    margin: 0 0 8px;
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+  .lp-card-desc {
+    font-size: 12px;
+    line-height: 1.4;
+    min-height: 18px;
+    -webkit-line-clamp: 1;
+    margin: 0 0 8px;
+  }
+  .lp-card-price {
+    font-size: 17px;
+    padding: 6px 8px;
+    margin: 4px 0 5px;
+  }
+  .lp-card-stock {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .lp-card-mode-note {
+    gap: 5px;
+    margin: 0 0 10px;
+    padding: 6px 8px;
+    font-size: 10.5px;
+  }
+  .lp-card-actions {
+    gap: 8px;
+  }
+  .lp-qty-ctrl {
+    height: 36px;
+  }
+  .lp-qty-btn {
+    width: 28px;
+    height: 36px;
+    font-size: 16px;
+  }
+  .lp-qty-val {
+    min-width: 28px;
+    font-size: 13px;
+  }
+  .lp-btn-add {
+    height: 36px;
+    font-size: 11.5px;
+    gap: 5px;
+    padding: 0 10px;
+  }
+}
+
 /* ── Animação fadeInUp para cards ── */
 @keyframes lp-fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
