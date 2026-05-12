@@ -18,7 +18,22 @@
 
   function isQuoteOnlyMode() {
     var commerce = getRuntimeCommerce();
-    return commerce.capabilities && commerce.capabilities.cart === false;
+    var capabilities = commerce.capabilities || {};
+    return capabilities.quoteOnly === true || capabilities.cart === false || commerce.checkoutMode === 'quote_only';
+  }
+
+  function getModalActionLabels() {
+    if (isQuoteOnlyMode()) {
+      return {
+        add: '<i class="fas fa-comments"></i> Pedir atendimento',
+        buy: '<i class="fab fa-whatsapp"></i> Falar no WhatsApp'
+      };
+    }
+
+    return {
+      add: '<i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho',
+      buy: '<i class="fas fa-bolt"></i> Comprar Agora'
+    };
   }
 
   function getSupportWhatsappUrl(product) {
@@ -59,6 +74,7 @@
   function _injectModal() {
     if (document.getElementById(MODAL_ID)) return;
 
+    var actionLabels = getModalActionLabels();
     var el = document.createElement('div');
     el.id = MODAL_ID;
     el.setAttribute('role', 'dialog');
@@ -118,10 +134,10 @@
             // Botões
             '<div class="pm-btns">',
               '<button class="pm-btn-add" id="pm-btn-add" type="button">',
-                '<i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho',
+                actionLabels.add,
               '</button>',
               '<button class="pm-btn-buy" id="pm-btn-buy" type="button">',
-                '<i class="fas fa-bolt"></i> Comprar Agora',
+                actionLabels.buy,
               '</button>',
             '</div>',
             // WhatsApp tirar dúvida
@@ -381,13 +397,9 @@
     var buyBtn = document.getElementById('pm-btn-buy');
     var quoteOnly = isQuoteOnlyMode();
 
-    if (quoteOnly) {
-      addBtn.innerHTML = '<i class="fas fa-comments"></i> Pedir atendimento';
-      buyBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Falar no WhatsApp';
-    } else {
-      addBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho';
-      buyBtn.innerHTML = '<i class="fas fa-bolt"></i> Comprar Agora';
-    }
+    var actionLabels = getModalActionLabels();
+    addBtn.innerHTML = actionLabels.add;
+    buyBtn.innerHTML = actionLabels.buy;
 
     addBtn.disabled = !isInStock;
     buyBtn.disabled = !isInStock;
@@ -442,14 +454,14 @@
         } else {
           activeBtn.disabled = false;
           activeBtn.style.background = '';
-          activeBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho';
+          activeBtn.innerHTML = getModalActionLabels().add;
         }
       }, 800);
     } catch (err) {
       console.error('[product-modal] addToCart error:', err);
       activeBtn.disabled = false;
       activeBtn.style.background = '';
-      activeBtn.innerHTML = buyNow ? '<i class="fas fa-bolt"></i> Comprar Agora' : '<i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho';
+      activeBtn.innerHTML = buyNow ? getModalActionLabels().buy : getModalActionLabels().add;
     }
   }
 
