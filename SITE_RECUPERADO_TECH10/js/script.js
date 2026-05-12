@@ -283,27 +283,29 @@ async function initializeApp() {
       if (hasCards) return;
 
       try {
+        var hasCanonicalStorefrontLoader =
+          typeof window.loadProductsFromAPI === 'function' &&
+          typeof window.renderProductsFromAPI === 'function';
+
+        if (hasCanonicalStorefrontLoader) {
+          var canonicalProducts = await window.loadProductsFromAPI();
+          if (canonicalProducts.length > 0) {
+            window.renderProductsFromAPI(canonicalProducts, 'produtosGrid');
+            return;
+          }
+        }
+
         var apiProducts = typeof loadProductsFromAPI === 'function' ? await loadProductsFromAPI() : [];
         if (apiProducts.length > 0) {
-          state.products = apiProducts.map(function(p) {
-            return Object.assign({}, p, {
-              name: p.title || p.name || 'Produto',
-              price: (p.variants && p.variants[0] && p.variants[0].prices && p.variants[0].prices[0] && p.variants[0].prices[0].amount || 0) / 100,
-              oldPrice: null,
-              category: p.categorySlug || 'outros',
-              image: p.thumbnail || null,
-              inStock: (p.variants && p.variants[0] ? p.variants[0].inventory_quantity : 0) > 0,
-              badge: null,
-              description: (p.description || '').substring(0, 100)
-            });
-          });
+          state.products = apiProducts;
           state.filteredProducts = state.products;
           renderProducts();
-        } else {
-          state.products = productsData;
-          state.filteredProducts = productsData;
-          renderProducts();
+          return;
         }
+
+        state.products = productsData;
+        state.filteredProducts = productsData;
+        renderProducts();
       } catch (e) {
         state.products = productsData;
         state.filteredProducts = productsData;
