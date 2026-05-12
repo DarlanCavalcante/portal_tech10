@@ -53,6 +53,15 @@
     }
   }
 
+  function buildSupportUrl(runtimeConfig, message) {
+    const support = (runtimeConfig && runtimeConfig.support) || {};
+    const tenantRoutes = global.TenantRoutes || {};
+    const company = tenantRoutes.company || {};
+    const whatsapp = String(company.whatsapp || support.whatsapp || defaults.whatsapp).replace(/\D/g, '');
+    const text = encodeURIComponent(message || 'Olá! Vim pelo portal da Tech10 e preciso de ajuda com uma ordem de serviço.');
+    return 'https://wa.me/' + whatsapp + '?text=' + text;
+  }
+
   function updateRuntimeInfo(runtimeConfig) {
     const note = document.getElementById('runtime-note');
     const whatsappButton = document.getElementById('whatsapp-support-btn');
@@ -62,28 +71,24 @@
     const integrations = runtimeConfig.integrations || {};
     const portalBaseUrl = integrations.portalBaseUrl || defaults.portalBaseUrl;
     const statusBaseUrl = integrations.statusBaseUrl || defaults.statusBaseUrl;
-    const storeBackendUrl = integrations.storeBackendUrl || 'não configurado';
+    const catalogBackendUrl = integrations.catalogBackendUrl || integrations.storeBackendUrl || 'não configurado';
     const commerce = runtimeConfig.commerce || {};
     const checkoutMode = commerce.checkoutMode || 'desconhecido';
-    const whatsapp = runtimeConfig.support && runtimeConfig.support.whatsapp
-      ? runtimeConfig.support.whatsapp
-      : defaults.whatsapp;
-    const supportUrl = `https://wa.me/${whatsapp}`;
 
     note.innerHTML = [
       `Portal: <code>${portalBaseUrl}</code>`,
       `Status: <code>${statusBaseUrl}</code>`,
-      `Backend da loja: <code>${storeBackendUrl}</code>`,
+      `Catálogo público: <code>${catalogBackendUrl}</code>`,
       `Proxy loja: <code>/api/store/*</code>`,
       `Fluxo comercial: <strong>${checkoutMode === 'quote_only' ? 'atendimento assistido' : checkoutMode}</strong>`,
     ].join('<br>');
 
     if (whatsappButton) {
-      whatsappButton.href = supportUrl;
+      whatsappButton.href = buildSupportUrl(runtimeConfig, whatsappButton.getAttribute('data-support-message'));
     }
 
     if (topbarSupportLink) {
-      topbarSupportLink.href = supportUrl;
+      topbarSupportLink.href = buildSupportUrl(runtimeConfig, topbarSupportLink.getAttribute('data-support-message'));
     }
   }
 
