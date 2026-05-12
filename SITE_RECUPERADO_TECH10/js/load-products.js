@@ -804,7 +804,12 @@
         var metaChips = getProductMetaChips(product);
         var metaHtml = metaChips.length
           ? '<div class="lp-card-meta">' + metaChips.map(function (chip) {
-              return '<span class="lp-card-meta-chip"><strong>' + chip.label + ':</strong> ' + String(chip.value).replace(/</g, '&lt;') + '</span>';
+              var chipModifierClass = chip.label === 'SKU'
+                ? ' lp-card-meta-chip--sku'
+                : chip.label === 'Marca'
+                  ? ' lp-card-meta-chip--brand'
+                  : '';
+              return '<span class="lp-card-meta-chip' + chipModifierClass + '"><strong>' + chip.label + ':</strong> ' + String(chip.value).replace(/</g, '&lt;') + '</span>';
             }).join('') + '</div>'
           : '';
         var supportNoteHtml = assistedSelectionEnabled
@@ -837,10 +842,12 @@
             metaHtml +
             duplicateIdentityHtml +
             '<p class="lp-card-desc">' + description.replace(/</g, '&lt;') + '</p>' +
-            '<div class="lp-card-price">R$ ' + priceFormatted + '</div>' +
-            '<div class="lp-card-stock ' + stockClass + '">' +
-              '<i class="fas ' + (isInStock ? 'fa-check-circle' : 'fa-times-circle') + '"></i>' +
-              '<span>' + stockText + '</span>' +
+            '<div class="lp-card-commerce">' +
+              '<div class="lp-card-price">R$ ' + priceFormatted + '</div>' +
+              '<div class="lp-card-stock ' + stockClass + '">' +
+                '<i class="fas ' + (isInStock ? 'fa-check-circle' : 'fa-times-circle') + '"></i>' +
+                '<span>' + stockText + '</span>' +
+              '</div>' +
             '</div>' +
             supportNoteHtml +
             '<div class="lp-card-actions ' + (cartEnabled ? 'cart-mode' : 'quote-mode') + '">' +
