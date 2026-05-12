@@ -228,14 +228,14 @@
     <div class="confirmation-container">
         <div id="loading" class="loading">
             <i class="fas fa-spinner fa-spin fa-3x"></i>
-            <p style="margin-top: 20px;">Carregando informações do pedido...</p>
+            <p style="margin-top: 20px;">Preparando as informações do fechamento...</p>
         </div>
 
         <div id="error" class="error" style="display: none;">
             <i class="fas fa-exclamation-triangle fa-2x" style="margin-bottom: 15px;"></i>
             <p id="error-message"></p>
-            <a href="index.html" class="btn btn-primary" style="margin-top: 20px; display: inline-block;">
-                Voltar para a Loja
+            <a href="/loja" class="btn btn-primary" style="margin-top: 20px; display: inline-block;">
+                Voltar ao catálogo
             </a>
         </div>
 
@@ -303,16 +303,18 @@
             </div>
 
             <div class="actions">
-                <a href="index.html" class="btn btn-primary">
-                    <i class="fas fa-home"></i> Voltar para a Loja
+                <a href="/portal" class="btn btn-primary">
+                    <i class="fas fa-receipt"></i> Portal do cliente
                 </a>
-                <a href="index.html" class="btn btn-secondary">
-                    <i class="fas fa-list"></i> Ver Mais Produtos
+                <a href="/loja" class="btn btn-secondary">
+                    <i class="fas fa-store"></i> Ver mais produtos
                 </a>
             </div>
         </div>
     </div>
 
+    <script src="js/tenant-config.js"></script>
+    <script src="js/tenant-routes.js"></script>
     <script>
         const RUNTIME_CONFIG_PATH = '/api/runtime-config';
 
@@ -348,11 +350,12 @@
             return commerce.checkoutMode === 'quote_only' || capabilities.quoteOnly === true;
         }
 
-        function buildSupportUrl(runtimeConfig) {
+        function buildSupportUrl(runtimeConfig, message) {
             const support = (runtimeConfig && runtimeConfig.support) || {};
-            const whatsapp = String(support.whatsapp || '55974001960').replace(/\D/g, '');
-            const message = encodeURIComponent('Olá! Vim da loja da Tech10 e quero confirmar um pedido por atendimento assistido.');
-            return 'https://wa.me/' + whatsapp + '?text=' + message;
+            const company = (window.TenantRoutes && window.TenantRoutes.company) || {};
+            const whatsapp = String(company.whatsapp || support.whatsapp || '55974001960').replace(/\D/g, '');
+            const text = encodeURIComponent(message || 'Olá! Vim da loja da Tech10 e quero confirmar um pedido por atendimento assistido.');
+            return 'https://wa.me/' + whatsapp + '?text=' + text;
         }
 
         function formatAddress(address) {
@@ -418,7 +421,10 @@
                         <i class="fab fa-whatsapp"></i> Falar com a Tech10
                     </a>
                     <a href="/loja" class="btn btn-secondary">
-                        <i class="fas fa-store"></i> Voltar para a loja
+                        <i class="fas fa-store"></i> Explorar catálogo
+                    </a>
+                    <a href="/portal" class="btn btn-secondary">
+                        <i class="fas fa-receipt"></i> Portal do cliente
                     </a>
                 </div>
             `;
