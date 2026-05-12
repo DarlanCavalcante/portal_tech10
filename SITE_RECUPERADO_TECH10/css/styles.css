@@ -3276,6 +3276,36 @@ body.loaded {
     font-weight: 800;
 }
 
+.catalog-spotlight-card__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    border: 1px solid #dbe7f5;
+    background: rgba(255, 255, 255, 0.92);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.catalog-spotlight-card__stock--in {
+    color: #047857;
+    border-color: rgba(16, 185, 129, 0.22);
+    background: rgba(236, 253, 245, 0.96);
+}
+
+.catalog-spotlight-card__stock--low {
+    color: #b45309;
+    border-color: rgba(245, 158, 11, 0.24);
+    background: rgba(255, 251, 235, 0.96);
+}
+
+.catalog-spotlight-card__stock--out {
+    color: #b91c1c;
+    border-color: rgba(239, 68, 68, 0.22);
+    background: rgba(254, 242, 242, 0.96);
+}
+
 .catalog-spotlight-card__cta {
     display: inline-flex;
     align-items: center;
@@ -3851,6 +3881,11 @@ body.loaded {
 
     .catalog-spotlight-card__price {
         font-size: 1rem;
+    }
+
+    .catalog-spotlight-card__stock {
+        font-size: 0.76rem;
+        padding: 6px 10px;
     }
 
     .catalog-live-tags {

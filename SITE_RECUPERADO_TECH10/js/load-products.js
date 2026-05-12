@@ -523,9 +523,32 @@
     return '/loja?search=' + encodeURIComponent(searchTerm);
   }
 
+  function getSpotlightStockState(product) {
+    var inventoryQty = getProductInventoryAmount(product);
+    if (inventoryQty <= 0) {
+      return {
+        label: 'Fora de estoque',
+        className: 'catalog-spotlight-card__stock catalog-spotlight-card__stock--out',
+        iconClass: 'fa-times-circle'
+      };
+    }
+    if (inventoryQty <= 5) {
+      return {
+        label: 'Últimas ' + inventoryQty + ' un.',
+        className: 'catalog-spotlight-card__stock catalog-spotlight-card__stock--low',
+        iconClass: 'fa-fire'
+      };
+    }
+    return {
+      label: 'Em estoque',
+      className: 'catalog-spotlight-card__stock catalog-spotlight-card__stock--in',
+      iconClass: 'fa-check-circle'
+    };
+  }
+
   function buildSpotlightDescription(product, badgeLabel, categoryLabel) {
     var metadata = product && product.metadata ? product.metadata : {};
-    var price = getProductPriceAmount(product);
+    var stockState = getSpotlightStockState(product);
     var parts = [];
 
     if (badgeLabel === 'Categoria em foco' && categoryLabel) {
@@ -534,12 +557,12 @@
       parts.push(categoryLabel + ' também aparece no ERP com estoque público.');
     }
 
-    if (metadata.sku) {
-      parts.push('Busca por SKU pronta para acelerar o atendimento.');
+    if (stockState && stockState.label) {
+      parts.push(stockState.label + ' na vitrine pública neste momento.');
     }
 
-    if (price > 0) {
-      parts.push('Preço exibido de R$ ' + formatPrice(price) + ' na vitrine assistida.');
+    if (metadata.sku) {
+      parts.push('Busca por SKU pronta para acelerar o atendimento.');
     }
 
     return parts.join(' ');
@@ -567,6 +590,7 @@
       var metadata = product.metadata || {};
       var categoryLabel = normalizeCatalogText(product.category && product.category.name) || 'Catálogo';
       var badgeLabel = entry.badgeLabel || 'Produto em destaque';
+      var stockState = getSpotlightStockState(product);
       var thumbnail = product.thumbnail || (product.images && product.images[0] && product.images[0].url) || fallbackImg;
       var metaBits = [
         categoryLabel,
@@ -587,7 +611,8 @@
           '<p class="catalog-spotlight-card__desc">' + buildSpotlightDescription(product, badgeLabel, categoryLabel).replace(/</g, '&lt;') + '</p>' +
           '<div class="catalog-spotlight-card__footer">' +
             '<span class="catalog-spotlight-card__price">R$ ' + formatPrice(getProductPriceAmount(product)) + '</span>' +
-            '<span class="catalog-spotlight-card__cta">Abrir item na loja <i class="fas fa-arrow-right"></i></span>' +
+            '<span class="' + stockState.className + '"><i class="fas ' + stockState.iconClass + '"></i> ' + stockState.label + '</span>' +
+            '<span class="catalog-spotlight-card__cta">Selecionar na loja <i class="fas fa-arrow-right"></i></span>' +
           '</div>' +
         '</div>' +
       '</a>';
