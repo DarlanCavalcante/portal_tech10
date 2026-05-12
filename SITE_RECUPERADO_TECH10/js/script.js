@@ -365,7 +365,7 @@ function setupEventListeners() {
         });
     }
 
-    const searchSubmit = document.querySelector('.search-box i');
+    const searchSubmit = document.querySelector('.search-box__submit');
     if (searchSubmit && searchInput) {
         searchSubmit.addEventListener('click', function() {
             openCanonicalStoreSearch(searchInput.value);

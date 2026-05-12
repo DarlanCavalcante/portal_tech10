@@ -345,6 +345,12 @@
       modeNode.textContent = 'Fechamento assistido';
     }
 
+    var leaderNode = global.document.querySelector('[data-home-catalog-leader]');
+    if (leaderNode) {
+      leaderNode.textContent = 'Categoria em foco: ' + categories[0].label;
+      leaderNode.setAttribute('href', '/loja?category=' + encodeURIComponent(categories[0].slug));
+    }
+
     var summaryNode = global.document.querySelector('[data-home-catalog-summary]');
     if (summaryNode) {
       var categoryNames = categories.map(function (category) { return category.label; });
@@ -355,8 +361,9 @@
     if (tagsNode) {
       tagsNode.innerHTML = '';
       categories.forEach(function (category) {
-        var tag = global.document.createElement('span');
-        tag.className = 'catalog-live-tag';
+        var tag = global.document.createElement('a');
+        tag.className = 'catalog-live-tag catalog-live-tag--link';
+        tag.setAttribute('href', '/loja?category=' + encodeURIComponent(category.slug));
         tag.textContent = category.label + ' · ' + category.count;
         tagsNode.appendChild(tag);
       });

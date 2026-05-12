@@ -42,7 +42,9 @@
             <div class="header-actions">
                 <div class="search-box">
                     <input type="text" placeholder="Buscar por produto, marca ou SKU..." id="searchInput">
-                    <i class="fas fa-search"></i>
+                    <button type="button" class="search-box__submit" aria-label="Buscar no catálogo completo">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                    </button>
                 </div>
                 <a
                     href="#contato"
@@ -187,6 +189,7 @@
                         <span class="cta-banner__pill" data-home-catalog-total>Estoque público em tempo real</span>
                         <span class="cta-banner__pill" data-home-catalog-categories>Categorias sincronizadas</span>
                         <span class="cta-banner__pill" data-home-catalog-mode>Atendimento assistido</span>
+                        <a class="cta-banner__pill cta-banner__pill--link" data-home-catalog-leader href="/loja">Categoria em foco</a>
                     </div>
                 </div>
                 <a href="/loja" class="cta-banner__btn">
@@ -200,7 +203,7 @@
                     <div class="catalog-live-summary">
                         <div class="catalog-live-summary__meta" data-home-catalog-summary>Catálogo da Tech10 sincronizado com o ERP.</div>
                         <div class="catalog-live-tags" data-home-catalog-tags>
-                            <span class="catalog-live-tag">Carregando categorias...</span>
+                            <a class="catalog-live-tag catalog-live-tag--link" href="/loja">Carregando categorias...</a>
                         </div>
                     </div>
                     <div class="filters">
