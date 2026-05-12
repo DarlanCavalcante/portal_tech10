@@ -56,3 +56,4 @@ Depois do smoke técnico, validar também:
 - o modal do produto não oferece checkout falso quando a loja está em `quote_only`
 - produtos com nome parecido ficam distinguíveis por marca e/ou SKU
 - a busca encontra produtos também por `marca` e `SKU`
+- produtos com título repetido exibem orientação explícita para confirmação por `SKU`

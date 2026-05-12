@@ -46,6 +46,13 @@
     return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
   }
 
+  function isDuplicateTitleProduct(product) {
+    var title = String(product && product.title ? product.title : '').trim().toLowerCase();
+    if (!title) return false;
+    var counts = global.__tech10_product_title_counts || {};
+    return counts[title] > 1;
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Injetar HTML do modal no body
   // ─────────────────────────────────────────────────────────────────────────
@@ -81,6 +88,7 @@
             '<span class="pm-cat" id="pm-cat"></span>',
             '<h2 class="pm-title" id="pm-title"></h2>',
             '<div class="pm-meta" id="pm-meta" style="display:none"></div>',
+            '<div class="pm-identity-note" id="pm-identity-note" style="display:none"></div>',
             '<div class="pm-price-row">',
               '<span class="pm-price" id="pm-price"></span>',
               '<span class="pm-old-price" id="pm-old-price" style="display:none"></span>',
@@ -241,6 +249,15 @@
     } else {
       metaEl.innerHTML = '';
       metaEl.style.display = 'none';
+    }
+
+    var identityEl = document.getElementById('pm-identity-note');
+    if (isDuplicateTitleProduct(product) && product.metadata && product.metadata.sku) {
+      identityEl.innerHTML = '<i class="fas fa-fingerprint"></i> Este produto tem outro item com o mesmo nome publicado. Use o SKU <strong>' + String(product.metadata.sku).replace(/</g, '&lt;') + '</strong> para confirmar o item correto no atendimento.';
+      identityEl.style.display = 'flex';
+    } else {
+      identityEl.innerHTML = '';
+      identityEl.style.display = 'none';
     }
 
     // Galeria de imagens
@@ -483,6 +500,9 @@
       '.pm-meta { display:flex;flex-wrap:wrap;gap:6px;margin-top:-2px; }',
       '.pm-meta-chip { display:inline-flex;align-items:center;gap:4px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:11px;font-weight:600;border-radius:999px;padding:4px 8px; }',
       '.pm-meta-chip strong { color:#0f172a;font-weight:700; }',
+      '.pm-identity-note { display:flex;align-items:flex-start;gap:8px;background:#fff7ed;border:1px solid #fdba74;color:#9a3412;font-size:12px;line-height:1.5;border-radius:10px;padding:10px 12px; }',
+      '.pm-identity-note i { margin-top:2px; color:#ea580c; }',
+      '.pm-identity-note strong { color:#7c2d12; }',
       '.pm-price-row { display:flex;align-items:baseline;gap:10px; }',
       '.pm-price { font-size:28px;font-weight:900;color:#2563eb; }',
       '.pm-old-price { font-size:16px;color:#9ca3af;text-decoration:line-through; }',
