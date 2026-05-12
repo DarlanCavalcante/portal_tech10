@@ -34,6 +34,14 @@
     return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
   }
 
+  function getProductMetaChips(product) {
+    var metadata = product && product.metadata ? product.metadata : {};
+    var chips = [];
+    if (metadata.brand) chips.push({ label: 'Marca', value: metadata.brand });
+    if (metadata.sku) chips.push({ label: 'SKU', value: metadata.sku });
+    return chips;
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // Helpers internos
   // ─────────────────────────────────────────────────────────────────────────
@@ -51,7 +59,16 @@
 
   function toCategorySlug(cat) {
     if (!cat) return 'outros';
-    const raw = (cat.handle || cat.name || '').toLowerCase().replace(/\s+/g, '-');
+    if (global.MarketplaceAdapter && global.MarketplaceAdapter.normalizeCategoryHandle) {
+      return global.MarketplaceAdapter.normalizeCategoryHandle(cat.handle || cat.name || '');
+    }
+    const raw = (cat.handle || cat.name || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[>:]+/g, '-')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
     return raw || 'outros';
   }
 
@@ -170,6 +187,12 @@
         var maxQty = inventoryQty > 0 ? inventoryQty : 99;
         var pid = product.id;
         var actionMode = cartEnabled ? 'cart' : 'quote';
+        var metaChips = getProductMetaChips(product);
+        var metaHtml = metaChips.length
+          ? '<div class="lp-card-meta">' + metaChips.map(function (chip) {
+              return '<span class="lp-card-meta-chip"><strong>' + chip.label + ':</strong> ' + String(chip.value).replace(/</g, '&lt;') + '</span>';
+            }).join('') + '</div>'
+          : '';
         var buttonLabel = cartEnabled
           ? '<i class="fas fa-shopping-cart"></i> Adicionar'
           : '<i class="fas fa-comments"></i> Pedir atendimento';
@@ -184,6 +207,7 @@
           '<div class="lp-card-body">' +
             (catName ? '<span class="lp-card-cat">' + catName + '</span>' : '') +
             '<h3 class="lp-card-title" onclick="window.__openProductModal && window.__openProductModal(\'' + pid + '\')">' + (product.title || '').replace(/</g, '&lt;') + '</h3>' +
+            metaHtml +
             '<p class="lp-card-desc">' + description.replace(/</g, '&lt;') + '</p>' +
             '<div class="lp-card-price">R$ ' + priceFormatted + '</div>' +
             '<div class="lp-card-stock ' + stockClass + '">' +

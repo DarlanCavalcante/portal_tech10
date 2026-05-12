@@ -39,6 +39,10 @@ Data-base: `2026-05-11`
 - validar `TECH10_CHECKOUT_MODE`
 - se estiver em `quote_only`, o comportamento correto é abrir atendimento
 - se receber `TECH10_CHECKOUT_BACKEND_NOT_CONFIGURED`, cadastrar `TECH10_CHECKOUT_BACKEND_URL`
+- validar também o modal do produto:
+  - o botão principal deve pedir atendimento
+  - o botão secundário deve levar ao WhatsApp
+  - não deve aparecer fluxo de compra transacional falso
 
 ### Portal abre, mas não segue a O.S.
 

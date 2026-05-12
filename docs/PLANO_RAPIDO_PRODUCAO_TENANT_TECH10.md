@@ -11,6 +11,10 @@ sem misturar com outros projetos.
 
 - base única escolhida: `portal_tech10/SITE_RECUPERADO_TECH10`
 - runtime standalone já preparado
+- projeto dedicado já criado: `tech10-portal`
+- alias de produção já ativo: `https://tech10-portal.vercel.app`
+- ERP já ligado como backend de catálogo via `https://core.tech10cloud.com`
+- slug público já ativado: `tech10`
 - rotas públicas já definidas:
   - `/`
   - `/loja`
@@ -22,22 +26,15 @@ sem misturar com outros projetos.
 
 ## Caminho mais curto para produção
 
-1. criar projeto de deploy próprio da Tech10
-   - sugestão: `tech10-portal`
-   - root directory: `SITE_RECUPERADO_TECH10`
-2. configurar variáveis mínimas:
-   - `TECH10_CATALOG_SOURCE`
-   - `TECH10_CATALOG_BACKEND_URL`
-   - `TECH10_CHECKOUT_MODE`
-   - `TECH10_ERP_PORTAL_BASE_URL`
-   - `TECH10_ERP_STATUS_BASE_URL`
-3. executar preview do projeto
-4. validar:
+1. manter o runtime em `quote_only` enquanto a venda continuar por atendimento
+2. manter os produtos vendaveis da Tech10 vinculados ao catalogo publico do ERP
+3. revisar categorias/taxonomia e identidade comercial dos itens na loja
+4. validar a loja com itens reais:
    - home
    - catálogo
    - carrinho
-   - checkout
    - entrada do portal
+   - modal do produto em `quote_only`
 5. anexar `tech10.tech10cloud.com`
 6. executar smoke final em domínio oficial
 
@@ -61,10 +58,10 @@ sem misturar com outros projetos.
 
 ## Veredito
 
-O bloqueio principal agora não é mais arquitetura.
+O bloqueio principal agora nao e mais deploy nem publicacao inicial de catalogo.
 
-É só publicação operacional:
+E curadoria comercial da vitrine:
 
-1. criar projeto próprio
-2. configurar env
-3. apontar domínio
+1. consolidar taxonomia e apresentacao dos produtos reais
+2. manter a UX coerente com `quote_only`
+3. so depois apontar o dominio oficial

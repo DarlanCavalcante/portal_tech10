@@ -387,6 +387,57 @@
     .pp-btn-load-more:hover { background: #2563eb; color: #fff; }
     .pp-btn-load-more:disabled { opacity: .5; cursor: not-allowed; }
 
+    .pp-quote-banner {
+      background: linear-gradient(135deg, #eff6ff 0%, #ecfeff 100%);
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      box-shadow: 0 1px 6px rgba(37, 99, 235, 0.08);
+    }
+    .pp-quote-banner i {
+      color: #2563eb;
+      font-size: 18px;
+      margin-top: 2px;
+    }
+    .pp-quote-banner strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .pp-quote-banner p {
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .lp-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 4px 0 8px;
+    }
+    .lp-card-meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 4px 8px;
+    }
+    .lp-card-meta-chip strong {
+      color: #0f172a;
+      font-weight: 700;
+    }
+
     /* WhatsApp Float */
     .pp-whatsapp-float {
       position: fixed;
@@ -490,6 +541,14 @@
           <option value="price-desc">Maior preço</option>
           <option value="name">Nome A–Z</option>
         </select>
+      </div>
+
+      <div class="pp-quote-banner" id="pp-quote-banner">
+        <i class="fas fa-comments-dollar" aria-hidden="true"></i>
+        <div>
+          <strong>Loja em atendimento assistido</strong>
+          <p>Os produtos já refletem o estoque público da Tech10. Nesta fase, a confirmação da venda continua pelo atendimento para garantir disponibilidade, orientação técnica e fechamento seguro do pedido.</p>
+        </div>
       </div>
 
       <!-- Grid de produtos -->

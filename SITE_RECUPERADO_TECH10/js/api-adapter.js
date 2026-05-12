@@ -5,6 +5,63 @@
 (function (global) {
   'use strict';
 
+  const CATEGORY_NAME_MAP = {
+    veiculos: 'Veículos',
+    mouse: 'Mouse',
+    cabos: 'Cabos',
+  };
+
+  function slugifyCategoryValue(value) {
+    if (!value) return 'outros';
+    return String(value)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/^product:/i, '')
+      .replace(/[>:]+/g, '-')
+      .replace(/[^a-zA-Z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .replace(/-{2,}/g, '-')
+      .toLowerCase() || 'outros';
+  }
+
+  function formatCategoryName(name, handle) {
+    const rawName = String(name || '').trim();
+    const normalizedHandle = slugifyCategoryValue(handle || rawName);
+
+    if (CATEGORY_NAME_MAP[normalizedHandle]) {
+      return CATEGORY_NAME_MAP[normalizedHandle];
+    }
+
+    if (!rawName) {
+      return normalizedHandle
+        .split('-')
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(' ') || 'Outros';
+    }
+
+    return rawName
+      .replace(/\s*>\s*/g, ' · ')
+      .replace(/\bveiculos\b/gi, 'Veículos')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  }
+
+  function normalizeCategory(category) {
+    if (!category) return null;
+
+    const rawHandle = category.handle || category.id || category.name || 'outros';
+    const handle = slugifyCategoryValue(rawHandle);
+    const name = formatCategoryName(category.name || category.id || category.handle, rawHandle);
+
+    return {
+      id: category.id || handle,
+      name,
+      handle,
+      rawHandle,
+    };
+  }
+
   function getBaseUrl() {
     const config = global.API_CONFIG || {};
     if (config.STORE_RUNTIME_BASE_URL) {
@@ -94,6 +151,8 @@
     const variant = (p.variants && p.variants[0]) || {};
     const prices = variant.prices || [];
     const amount = (prices[0] && prices[0].amount) != null ? prices[0].amount : 0;
+    const metadata = p.metadata || {};
+
     return {
       id: p.id,
       title: p.title,
@@ -106,7 +165,11 @@
         prices: [{ amount }]
       }],
       images: p.images,
-      category: p.category
+      category: normalizeCategory(p.category),
+      metadata: {
+        sku: metadata.sku || p.sku || null,
+        brand: metadata.brand || p.brand || null,
+      },
     };
   }
 
@@ -136,9 +199,9 @@
         const products = data.data?.products || data.products || [];
         const seen = new Map();
         products.forEach(p => {
-          const cat = p.category;
-          if (cat && cat.id && !seen.has(cat.id)) {
-            seen.set(cat.id, { id: cat.id, name: cat.name, handle: cat.handle || cat.id });
+          const cat = normalizeCategory(p.category);
+          if (cat && !seen.has(cat.handle)) {
+            seen.set(cat.handle, cat);
           }
         });
         return Array.from(seen.values());
@@ -152,7 +215,7 @@
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       const list = (data.data && data.data.categories) || data.categories || [];
-      return list.map(c => ({ id: c.id, name: c.name, handle: c.handle || c.id }));
+      return list.map(normalizeCategory).filter(Boolean);
     } catch (err) {
       console.error('[api-adapter] getCategories:', err);
       return [];
@@ -258,6 +321,8 @@
     getProducts,
     getProductById,
     getCategories,
+    normalizeCategory,
+    normalizeCategoryHandle: slugifyCategoryValue,
     createCart,
     getCart,
     addLineItem,

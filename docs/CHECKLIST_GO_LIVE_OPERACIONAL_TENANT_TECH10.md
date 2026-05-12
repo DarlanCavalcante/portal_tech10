@@ -13,6 +13,18 @@ Checklist para colocar no ar o runtime próprio da Tech10, usando
 - root directory configurado como `SITE_RECUPERADO_TECH10`
 - domínio `tech10.tech10cloud.com` sem vínculo com projeto externo
 
+## Estado atual confirmado
+
+- projeto dedicado confirmado: `tech10-portal`
+- alias de produção confirmado: `https://tech10-portal.vercel.app`
+- `TECH10_CATALOG_SOURCE=erp_stock` configurado em produção
+- `TECH10_CATALOG_BACKEND_URL=https://core.tech10cloud.com` configurado em produção
+- `TECH10_CHECKOUT_MODE=quote_only` configurado em produção
+- `storeSlug=tech10` ativo no tenant real da Tech10
+- ERP já responde `200` em `/api/store/lojas/tech10/produtos`
+- ERP já responde catálogo real com `total=7`
+- runtime do portal já responde `status=ok` em `/api/health`
+
 ## Variáveis mínimas
 
 1. `TECH10_CATALOG_SOURCE`
@@ -60,5 +72,11 @@ Opcional:
 
 ## Veredito
 
-Depois desta rodada, o go-live da Tech10 depende mais de deploy, DNS e da
-definição do backend do catálogo do que de reestruturação de código.
+Depois desta rodada, o go-live da Tech10 nao depende mais de reestruturacao
+arquitetural.
+
+O bloqueio remanescente e operacional de vitrine:
+
+1. revisar taxonomia/categorias publicas
+2. corrigir itens que ainda caiam em `Outros` ou sem imagem ideal
+3. validar a vitrine com itens reais antes do dominio oficial
