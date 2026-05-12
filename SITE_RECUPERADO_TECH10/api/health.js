@@ -56,6 +56,9 @@ module.exports = async function handler(req, res) {
   const checks = {
     catalogBackendConfigured: Boolean(env.catalogBackendUrl),
     checkoutBackendConfigured: capabilities.checkout,
+    supportWhatsappConfigured: Boolean(env.supportWhatsapp),
+    assistedCartBridgeConfigured: capabilities.assistedCartBridge === true,
+    assistedCheckoutBridgeConfigured: capabilities.assistedCheckoutBridge === true,
     checkoutMode: env.checkoutMode,
     catalogSource: env.catalogSource,
     portalBaseUrlConfigured: Boolean(env.portalBaseUrl),
@@ -68,7 +71,9 @@ module.exports = async function handler(req, res) {
     checks.catalogBackendConfigured,
     checks.portalBaseUrlConfigured,
     checks.statusBaseUrlConfigured,
-    env.checkoutMode === 'quote_only' || checks.checkoutBackendConfigured,
+    env.checkoutMode === 'quote_only'
+      ? checks.assistedCheckoutBridgeConfigured
+      : checks.checkoutBackendConfigured,
   ];
 
   const upstreamHasError = upstream.some((check) => check.status !== 'ok');
