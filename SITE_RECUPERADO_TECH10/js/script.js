@@ -335,7 +335,6 @@ async function initializeApp() {
     setupHeroVideo();
     initializeGallery();
     initializeBackToTop();
-    initializeProductModal();
     
     // Marcar como carregado para prevenir piscar
     document.body.classList.add('loaded');
@@ -544,7 +543,7 @@ function createProductCard(product) {
                     <i class="fas ${stockIcon}"></i>
                     ${stockText}
                 </button>
-                <button class="btn btn-small btn-favorite" onclick="toggleFavorite(${product.id})">
+                <button class="btn btn-small btn-favorite" onclick="toggleFavorite(event, ${product.id})">
                     <i class="far fa-heart"></i>
                 </button>
             </div>
@@ -636,16 +635,31 @@ function animateProductCards() {
     });
 }
 
-function toggleCart() {
+function getCommerceRuntimeState() {
     const runtime = window.__tech10_runtime_config || {};
     const commerce = runtime.commerce || {};
     const capabilities = commerce.capabilities || {};
-    const quoteOnly = capabilities.quoteOnly === true || capabilities.cart === false || commerce.checkoutMode === 'quote_only';
+
+    return {
+        runtime,
+        commerce,
+        capabilities,
+        quoteOnly: capabilities.quoteOnly === true || capabilities.cart === false || commerce.checkoutMode === 'quote_only'
+    };
+}
+
+function getSupportWhatsAppNumber() {
+    const tenantCompany = (window.TENANT_CONFIG && window.TENANT_CONFIG.company) || {};
+    const { runtime } = getCommerceRuntimeState();
+    const support = runtime.support || {};
+    return String(support.whatsapp || tenantCompany.whatsapp || '55974001960').replace(/\D/g, '');
+}
+
+function toggleCart() {
+    const { quoteOnly } = getCommerceRuntimeState();
 
     if (quoteOnly) {
-        const tenantCompany = (window.TENANT_CONFIG && window.TENANT_CONFIG.company) || {};
-        const support = runtime.support || {};
-        const whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '55974001960').replace(/\D/g, '');
+        const whatsapp = getSupportWhatsAppNumber();
         const message = encodeURIComponent('Olá! Vim pelo site da Tech10 e quero ajuda para escolher ou fechar um produto.');
         window.open(`https://wa.me/${whatsapp}?text=${message}`, '_blank', 'noopener,noreferrer');
         return;
@@ -654,29 +668,31 @@ function toggleCart() {
     window.location.href = '/carrinho.html';
 }
 
-function addToCart(productId) {
-    const runtime = window.__tech10_runtime_config || {};
-    const commerce = runtime.commerce || {};
-    const capabilities = commerce.capabilities || {};
-    const quoteOnly = capabilities.quoteOnly === true || capabilities.cart === false || commerce.checkoutMode === 'quote_only';
-
-    const product = (state.filteredProducts || []).find(p => p.id === productId)
+function findProductById(productId) {
+    return (state.filteredProducts || []).find(p => p.id === productId)
         || (state.products || []).find(p => p.id === productId)
         || null;
+}
+
+function openProductSupportChat(product) {
+    const whatsapp = getSupportWhatsAppNumber();
+    const lines = [
+        'Olá! Vim pelo site da Tech10 e quero atendimento para este produto.',
+        product && product.name ? `Produto: ${product.name}` : '',
+        product && product.categoryName ? `Categoria: ${product.categoryName}` : '',
+        product && product.price ? `Preço exibido: R$ ${formatPrice(product.price)}` : '',
+        '',
+        'Pode me ajudar a confirmar disponibilidade e fechamento?'
+    ].filter(Boolean);
+    window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
+}
+
+function addToCart(productId) {
+    const { quoteOnly } = getCommerceRuntimeState();
+    const product = findProductById(productId);
 
     if (quoteOnly) {
-        const tenantCompany = (window.TENANT_CONFIG && window.TENANT_CONFIG.company) || {};
-        const support = runtime.support || {};
-        const whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '55974001960').replace(/\D/g, '');
-        const lines = [
-            'Olá! Vim pelo site da Tech10 e quero atendimento para este produto.',
-            product && product.name ? `Produto: ${product.name}` : '',
-            product && product.categoryName ? `Categoria: ${product.categoryName}` : '',
-            product && product.price ? `Preço exibido: R$ ${formatPrice(product.price)}` : '',
-            '',
-            'Pode me ajudar a confirmar disponibilidade e fechamento?'
-        ].filter(Boolean);
-        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
+        openProductSupportChat(product);
         return;
     }
 
@@ -688,8 +704,9 @@ function addToCart(productId) {
     toggleCart();
 }
 
-function toggleFavorite(productId) {
-    const button = event.target.closest('.btn-favorite');
+function toggleFavorite(event, productId) {
+    const button = event && event.target ? event.target.closest('.btn-favorite') : null;
+    if (!button) return;
     const icon = button.querySelector('i');
     
     if (icon.classList.contains('far')) {
@@ -1325,9 +1342,6 @@ function initializeBackToTop() {
     console.log('🔝 Botão Voltar ao Topo inicializado!');
 }
 
-// Modal de Detalhes do Produto
-let currentProductModal = null;
-
 function openProductModal(productId) {
     if (
         window.Tech10ProductModal
@@ -1338,175 +1352,12 @@ function openProductModal(productId) {
         return;
     }
 
-    console.log('🔍 Tentando abrir modal para produto:', productId);
-    
-    // Buscar primeiro em filteredProducts, depois em products
-    let product = state.filteredProducts.find(p => p.id === productId);
-    if (!product) {
-        product = state.products.find(p => p.id === productId);
-    }
-    
+    const product = findProductById(productId);
     if (!product) {
         console.error('Produto não encontrado:', productId);
         return;
     }
-    
-    console.log('✅ Produto encontrado:', product.name);
-    currentProductModal = product;
-    
-    const modal = document.getElementById('productModal');
-    const modalImage = document.getElementById('modalProductImage');
-    const modalName = document.getElementById('modalProductName');
-    const modalCategory = document.getElementById('modalProductCategory');
-    const modalDescription = document.getElementById('modalProductDescription');
-    const modalOldPrice = document.getElementById('modalOldPrice');
-    const modalCurrentPrice = document.getElementById('modalCurrentPrice');
-    const modalBadge = document.getElementById('modalProductBadge');
-    const modalStock = document.getElementById('modalProductStock');
-    const modalFeatures = document.getElementById('modalProductFeatures');
-    const modalFeaturesList = document.getElementById('modalFeaturesList');
-    const modalAddToCart = document.getElementById('modalAddToCart');
-    const modalAddToFavorite = document.getElementById('modalAddToFavorite');
-    
-    // Verificar se todos os elementos existem
-    if (!modal || !modalImage || !modalName || !modalCurrentPrice) {
-        console.error('Elementos do modal não encontrados');
-        console.log('Modal:', modal);
-        console.log('ModalImage:', modalImage);
-        console.log('ModalName:', modalName);
-        return;
-    }
-    
-    console.log('✅ Elementos do modal encontrados');
-    
-    // Restaurar imagem se foi removida
-    const imageContainer = modal.querySelector('.product-modal-image');
-    if (imageContainer && !imageContainer.querySelector('img')) {
-        imageContainer.innerHTML = '<img id="modalProductImage" src="" alt=""><div class="product-modal-badge" id="modalProductBadge"></div>';
-    }
-    
-    // Reobter referências após possível restauração
-    const finalModalImage = document.getElementById('modalProductImage');
-    const finalModalBadge = document.getElementById('modalProductBadge');
-    
-    // Definir imagem
-    let imagePath = product.image || '';
-    const isEmbeddedOrAbsoluteModalImage = imagePath && (
-        imagePath.startsWith('http') ||
-        imagePath.startsWith('//') ||
-        imagePath.startsWith('data:') ||
-        imagePath.startsWith('blob:')
-    );
-
-    if (imagePath && !isEmbeddedOrAbsoluteModalImage && !imagePath.startsWith('/uploads') && !imagePath.startsWith('/imagem')) {
-        imagePath = `imagem/${imagePath}`;
-    } else if (imagePath && imagePath.startsWith('/imagem')) {
-        // Remove a barra inicial se já começa com /imagem
-        imagePath = imagePath.substring(1);
-    }
-    if (finalModalImage) {
-        finalModalImage.src = imagePath;
-        finalModalImage.alt = product.name || 'Produto';
-        finalModalImage.style.display = 'block';
-        finalModalImage.onerror = function() {
-            this.style.display = 'none';
-            const placeholder = document.createElement('div');
-            placeholder.className = 'image-placeholder';
-            placeholder.innerHTML = '<i class="fas fa-laptop" style="font-size: 120px; color: #ccc;"></i>';
-            placeholder.style.cssText = 'display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;';
-            
-            if (this.nextElementSibling && this.nextElementSibling.className === 'image-placeholder') {
-                this.nextElementSibling.remove();
-            }
-            this.parentElement.insertBefore(placeholder, this.nextSibling);
-        };
-    }
-    
-    // Definir badge
-    if (finalModalBadge || modalBadge) {
-        const badgeElement = finalModalBadge || modalBadge;
-        if (product.badge) {
-            badgeElement.textContent = product.badge;
-            badgeElement.style.display = 'block';
-        } else {
-            badgeElement.style.display = 'none';
-        }
-    }
-    
-    // Definir informações básicas
-    if (modalName) modalName.textContent = product.name || 'Produto';
-    if (modalCategory) modalCategory.textContent = product.categoryName || product.category || 'Sem categoria';
-    if (modalDescription) modalDescription.textContent = product.description || 'Sem descrição disponível';
-    
-    // Definir preços
-    if (modalOldPrice) {
-        if (product.oldPrice) {
-            modalOldPrice.textContent = `R$ ${formatPrice(product.oldPrice)}`;
-            modalOldPrice.style.display = 'inline';
-        } else {
-            modalOldPrice.style.display = 'none';
-        }
-    }
-    if (modalCurrentPrice) {
-        modalCurrentPrice.textContent = `R$ ${formatPrice(product.price || 0)}`;
-    }
-    
-    // Definir estoque
-    const inStock = product.inStock !== false && product.stock !== 0;
-    if (modalStock) {
-        if (inStock) {
-            modalStock.innerHTML = '<i class="fas fa-check-circle"></i> Em estoque';
-            modalStock.className = 'product-modal-stock in-stock';
-        } else {
-            modalStock.innerHTML = '<i class="fas fa-times-circle"></i> Fora de estoque';
-            modalStock.className = 'product-modal-stock out-of-stock';
-        }
-    }
-    if (modalAddToCart) {
-        modalAddToCart.disabled = !inStock;
-        modalAddToCart.innerHTML = inStock 
-            ? '<i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho'
-            : '<i class="fas fa-times"></i> Indisponível';
-    }
-    
-    // Definir características
-    if (modalFeatures && modalFeaturesList) {
-        if (product.features && Array.isArray(product.features) && product.features.length > 0) {
-            modalFeaturesList.innerHTML = product.features.map(feature => 
-                `<li><i class="fas fa-check"></i> ${feature}</li>`
-            ).join('');
-            modalFeatures.style.display = 'block';
-        } else {
-            modalFeatures.style.display = 'none';
-        }
-    }
-    
-    // Configurar botões de ação
-    if (modalAddToCart) {
-        modalAddToCart.onclick = () => {
-            addToCart(productId);
-            // Opcional: fechar modal após adicionar
-            // closeProductModal();
-        };
-    }
-    
-    if (modalAddToFavorite) {
-        modalAddToFavorite.onclick = () => {
-            toggleFavorite(productId);
-        };
-        
-        // Verificar se está nos favoritos
-        const isFavorite = state.favorites && Array.isArray(state.favorites) && state.favorites.includes(productId);
-        modalAddToFavorite.innerHTML = isFavorite 
-            ? '<i class="fas fa-heart"></i>' 
-            : '<i class="far fa-heart"></i>';
-    }
-    
-    // Mostrar modal
-    console.log('📱 Abrindo modal...');
-    modal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    console.log('✅ Modal aberto!');
+    openProductSupportChat(product);
 }
 
 function closeProductModal() {
@@ -1516,51 +1367,5 @@ function closeProductModal() {
         && window.Tech10ProductModal.close !== closeProductModal
     ) {
         window.Tech10ProductModal.close();
-        return;
     }
-
-    console.log('❌ Fechando modal...');
-    const modal = document.getElementById('productModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-    document.body.style.overflow = 'auto';
-    currentProductModal = null;
-    console.log('✅ Modal fechado!');
-}
-
-// Event handlers para o modal (declarados uma vez)
-function handleModalClose(event) {
-    const modal = document.getElementById('productModal');
-    if (event.target === modal) {
-        closeProductModal();
-    }
-}
-
-function handleEscapeKey(event) {
-    const modal = document.getElementById('productModal');
-    if (event.key === 'Escape' && modal && modal.style.display === 'block') {
-        closeProductModal();
-    }
-}
-
-function initializeProductModal() {
-    const modal = document.getElementById('productModal');
-    const closeBtn = document.getElementById('closeProductModal');
-    
-    if (!modal || !closeBtn) {
-        return;
-    }
-    
-    // Remover event listeners antigos para evitar duplicação
-    closeBtn.removeEventListener('click', closeProductModal);
-    window.removeEventListener('click', handleModalClose);
-    document.removeEventListener('keydown', handleEscapeKey);
-    
-    // Adicionar event listeners
-    closeBtn.addEventListener('click', closeProductModal);
-    window.addEventListener('click', handleModalClose);
-    document.addEventListener('keydown', handleEscapeKey);
-    
-    console.log('🛍️ Modal de produto inicializado!');
 }
