@@ -274,11 +274,15 @@
 
     filtersRoot.innerHTML = '';
 
-    function appendButton(label, slug, isActive) {
+    function appendButton(label, slug, isActive, count) {
       var button = global.document.createElement('button');
       button.className = 'filter-btn' + (isActive ? ' active' : '');
       button.setAttribute('data-filter', slug);
-      button.textContent = label;
+      button.setAttribute('type', 'button');
+      button.innerHTML = '<span class="filter-btn__label">' + String(label).replace(/</g, '&lt;') + '</span>'
+        + (typeof count === 'number'
+          ? '<span class="filter-btn__count">' + count + '</span>'
+          : '');
       button.addEventListener('click', function (event) {
         if (typeof global.handleFilterClick === 'function') {
           global.handleFilterClick(event);
@@ -287,9 +291,9 @@
       filtersRoot.appendChild(button);
     }
 
-    appendButton('Todos', 'all', currentActive === 'all');
+    appendButton('Todos', 'all', currentActive === 'all', sourceProducts.length);
     categories.forEach(function (category) {
-      appendButton(category.label, category.slug, currentActive === category.slug);
+      appendButton(category.label, category.slug, currentActive === category.slug, category.count);
     });
   }
 
