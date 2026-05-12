@@ -12,14 +12,6 @@
   }
 
   function getSupportWhatsappUrl(product, quantity) {
-    var runtime = global.__tech10_runtime_config || {};
-    var support = runtime.support || {};
-    var tenantRoutes = global.TenantRoutes || {};
-    var tenantCompanyFromRoutes = tenantRoutes.company || {};
-    var tenantCompany = (global.TENANT_CONFIG && global.TENANT_CONFIG.company) || {};
-    var whatsapp = String(tenantCompanyFromRoutes.whatsapp || support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
-    if (!whatsapp) return '';
-
     var title = product && product.title ? product.title : 'um produto da loja';
     var metadata = product && product.metadata ? product.metadata : {};
     var price = product && product.variants && product.variants[0] && product.variants[0].prices && product.variants[0].prices[0]
@@ -39,6 +31,16 @@
       'Gostaria de confirmar disponibilidade e atendimento.'
     ].filter(Boolean).join('\n');
 
+    var tenantRoutes = global.TenantRoutes || {};
+    if (tenantRoutes.supportUrl) {
+      return tenantRoutes.supportUrl(message);
+    }
+
+    var runtime = global.__tech10_runtime_config || {};
+    var support = runtime.support || {};
+    var tenantCompany = (global.TENANT_CONFIG && global.TENANT_CONFIG.company) || {};
+    var whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
+    if (!whatsapp) return '';
     return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
   }
 
