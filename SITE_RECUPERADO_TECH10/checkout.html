@@ -471,6 +471,19 @@
             return commerce.checkoutMode === 'quote_only' || capabilities.quoteOnly === true;
         }
 
+        function buildSupportUrl(message) {
+            const company = (window.TenantRoutes && window.TenantRoutes.company) || {};
+            const whatsapp = company.whatsapp || '55974001960';
+            const text = encodeURIComponent(message || 'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.');
+            return 'https://wa.me/' + whatsapp + '?text=' + text;
+        }
+
+        function getSubmitButtonHtml() {
+            return isQuoteOnlyRuntime(runtimeConfigCache)
+                ? '<i class="fas fa-headset"></i> Finalizar com atendimento'
+                : '<i class="fas fa-lock"></i> Finalizar Pedido';
+        }
+
         function selectShipping(method, cost, isFree) {
             selectedShippingOption = { method, cost, is_free: isFree, zone: null };
             renderCartSummary();
@@ -534,7 +547,7 @@
             const summaryEl = document.getElementById('cart-summary');
             if (!summaryEl) return;
             if (!cart || !cart.items || cart.items.length === 0) {
-                summaryEl.innerHTML = '<div class="error"><p>Carrinho vazio. <a href="carrinho.html">Voltar</a></p></div>';
+                summaryEl.innerHTML = '<div class="error"><p>Nenhum item selecionado ainda. <a href="/loja">Explorar catálogo</a></p></div>';
                 return;
             }
             const imgFallback = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect fill='%23e5e7eb' width='60' height='60'/%3E%3C/svg%3E";
@@ -573,7 +586,7 @@
             cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
             const summaryEl = document.getElementById('cart-summary');
             if (!cartId) {
-                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Carrinho não encontrado. <a href="index.html">Voltar para a loja</a></p></div>';
+                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhuma seleção ativa no momento. <a href="/loja">Explorar catálogo</a></p></div>';
                 return;
             }
             try {
@@ -582,13 +595,13 @@
                 const data = await res.json();
                 cart = data.cart;
                 if (!cart || !cart.items || cart.items.length === 0) {
-                    if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Carrinho vazio. <a href="index.html">Voltar para a loja</a></p></div>';
+                    if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhum item selecionado ainda. <a href="/loja">Explorar catálogo</a></p></div>';
                     return;
                 }
                 renderCartSummary();
             } catch (err) {
                 console.error('[CHECKOUT] Erro ao carregar carrinho:', err);
-                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Erro ao carregar carrinho. <a href="carrinho.html">Voltar</a></p></div>';
+                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Não foi possível carregar sua seleção atual. <a href="/loja">Voltar ao catálogo</a> ou <a href="' + buildSupportUrl('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu fechamento assistido.') + '" target="_blank" rel="noopener noreferrer">falar com a Tech10</a>.</p></div>';
             }
         }
 
@@ -610,14 +623,18 @@
                 const submitBtn = document.getElementById('submit-btn');
                 const errorDiv = document.getElementById('error-message');
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+                submitBtn.innerHTML = isQuoteOnlyRuntime(runtimeConfigCache)
+                    ? '<i class="fas fa-spinner fa-spin"></i> Acionando atendimento...'
+                    : '<i class="fas fa-spinner fa-spin"></i> Processando...';
                 if (errorDiv) errorDiv.style.display = 'none';
 
                 cartId = localStorage.getItem(CART_KEY) || localStorage.getItem(LEGACY_CART_KEY);
                 if (!cartId) {
-                    showError('Carrinho não encontrado. Adicione produtos ao carrinho primeiro.');
+                    showError(isQuoteOnlyRuntime(runtimeConfigCache)
+                        ? 'Nenhuma seleção ativa no momento. Volte ao catálogo ou fale com a Tech10 para continuar o fechamento assistido.'
+                        : 'Carrinho não encontrado. Adicione produtos ao carrinho primeiro.');
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar Pedido';
+                    submitBtn.innerHTML = getSubmitButtonHtml();
                     return;
                 }
 
@@ -694,7 +711,7 @@
                     console.error('[CHECKOUT] Erro ao finalizar:', err);
                     showError(err.message || 'Erro ao processar pedido. Tente novamente.');
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-lock"></i> Finalizar Pedido';
+                    submitBtn.innerHTML = getSubmitButtonHtml();
                 }
             });
         }
