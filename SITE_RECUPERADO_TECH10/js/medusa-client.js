@@ -3,6 +3,8 @@
  * Mantido apenas por compatibilidade; o runtime canônico usa MarketplaceAdapter.
  */
 
+const LEGACY_DEEP_CART_STORAGE_KEY = 'medusa_cart_id';
+
 function resolveLegacyStoreApiBaseUrl() {
   if (window.API_CONFIG && typeof window.API_CONFIG.resolveLegacyStoreApiBaseUrl === 'function') {
     return window.API_CONFIG.resolveLegacyStoreApiBaseUrl();
@@ -19,7 +21,7 @@ function readLegacyCartId() {
   if (typeof apiConfig.readStoredCartId === 'function') {
     return apiConfig.readStoredCartId();
   }
-  return localStorage.getItem('medusa_cart_id');
+  return localStorage.getItem(LEGACY_DEEP_CART_STORAGE_KEY);
 }
 
 function persistLegacyCartId(value) {
@@ -34,11 +36,11 @@ function persistLegacyCartId(value) {
   }
 
   if (!value) {
-    localStorage.removeItem('medusa_cart_id');
+    localStorage.removeItem(LEGACY_DEEP_CART_STORAGE_KEY);
     return;
   }
 
-  localStorage.setItem('medusa_cart_id', value);
+  localStorage.setItem(LEGACY_DEEP_CART_STORAGE_KEY, value);
 }
 
 class LegacyStorefrontClient {
