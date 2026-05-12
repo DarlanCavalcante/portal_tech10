@@ -375,6 +375,10 @@
       });
       document.querySelectorAll('.cart-icon').forEach(function (element) {
         if (element.classList.contains('pp-cart-btn')) return;
+        if (hasPrimarySupportEntry) {
+          hideElement(element);
+          return;
+        }
         convertElementToSupportEntry(
           element,
           'Olá! Vim pela loja da Tech10 e gostaria de atendimento para fechar uma compra.',
@@ -382,6 +386,10 @@
         );
       });
       document.querySelectorAll('#cartIcon').forEach(function (element) {
+        if (hasPrimarySupportEntry) {
+          hideElement(element);
+          return;
+        }
         if (element.classList.contains('runtime-support-entry')) return;
         convertElementToSupportEntry(
           element,
