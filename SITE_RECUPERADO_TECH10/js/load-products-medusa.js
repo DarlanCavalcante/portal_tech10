@@ -21,6 +21,52 @@ async function loadProductsFromMedusa() {
   }
 }
 
+function getLegacyRuntimeCommerce() {
+  const runtime = window.__tech10_runtime_config || {};
+  const commerce = runtime.commerce || {};
+  if (!commerce.checkoutMode && window.API_CONFIG && window.API_CONFIG.CHECKOUT_MODE) {
+    commerce.checkoutMode = window.API_CONFIG.CHECKOUT_MODE;
+  }
+  return commerce;
+}
+
+function isQuoteOnlyRuntime() {
+  const commerce = getLegacyRuntimeCommerce();
+  const capabilities = commerce.capabilities || {};
+  return capabilities.quoteOnly === true || commerce.checkoutMode === 'quote_only';
+}
+
+function getActiveStorefrontCart() {
+  if (typeof window.getActiveStorefrontCart === 'function') {
+    return window.getActiveStorefrontCart();
+  }
+  return window.storefrontCart || window.cartStorefront || window.medusaCart || window.cartVivaCommerce || null;
+}
+
+function buildSupportUrlForProduct(product, quantity = 1) {
+  const variant = product && product.variants && product.variants.length > 0 ? product.variants[0] : null;
+  const amount = variant?.prices?.[0]?.amount || 0;
+  const metadata = product && product.metadata ? product.metadata : {};
+  const lines = [
+    'Olá! Vim pela loja da Tech10 e tenho interesse neste produto:',
+    product?.title || 'Produto da loja',
+    metadata.brand ? `Marca: ${metadata.brand}` : '',
+    metadata.sku ? `SKU: ${metadata.sku}` : '',
+    quantity > 1 ? `Quantidade desejada: ${quantity}` : '',
+    amount ? `Preço exibido: R$ ${(amount / 100).toFixed(2).replace('.', ',')}` : '',
+    '',
+    'Quero confirmar disponibilidade e atendimento.',
+  ].filter(Boolean);
+
+  if (window.TenantRoutes && typeof window.TenantRoutes.supportUrl === 'function') {
+    return window.TenantRoutes.supportUrl(lines.join('\n'));
+  }
+
+  const company = (window.TENANT_CONFIG && window.TENANT_CONFIG.company) || {};
+  const whatsapp = String(company.whatsapp || '55974001960').replace(/\D/g, '');
+  return `https://wa.me/${whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`;
+}
+
 function renderProducts(products, containerId = 'produtosGrid') {
   // CORREÇÃO: Garantir que products é sempre um array
   if (!products) {
@@ -53,8 +99,11 @@ function renderProducts(products, containerId = 'produtosGrid') {
   }
 
     // CORREÇÃO: Validar cada produto antes de renderizar
-    container.innerHTML = products
-      .filter(product => product && product.id && product.title) // Filtrar produtos inválidos
+    const validProducts = products.filter(product => product && product.id && product.title);
+    window.__tech10_legacy_products = validProducts;
+    const quoteOnly = isQuoteOnlyRuntime();
+
+    container.innerHTML = validProducts
       .map(product => {
         try {
           const variant = product.variants?.[0];
@@ -72,8 +121,13 @@ function renderProducts(products, containerId = 'produtosGrid') {
           const stockClass = isInStock ? 'in-stock' : 'out-of-stock';
           const buttonDisabled = !isInStock ? 'disabled' : '';
           const buttonText = isInStock 
-            ? '<i class="fas fa-shopping-cart"></i> Comprar'
+            ? (quoteOnly
+              ? '<i class="fab fa-whatsapp"></i> Pedir atendimento'
+              : '<i class="fas fa-shopping-cart"></i> Comprar')
             : '<i class="fas fa-times-circle"></i> Indisponível';
+          const buttonAction = quoteOnly
+            ? `requestLegacySupport('${product.id}'); event.stopPropagation();`
+            : `addToCartMedusa('${variant?.id || ''}', '${product.id}'); event.stopPropagation();`;
       
       return `
       <div class="product-card ${stockClass}" data-product-id="${product.id}">
@@ -94,7 +148,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
             <span>${stockText}</span>
             ${isInStock && inventoryQty > 5 ? `<small>(${inventoryQty} disponíveis)</small>` : ''}
           </div>
-                <button class="btn-comprar ${stockClass}" ${buttonDisabled} onclick="addToCartMedusa('${variant?.id || ''}', '${product.id}'); event.stopPropagation();" data-product-id="${product.id}" data-variant-id="${variant?.id || ''}" data-inventory="${inventoryQty}">
+                <button class="btn-comprar ${stockClass}" ${buttonDisabled} onclick="${buttonAction}" data-product-id="${product.id}" data-variant-id="${variant?.id || ''}" data-inventory="${inventoryQty}">
             ${buttonText}
           </button>
         </div>
@@ -114,10 +168,11 @@ function renderProducts(products, containerId = 'produtosGrid') {
 
   // Função global canônica para adicionar ao carrinho do storefront
   window.addToStorefrontCart = async function(variantId, productId, buyNow = false) {
+    const activeCart = getActiveStorefrontCart();
     try {
       if (!variantId) {
-        if (window.medusaCart) {
-          window.medusaCart.showNotification('❌ Erro: Variante do produto não encontrada', 'error');
+        if (activeCart) {
+          activeCart.showNotification('❌ Erro: Variante do produto não encontrada', 'error');
         } else {
         alert('❌ Erro: Variante do produto não encontrada');
         }
@@ -129,8 +184,8 @@ function renderProducts(products, containerId = 'produtosGrid') {
       const inventory = button ? parseInt(button.getAttribute('data-inventory') || '0') : 0;
       
       if (inventory <= 0) {
-        if (window.medusaCart) {
-          window.medusaCart.showNotification('❌ Produto fora de estoque', 'error');
+        if (activeCart) {
+          activeCart.showNotification('❌ Produto fora de estoque', 'error');
         } else {
           alert('❌ Este produto está fora de estoque no momento.');
         }
@@ -138,16 +193,16 @@ function renderProducts(products, containerId = 'produtosGrid') {
       }
 
       // Verificar estoque disponível no carrinho atual
-      if (window.medusaCart && window.medusaCart.cartId) {
+      if (activeCart && activeCart.cartId) {
         try {
-          const cart = await window.medusaCart.getCart();
+          const cart = await activeCart.getCart();
           if (cart && cart.items) {
             const itemInCart = cart.items.find(item => item.variant_id === variantId);
             const qtyInCart = itemInCart ? itemInCart.quantity : 0;
             
             if (qtyInCart >= inventory) {
-              if (window.medusaCart) {
-                window.medusaCart.showNotification(`❌ Estoque insuficiente. Disponível: ${inventory} unidades`, 'error');
+              if (activeCart) {
+                activeCart.showNotification(`❌ Estoque insuficiente. Disponível: ${inventory} unidades`, 'error');
               } else {
                 alert(`❌ Estoque insuficiente. Disponível: ${inventory} unidades`);
               }
@@ -159,12 +214,12 @@ function renderProducts(products, containerId = 'produtosGrid') {
         }
       }
 
-      // Usar MedusaCart se disponível, senão usar MarketplaceAdapter
-      if (window.medusaCart) {
-        await window.medusaCart.addItem(variantId, productId, 1, buyNow);
+      // Usar o carrinho ativo do storefront se disponível, senão usar MarketplaceAdapter
+      if (activeCart) {
+        await activeCart.addItem(variantId, productId, 1, buyNow);
       } else if (window.MarketplaceAdapter) {
         // Fallback via adapter storefront
-        console.warn('⚠️ MedusaCart não disponível, usando MarketplaceAdapter');
+        console.warn('⚠️ Carrinho do storefront não disponível, usando MarketplaceAdapter');
         let cartId = localStorage.getItem('tech10_storefront_cart_id') || localStorage.getItem('vc_cart_id');
         if (!cartId) {
           const created = await window.MarketplaceAdapter.createCart();
@@ -188,8 +243,8 @@ function renderProducts(products, containerId = 'produtosGrid') {
       }
     } catch (error) {
       console.error('Erro ao adicionar ao carrinho:', error);
-      if (window.medusaCart) {
-        window.medusaCart.showNotification('❌ Erro ao adicionar produto', 'error');
+      if (activeCart) {
+        activeCart.showNotification('❌ Erro ao adicionar produto', 'error');
       } else {
         alert('❌ Erro ao adicionar produto ao carrinho');
       }
@@ -199,6 +254,15 @@ function renderProducts(products, containerId = 'produtosGrid') {
 
   // Alias legado preservado para superfícies antigas
   window.addToCartMedusa = window.addToStorefrontCart;
+
+  window.requestLegacySupport = function(productId, quantity = 1) {
+    const products = window.__tech10_legacy_products || [];
+    const product = products.find(item => String(item.id) === String(productId));
+    const supportUrl = buildSupportUrlForProduct(product, quantity);
+    if (supportUrl) {
+      window.open(supportUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   // Função para abrir modal do produto
   window.openProductModal = async function(productId) {
@@ -219,6 +283,29 @@ function renderProducts(products, containerId = 'produtosGrid') {
           ? (variant.prices[0]?.amount / 100).toFixed(2).replace('.', ',')
           : '0,00';
         
+        const quoteOnly = isQuoteOnlyRuntime();
+        const actionButtonsHtml = quoteOnly
+          ? `
+                <button onclick="requestLegacySupport('${product.id}')"
+                        style="background: #0f766e; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600;">
+                  <i class="fab fa-whatsapp"></i> Pedir atendimento
+                </button>
+                <button onclick="closeProductModal()"
+                        style="background: #e2e8f0; color: #0f172a; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600;">
+                  Continuar vendo
+                </button>
+            `
+          : `
+                <button onclick="handleBuyNow('${variant?.id || ''}', '${product.id}')"
+                        style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600;">
+                  <i class="fas fa-shopping-bag"></i> Comprar Agora
+                </button>
+                <button onclick="handleAddToCart('${variant?.id || ''}', '${product.id}')"
+                        style="background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600;">
+                  <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                </button>
+            `;
+
         // Usar ModalManager global se disponível
         if (window.modalManager && typeof window.modalManager.create === 'function') {
           const modalId = window.modalManager.create({
@@ -234,14 +321,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
                   R$ ${price}
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-                  <button onclick="handleBuyNow('${variant?.id || ''}', '${product.id}')" 
-                          style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600;">
-                    <i class="fas fa-shopping-bag"></i> Comprar Agora
-                  </button>
-                  <button onclick="handleAddToCart('${variant?.id || ''}', '${product.id}')" 
-                          style="background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600;">
-                    <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
-                  </button>
+                  ${actionButtonsHtml}
                 </div>
               </div>
             `,
@@ -264,14 +344,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
                     R$ ${price}
                   </div>
                   <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-                    <button onclick="handleBuyNow('${variant?.id || ''}', '${product.id}')" 
-                            style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600;">
-                      <i class="fas fa-shopping-bag"></i> Comprar Agora
-                    </button>
-                    <button onclick="handleAddToCart('${variant?.id || ''}', '${product.id}')" 
-                            style="background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: 600;">
-                      <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
-                    </button>
+                    ${actionButtonsHtml}
                   </div>
                 </div>
               </div>
@@ -301,6 +374,10 @@ function renderProducts(products, containerId = 'produtosGrid') {
   window.handleBuyNow = async function(variantId, productId) {
     try {
       if (window.closeProductModal) window.closeProductModal();
+      if (isQuoteOnlyRuntime()) {
+        window.requestLegacySupport(productId);
+        return;
+      }
       
       // Adicionar ao carrinho
       await (window.addToStorefrontCart || window.addToCartMedusa)(variantId, productId);
@@ -321,6 +398,10 @@ function renderProducts(products, containerId = 'produtosGrid') {
   window.handleAddToCart = async function(variantId, productId) {
     try {
       if (window.closeProductModal) window.closeProductModal();
+      if (isQuoteOnlyRuntime()) {
+        window.requestLegacySupport(productId);
+        return;
+      }
       await (window.addToStorefrontCart || window.addToCartMedusa)(variantId, productId);
     } catch (error) {
       console.error('Erro ao adicionar ao carrinho:', error);
