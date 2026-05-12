@@ -54,8 +54,11 @@
   }
 
   function buildSupportUrl(runtimeConfig, message) {
-    const support = (runtimeConfig && runtimeConfig.support) || {};
     const tenantRoutes = global.TenantRoutes || {};
+    if (tenantRoutes.supportUrl) {
+      return tenantRoutes.supportUrl(message);
+    }
+    const support = (runtimeConfig && runtimeConfig.support) || {};
     const company = tenantRoutes.company || {};
     const whatsapp = String(company.whatsapp || support.whatsapp || defaults.whatsapp).replace(/\D/g, '');
     const text = encodeURIComponent(message || 'Olá! Vim pelo portal da Tech10 e preciso de ajuda com uma ordem de serviço.');

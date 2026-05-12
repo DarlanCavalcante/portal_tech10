@@ -351,6 +351,10 @@
         }
 
         function buildSupportUrl(runtimeConfig, message) {
+            const tenantRoutes = window.TenantRoutes || {};
+            if (tenantRoutes.supportUrl) {
+                return tenantRoutes.supportUrl(message);
+            }
             const support = (runtimeConfig && runtimeConfig.support) || {};
             const company = (window.TenantRoutes && window.TenantRoutes.company) || {};
             const whatsapp = String(company.whatsapp || support.whatsapp || '55974001960').replace(/\D/g, '');

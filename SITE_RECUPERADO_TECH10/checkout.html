@@ -478,6 +478,10 @@
         }
 
         function buildSupportUrl(message) {
+            const tenantRoutes = window.TenantRoutes || {};
+            if (tenantRoutes.supportUrl) {
+                return tenantRoutes.supportUrl(message);
+            }
             const company = (window.TenantRoutes && window.TenantRoutes.company) || {};
             const whatsapp = company.whatsapp || '55974001960';
             const text = encodeURIComponent(message || 'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.');

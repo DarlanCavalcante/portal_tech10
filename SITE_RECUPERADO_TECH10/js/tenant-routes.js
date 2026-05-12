@@ -23,6 +23,9 @@
     orderSuccess: tenant.orderSuccessPath || '/pedido-confirmado',
     portal: tenant.portalPath || '/portal',
     whatsappBase: company.whatsapp ? `https://wa.me/${company.whatsapp}` : 'https://wa.me/55974001960',
+    company: {
+      whatsapp: company.whatsapp || '55974001960',
+    },
     logoUrl: (brand && brand.logoUrl) || '/imagem/logo/tech10-logo-fundo-azul.png',
     storeSlug: (tenant && tenant.slug) || 'tech10',
     legacyStoreSlugs,
@@ -437,6 +440,10 @@
       applyCommerceRuntime(runtimeConfig);
     });
   }
+
+  routes.supportUrl = function (message) {
+    return buildSupportUrl(message);
+  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', apply);
