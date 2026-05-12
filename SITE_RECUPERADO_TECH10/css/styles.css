@@ -484,6 +484,59 @@ body.loaded {
     background: var(--gray-50);
 }
 
+.categories-intro {
+    max-width: 880px;
+    margin: 0 auto 2rem;
+    text-align: center;
+    color: var(--gray-700);
+}
+
+.categories-intro p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.categories-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.875rem;
+    flex-wrap: wrap;
+}
+
+.categories-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.categories-action.primary {
+    background: var(--primary-color);
+    color: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.categories-action.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.categories-action.secondary {
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--primary-color);
+    border: 1px solid rgba(37, 99, 235, 0.16);
+}
+
+.categories-action.secondary:hover {
+    background: rgba(37, 99, 235, 0.12);
+}
+
 .categories-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -520,6 +573,34 @@ body.loaded {
 
 .category-card p {
     color: rgba(255, 255, 255, 0.9);
+}
+
+.category-card-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--white);
+}
+
+.category-card-tag.catalog {
+    background: rgba(16, 185, 129, 0.16);
+    color: #d1fae5;
+}
+
+.category-card-route {
+    display: block;
+    margin-top: 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.92);
 }
 
 /* Produtos em Destaque */
