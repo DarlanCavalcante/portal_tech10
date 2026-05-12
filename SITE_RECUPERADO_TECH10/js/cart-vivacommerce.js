@@ -51,6 +51,22 @@
     }
   }
 
+  function getLegacyNotificationBridge(currentCart) {
+    return [
+      global.storefrontCart,
+      global.cartStorefront,
+      global.medusaCart
+    ].find(function (cart) {
+      return cart && cart !== currentCart && typeof cart.showNotification === 'function';
+    }) || null;
+  }
+
+  function publishCompatibilityAliases(cart) {
+    if (typeof window === 'undefined') return;
+    window.cartVivaCommerce = cart;
+    window.medusaCart = window.medusaCart || cart;
+  }
+
   class CartVivaCommerce {
     constructor() {
       this.adapter = global.MarketplaceAdapter;
@@ -100,7 +116,7 @@
         this.cart = cart;
         await this.updateCartCount();
         this.showNotification('Produto adicionado ao carrinho!');
-        if (buyNow) setTimeout(() => { window.location.href = 'carrinho.html'; }, 1000);
+        if (buyNow) setTimeout(() => { window.location.href = '/carrinho'; }, 1000);
         return this.cart;
       } catch (err) {
         this.showNotification(err.message || 'Erro ao adicionar produto', 'error');
@@ -145,8 +161,9 @@
     }
 
     showNotification(message, type) {
-      if (typeof global.medusaCart !== 'undefined' && global.medusaCart.showNotification) {
-        global.medusaCart.showNotification(message, type);
+      const bridge = getLegacyNotificationBridge(this);
+      if (bridge) {
+        bridge.showNotification(message, type);
         return;
       }
       if (typeof alert !== 'undefined') alert(message);
@@ -154,8 +171,5 @@
   }
 
   const cart = new CartVivaCommerce();
-  if (typeof window !== 'undefined') {
-    window.medusaCart = window.medusaCart || cart;
-    window.cartVivaCommerce = cart;
-  }
+  publishCompatibilityAliases(cart);
 })(typeof window !== 'undefined' ? window : this);
