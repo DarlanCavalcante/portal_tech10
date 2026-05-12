@@ -55,3 +55,4 @@ Depois do smoke técnico, validar também:
 - o CTA principal continua coerente com `quote_only`
 - o modal do produto não oferece checkout falso quando a loja está em `quote_only`
 - produtos com nome parecido ficam distinguíveis por marca e/ou SKU
+- a busca encontra produtos também por `marca` e `SKU`

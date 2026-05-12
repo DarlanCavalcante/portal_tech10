@@ -19,6 +19,24 @@
   var _sortValue = 'recent';
   var _totalFromApi = 0;
 
+  function _matchesSearch(product, term) {
+    if (!term) return true;
+
+    var metadata = product && product.metadata ? product.metadata : {};
+    var haystack = [
+      product && product.title,
+      product && product.description,
+      metadata.brand,
+      metadata.sku,
+      product && product.category && (product.category.name || product.category.handle),
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    return haystack.indexOf(term) !== -1;
+  }
+
   function _normalizeHandle(value) {
     if (global.MarketplaceAdapter && global.MarketplaceAdapter.normalizeCategoryHandle) {
       return global.MarketplaceAdapter.normalizeCategoryHandle(value);
@@ -368,8 +386,7 @@
     // Filtro de busca
     if (search) {
       filtered = filtered.filter(function (p) {
-        return (p.title || '').toLowerCase().indexOf(search) !== -1 ||
-               (p.description || '').toLowerCase().indexOf(search) !== -1;
+        return _matchesSearch(p, search);
       });
     }
 
