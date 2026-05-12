@@ -19,6 +19,7 @@
     if (!whatsapp) return '';
 
     var title = product && product.title ? product.title : 'um produto da loja';
+    var metadata = product && product.metadata ? product.metadata : {};
     var price = product && product.variants && product.variants[0] && product.variants[0].prices && product.variants[0].prices[0]
       ? product.variants[0].prices[0].amount
       : 0;
@@ -26,6 +27,8 @@
     var message = [
       'Olá Tech10, tenho interesse neste produto:',
       title,
+      metadata.brand ? 'Marca: ' + metadata.brand : '',
+      metadata.sku ? 'SKU: ' + metadata.sku : '',
       price ? 'Preço exibido: R$ ' + formatPrice(price) : '',
       '',
       'Gostaria de confirmar disponibilidade e atendimento.'
