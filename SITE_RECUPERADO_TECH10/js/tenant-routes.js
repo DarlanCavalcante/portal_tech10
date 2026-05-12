@@ -213,6 +213,41 @@
     element.setAttribute('aria-hidden', 'true');
   }
 
+  function convertElementToSupportEntry(element, message, options) {
+    if (!element) return;
+
+    const supportUrl = buildSupportUrl(message);
+    const html = (options && options.html)
+      || '<i class="fab fa-whatsapp"></i><span>Atendimento</span>';
+
+    if (element.tagName === 'A') {
+      element.setAttribute('href', supportUrl);
+      element.setAttribute('target', '_blank');
+      element.setAttribute('rel', 'noopener noreferrer');
+      element.setAttribute('data-runtime-retarget', 'support-entry');
+      element.innerHTML = html;
+      element.classList.add('runtime-support-entry');
+      return;
+    }
+
+    if (element.tagName === 'DIV' || element.tagName === 'BUTTON') {
+      element.innerHTML = html;
+      element.setAttribute('role', 'link');
+      element.setAttribute('tabindex', '0');
+      element.setAttribute('data-runtime-retarget', 'support-entry');
+      element.classList.add('runtime-support-entry');
+      element.onclick = function () {
+        global.open(supportUrl, '_blank', 'noopener,noreferrer');
+      };
+      element.onkeydown = function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          global.open(supportUrl, '_blank', 'noopener,noreferrer');
+        }
+      };
+    }
+  }
+
   function retargetLinkToSupport(link, message, html) {
     if (!link) return;
     link.setAttribute('href', buildSupportUrl(message));
@@ -237,6 +272,12 @@
       '.quote-only-runtime-link{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700;}',
       '.quote-only-runtime-link.primary{background:#2563eb;color:#fff;}',
       '.quote-only-runtime-link.secondary{background:#ecfeff;color:#0f766e;border:1px solid rgba(15,118,110,.18);}',
+      '.runtime-support-entry{display:inline-flex !important;align-items:center;justify-content:center;gap:8px;text-decoration:none;}',
+      '.pp-cart-btn.runtime-support-entry{width:auto;height:44px;border-radius:999px;padding:0 14px;background:#ecfeff;color:#0f766e;font-size:13px;font-weight:700;border:1px solid rgba(15,118,110,.18);}',
+      '.pp-cart-btn.runtime-support-entry:hover{background:#d1fae5;color:#0f766e;}',
+      '.pp-cart-btn.runtime-support-entry .pp-cart-count{display:none !important;}',
+      '.cart-icon.runtime-support-entry{width:auto;height:40px;border-radius:999px;padding:0 14px;background:#ecfeff;color:#0f766e;font-size:13px;font-weight:700;border:1px solid rgba(15,118,110,.18);gap:8px;}',
+      '.cart-icon.runtime-support-entry .cart-count{display:none !important;}',
     ].join('');
     document.head.appendChild(style);
   }
@@ -309,11 +350,33 @@
     const quoteOnly = capabilities.quoteOnly === true || runtimeConfig.commerce.checkoutMode === 'quote_only';
 
     if (!cartEnabled) {
-      document.querySelectorAll('.pp-cart-btn, .cart-icon, #cartIcon').forEach(hideElement);
       document.querySelectorAll('.cart-count, .pp-cart-count').forEach(hideElement);
+      document.querySelectorAll('.pp-cart-btn').forEach(function (element) {
+        convertElementToSupportEntry(
+          element,
+          'Olá! Vim pela loja da Tech10 e gostaria de atendimento para fechar uma compra.',
+          { html: '<i class="fab fa-whatsapp"></i><span>Atendimento</span>' }
+        );
+      });
+      document.querySelectorAll('.cart-icon').forEach(function (element) {
+        if (element.classList.contains('pp-cart-btn')) return;
+        convertElementToSupportEntry(
+          element,
+          'Olá! Vim pela loja da Tech10 e gostaria de atendimento para fechar uma compra.',
+          { html: '<i class="fab fa-whatsapp"></i><span>Atendimento</span>' }
+        );
+      });
+      document.querySelectorAll('#cartIcon').forEach(function (element) {
+        if (element.classList.contains('runtime-support-entry')) return;
+        convertElementToSupportEntry(
+          element,
+          'Olá! Vim pela loja da Tech10 e gostaria de atendimento para fechar uma compra.',
+          { html: '<i class="fab fa-whatsapp"></i><span>Atendimento</span>' }
+        );
+      });
+
       document.querySelectorAll('a[href="/carrinho"], a[href="/carrinho.html"]').forEach(function (link) {
-        if (link.classList.contains('cart-icon') || link.classList.contains('pp-cart-btn')) {
-          hideElement(link);
+        if (link.classList.contains('runtime-support-entry')) {
           return;
         }
 
