@@ -45,7 +45,7 @@ function getRuntimeEnv() {
   const catalogSource = normalizeChoice(
     process.env.TECH10_CATALOG_SOURCE,
     ALLOWED_CATALOG_SOURCES,
-    'store_backend'
+    legacyStoreBackendUrl ? 'store_backend' : 'erp_stock'
   );
 
   const catalogBackendUrl = normalizeUrl(

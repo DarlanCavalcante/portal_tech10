@@ -30,9 +30,9 @@
     VIVACOMMERCE_BASE_URL: runtimeOrigin,
     LEGACY_STORE_BASE_URL: runtimeOrigin,
 
-    CATALOG_SOURCE: tenantStore.catalogSource || 'store_backend',
+    CATALOG_SOURCE: tenantStore.catalogSource || 'erp_stock',
 
-    CHECKOUT_MODE: tenantStore.checkoutMode || 'store_backend',
+    CHECKOUT_MODE: tenantStore.checkoutMode || 'quote_only',
 
     CART_STORAGE_KEY: `${tenantRuntimeId}_storefront_cart_id`,
 

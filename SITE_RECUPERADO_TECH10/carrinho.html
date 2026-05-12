@@ -561,7 +561,18 @@
                 return runtimeConfigCache;
             } catch (err) {
                 console.warn('[CARRINHO] Não foi possível carregar runtime config:', err);
-                runtimeConfigCache = { commerce: { checkoutMode: 'store_backend', capabilities: { cart: true, checkout: true, quoteOnly: false } } };
+                runtimeConfigCache = {
+                    commerce: {
+                        checkoutMode: 'quote_only',
+                        capabilities: {
+                            cart: false,
+                            checkout: false,
+                            quoteOnly: true,
+                            assistedCartBridge: true,
+                            assistedCheckoutBridge: true
+                        }
+                    }
+                };
                 return runtimeConfigCache;
             }
         }

@@ -334,8 +334,14 @@
                 console.warn('[PEDIDO-CONFIRMADO] Não foi possível carregar runtime config:', err);
                 return {
                     commerce: {
-                        checkoutMode: 'store_backend',
-                        capabilities: { cart: true, checkout: true, quoteOnly: false }
+                        checkoutMode: 'quote_only',
+                        capabilities: {
+                            cart: false,
+                            checkout: false,
+                            quoteOnly: true,
+                            assistedCartBridge: true,
+                            assistedCheckoutBridge: true
+                        }
                     },
                     support: {
                         whatsapp: '55974001960'
