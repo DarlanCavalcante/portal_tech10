@@ -40,7 +40,7 @@ function getActiveStorefrontCart() {
   if (typeof window.getActiveStorefrontCart === 'function') {
     return window.getActiveStorefrontCart();
   }
-  return window.storefrontCart || window.cartStorefront || window.medusaCart || window.cartVivaCommerce || null;
+  return window.storefrontCart || null;
 }
 
 function buildSupportUrlForProduct(product, quantity = 1) {

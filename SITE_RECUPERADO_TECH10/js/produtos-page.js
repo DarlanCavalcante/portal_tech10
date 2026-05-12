@@ -480,7 +480,7 @@
     function update() {
       var cart = typeof global.getActiveStorefrontCart === 'function'
         ? global.getActiveStorefrontCart()
-        : (global.storefrontCart || global.cartStorefront || global.medusaCart || global.cartVivaCommerce);
+        : (global.storefrontCart || null);
       if (cart && cart.getCount) {
         var n = cart.getCount();
         countEl.textContent = n;

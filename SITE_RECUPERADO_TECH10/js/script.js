@@ -263,7 +263,7 @@ async function initializeApp() {
         if (typeof window.getActiveStorefrontCart === 'function') {
             return window.getActiveStorefrontCart();
         }
-        return window.storefrontCart || window.cartStorefront || window.medusaCart || window.cartVivaCommerce || null;
+        return window.storefrontCart || null;
     }
 
     function syncStorefrontCartCount() {
@@ -1125,7 +1125,7 @@ window.addEventListener('load', function() {
     // Se o carrinho canônico já estiver inicializado, atualizar contador.
     var cart = (typeof getActiveStorefrontCart === 'function')
         ? getActiveStorefrontCart()
-        : (window.storefrontCart || window.cartStorefront || window.medusaCart || window.cartVivaCommerce || null);
+        : (window.storefrontCart || null);
     if (cart && typeof cart.updateCartCount === 'function') {
         cart.updateCartCount().catch(err => console.error('Erro ao atualizar contador:', err));
     }
