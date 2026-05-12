@@ -305,7 +305,7 @@ function renderProducts(products, containerId = 'produtosGrid') {
       // Redirecionar para carrinho
       showNotification('✅ Produto adicionado! Redirecionando...');
       setTimeout(() => {
-        window.location.href = '/carrinho.html';
+        window.location.href = '/carrinho';
       }, 1000);
       
     } catch (error) {

@@ -845,7 +845,7 @@
                     localStorage.setItem('last_order', JSON.stringify(lastOrder));
                     localStorage.removeItem(CART_KEY);
                     localStorage.removeItem(LEGACY_CART_KEY);
-                    window.location.href = 'pedido-confirmado.html?order=' + (lastOrder.order_number || '');
+                    window.location.href = '/pedido-confirmado?order=' + (lastOrder.order_number || '');
                 } catch (err) {
                     console.error('[CHECKOUT] Erro ao finalizar:', err);
                     showError(err.message || 'Erro ao processar pedido. Tente novamente.');
