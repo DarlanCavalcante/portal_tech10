@@ -282,7 +282,7 @@
         <div class="cs-sep done"></div>
         <div class="cs-step active">
             <div class="cs-step-num">2</div>
-            <span class="cs-step-lbl">Seus Dados</span>
+            <span class="cs-step-lbl">Contato</span>
         </div>
         <div class="cs-sep"></div>
         <div class="cs-step">
@@ -294,7 +294,7 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-headset"></i> Fechamento assistido</h1>
-            <p>Confirme seus dados para seguir com a Tech10 no fechamento do pedido.</p>
+            <p>Compartilhe seus dados para a Tech10 continuar o atendimento da sua seleção com estoque, entrega e pagamento alinhados com você.</p>
             <div class="checkout-links">
                 <a href="/loja"><i class="fas fa-store"></i> Voltar para a loja</a>
                 <a href="/portal" data-tenant-portal-link><i class="fas fa-receipt"></i> Portal do cliente</a>
@@ -314,7 +314,7 @@
             <div class="checkout-form">
                 <form id="checkout-form">
                     <!-- Dados do Cliente -->
-                    <h2 class="section-title">Dados do Cliente</h2>
+                    <h2 class="section-title">Seus dados para o atendimento</h2>
                     <div class="form-group">
                         <label>Nome Completo <span class="required">*</span></label>
                         <input type="text" name="customer_name" required>
@@ -335,7 +335,7 @@
                     </div>
 
                     <!-- Endereço de Entrega -->
-                    <h2 class="section-title" style="margin-top: 30px;">Endereço de Entrega</h2>
+                    <h2 class="section-title" style="margin-top: 30px;">Entrega ou retirada</h2>
                     <div class="form-group">
                         <label>CEP <span class="required">*</span></label>
                         <div class="cep-lookup">
@@ -375,7 +375,7 @@
                     </div>
 
                     <!-- Forma de Entrega -->
-                    <h2 class="section-title" style="margin-top: 30px;">Forma de Entrega</h2>
+                    <h2 class="section-title" style="margin-top: 30px;">Como prefere receber</h2>
                     <div class="form-group">
                         <label>Como deseja receber? <span class="required">*</span></label>
                         <div id="shipping-options" style="display: flex; flex-direction: column; gap: 15px;">
@@ -399,7 +399,7 @@
                     </div>
 
                     <!-- Método de Pagamento -->
-                    <h2 class="section-title" style="margin-top: 30px;">Método de Pagamento</h2>
+                    <h2 class="section-title" style="margin-top: 30px;">Preferência de pagamento</h2>
                     <div class="form-group">
                         <label>Forma de Pagamento <span class="required">*</span></label>
                         <select name="payment_method" required>
@@ -412,23 +412,23 @@
 
                     <!-- Observações -->
                     <div class="form-group">
-                        <label>Observações (opcional)</label>
-                        <textarea name="notes" rows="3" placeholder="Alguma observação sobre o pedido?"></textarea>
+                        <label>Observações para a equipe (opcional)</label>
+                        <textarea name="notes" rows="3" placeholder="Alguma observação sobre sua seleção, entrega ou atendimento?"></textarea>
                     </div>
 
                     <button type="submit" class="btn-submit" id="submit-btn">
-                        <i class="fas fa-headset"></i> Finalizar com atendimento
+                        <i class="fas fa-headset"></i> Enviar para atendimento
                     </button>
                 </form>
             </div>
 
             <!-- Resumo do Pedido -->
             <div class="checkout-summary">
-                <h2 class="section-title">Resumo do Pedido</h2>
+                <h2 class="section-title">Sua seleção</h2>
                 <div id="cart-summary">
                     <div class="loading">
                         <i class="fas fa-spinner fa-spin"></i>
-                        <p>Carregando...</p>
+                        <p>Carregando sua seleção...</p>
                     </div>
                 </div>
             </div>
@@ -480,12 +480,61 @@
 
         function getSubmitButtonHtml() {
             return isQuoteOnlyRuntime(runtimeConfigCache)
-                ? '<i class="fas fa-headset"></i> Finalizar com atendimento'
+                ? '<i class="fas fa-headset"></i> Enviar para atendimento'
                 : '<i class="fas fa-lock"></i> Finalizar Pedido';
+        }
+
+        function formatCurrencyForMessage(value) {
+            const number = Number(value || 0);
+            return 'R$ ' + number.toFixed(2).replace('.', ',');
+        }
+
+        function buildAssistedCheckoutMessage(details) {
+            const lines = [
+                'Olá! Vim pela loja da Tech10 e quero continuar o fechamento assistido da minha seleção.',
+                '',
+                '*Cliente*',
+                '- Nome: ' + (details.customerName || '-'),
+                '- Email: ' + (details.customerEmail || '-'),
+                '- Telefone: ' + (details.customerPhone || '-')
+            ];
+
+            if (details.customerCpf) {
+                lines.push('- CPF: ' + details.customerCpf);
+            }
+
+            lines.push('', '*Entrega*', '- Preferência: ' + details.shippingLabel);
+
+            if (details.shippingAddress) {
+                lines.push('- Endereço: ' + details.shippingAddress);
+            }
+
+            lines.push('', '*Pagamento*', '- Preferência: ' + details.paymentLabel);
+
+            if (details.notes) {
+                lines.push('', '*Observações*', details.notes);
+            }
+
+            if (details.items && details.items.length > 0) {
+                lines.push('', '*Seleção*');
+                details.items.forEach(function(item) {
+                    lines.push('- ' + item.title + ' | Qtd: ' + item.quantity + ' | ' + formatCurrencyForMessage(item.unitPrice));
+                });
+                lines.push('- Subtotal estimado: ' + formatCurrencyForMessage(details.subtotal));
+            }
+
+            lines.push('', 'Quero validar disponibilidade, entrega e fechamento com a equipe.');
+            return lines.join('\n');
         }
 
         function selectShipping(method, cost, isFree) {
             selectedShippingOption = { method, cost, is_free: isFree, zone: null };
+            const requiresAddress = method !== 'pickup';
+            ['zip_code', 'street', 'number', 'neighborhood', 'city', 'state'].forEach(function(fieldId) {
+                const input = document.getElementById(fieldId);
+                if (!input) return;
+                input.required = requiresAddress;
+            });
             renderCartSummary();
         }
 
@@ -624,7 +673,7 @@
                 const errorDiv = document.getElementById('error-message');
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = isQuoteOnlyRuntime(runtimeConfigCache)
-                    ? '<i class="fas fa-spinner fa-spin"></i> Acionando atendimento...'
+                    ? '<i class="fas fa-spinner fa-spin"></i> Preparando atendimento...'
                     : '<i class="fas fa-spinner fa-spin"></i> Processando...';
                 if (errorDiv) errorDiv.style.display = 'none';
 
@@ -642,11 +691,13 @@
                 const customerName = String(formData.get('customer_name') || '').trim();
                 const customerEmail = String(formData.get('customer_email') || '').trim();
                 const customerPhone = String(formData.get('customer_phone') || '').trim();
+                const customerCpf = String(formData.get('customer_cpf') || '').trim();
                 const nameParts = customerName.split(' ');
                 const firstName = nameParts[0] || '';
                 const lastName = nameParts.slice(1).join(' ') || '';
                 const zipCode = String(formData.get('zip_code') || '').replace(/\D/g, '');
                 const paymentMethod = String(formData.get('payment_method') || 'pix');
+                const notes = String(formData.get('notes') || '').trim();
 
                 const checkoutPayload = {
                     email: customerEmail,
@@ -664,6 +715,56 @@
                 };
 
                 try {
+                    if (isQuoteOnlyRuntime(runtimeConfigCache)) {
+                        const shippingMethod = String(formData.get('shipping_method') || 'standard');
+                        const shippingLabel = shippingMethod === 'pickup' ? 'Retirada na loja' : 'Entrega padrão';
+                        const shippingAddress = shippingMethod === 'pickup'
+                            ? 'Retirada presencial na loja Tech10.'
+                            : [
+                                checkoutPayload.shipping_address.street,
+                                checkoutPayload.shipping_address.number,
+                                checkoutPayload.shipping_address.complement,
+                                checkoutPayload.shipping_address.neighborhood,
+                                checkoutPayload.shipping_address.city,
+                                checkoutPayload.shipping_address.state,
+                                zipCode && ('CEP ' + zipCode.replace(/(\d{5})(\d{3})/, '$1-$2'))
+                            ].filter(Boolean).join(', ');
+                        const paymentLabelMap = {
+                            pix: 'PIX',
+                            credit_card: 'Cartão de crédito',
+                            debit_card: 'Cartão de débito',
+                            boleto: 'Boleto bancário'
+                        };
+                        const items = (cart && Array.isArray(cart.items)) ? cart.items.map(function(item) {
+                            return {
+                                title: item.title || 'Produto',
+                                quantity: item.quantity || 1,
+                                unitPrice: item.unit_price || 0
+                            };
+                        }) : [];
+                        const subtotal = cart && cart.subtotal
+                            ? cart.subtotal
+                            : items.reduce(function(sum, item) {
+                                return sum + ((item.unitPrice || 0) * (item.quantity || 1));
+                            }, 0);
+
+                        window.location.href = buildSupportUrl(buildAssistedCheckoutMessage({
+                            customerName,
+                            customerEmail,
+                            customerPhone,
+                            customerCpf,
+                            shippingLabel,
+                            shippingAddress,
+                            paymentLabel: paymentLabelMap[paymentMethod] || paymentMethod,
+                            notes,
+                            items,
+                            subtotal
+                        }));
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = getSubmitButtonHtml();
+                        return;
+                    }
+
                     const res = await fetch(getStoreAPI() + '/carts/' + cartId + '/complete', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -718,13 +819,11 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             runtimeConfigCache = await fetchRuntimeConfig();
-            if (isQuoteOnlyRuntime(runtimeConfigCache)) {
-                console.log('[CHECKOUT] Runtime em quote_only; a página ficará sob o fluxo assistido.');
-                return;
-            }
-
             bindCheckoutForm();
             loadCartSummary();
+            if (isQuoteOnlyRuntime(runtimeConfigCache)) {
+                console.log('[CHECKOUT] Runtime em quote_only; a página atuará como ponte de fechamento assistido.');
+            }
         });
     </script>
 </body>
