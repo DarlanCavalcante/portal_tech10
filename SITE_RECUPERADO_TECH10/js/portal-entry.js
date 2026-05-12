@@ -56,25 +56,34 @@
   function updateRuntimeInfo(runtimeConfig) {
     const note = document.getElementById('runtime-note');
     const whatsappButton = document.getElementById('whatsapp-support-btn');
+    const topbarSupportLink = document.getElementById('portal-topbar-support-link');
     if (!note) return;
 
     const integrations = runtimeConfig.integrations || {};
     const portalBaseUrl = integrations.portalBaseUrl || defaults.portalBaseUrl;
     const statusBaseUrl = integrations.statusBaseUrl || defaults.statusBaseUrl;
     const storeBackendUrl = integrations.storeBackendUrl || 'não configurado';
+    const commerce = runtimeConfig.commerce || {};
+    const checkoutMode = commerce.checkoutMode || 'desconhecido';
     const whatsapp = runtimeConfig.support && runtimeConfig.support.whatsapp
       ? runtimeConfig.support.whatsapp
       : defaults.whatsapp;
+    const supportUrl = `https://wa.me/${whatsapp}`;
 
     note.innerHTML = [
       `Portal: <code>${portalBaseUrl}</code>`,
       `Status: <code>${statusBaseUrl}</code>`,
       `Backend da loja: <code>${storeBackendUrl}</code>`,
       `Proxy loja: <code>/api/store/*</code>`,
+      `Fluxo comercial: <strong>${checkoutMode === 'quote_only' ? 'atendimento assistido' : checkoutMode}</strong>`,
     ].join('<br>');
 
     if (whatsappButton) {
-      whatsappButton.href = `https://wa.me/${whatsapp}`;
+      whatsappButton.href = supportUrl;
+    }
+
+    if (topbarSupportLink) {
+      topbarSupportLink.href = supportUrl;
     }
   }
 
