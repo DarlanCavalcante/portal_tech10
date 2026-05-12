@@ -24,6 +24,12 @@ Na rodada mais recente:
 - a sidebar da loja passou a ser tratada como vitrine do tenant, e nao como arvore generica;
 - o consumidor standalone passou a normalizar nomes e handles de categoria para apresentacao comercial.
 
+Na rodada seguinte de curadoria comercial:
+
+- o produto `Cabo Inova Type-C para Type-C (CBO-5766)` que ainda estava sem marca publica passou a exibir `Inova`;
+- o produto `Roteador Wireless TP-Link 300Mbps` teve a marca normalizada de `TP- Link` para `TP-Link`;
+- a API publica do ERP e o `tech10-portal` passaram a responder a mesma vitrine com `brand` consistente nos `7` itens publicados.
+
 ## O que foi confirmado
 
 ### Runtime publico Tech10
@@ -101,6 +107,13 @@ Categorias publicas confirmadas depois do saneamento:
 - `Mouse`
 - `Redes · Equipamentos`
 - `Veículos`
+
+Qualidade comercial confirmada nesta etapa:
+
+- `7/7` produtos com `SKU` publico
+- `7/7` produtos com `brand` publica
+- `7/7` produtos com imagem principal
+- `0` produtos em fallback `Outros`
 
 ## Proximo passo critico
 
