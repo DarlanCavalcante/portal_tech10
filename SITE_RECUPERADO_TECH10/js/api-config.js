@@ -47,9 +47,16 @@
       ].concat(this.EXTRA_LEGACY_CART_STORAGE_KEYS || []).filter(Boolean)));
     },
 
+    resolveCartStorageKeys(fallbackKeys = []) {
+      return Array.from(new Set([]
+        .concat(this.CART_STORAGE_KEYS || [])
+        .concat(fallbackKeys || [])
+        .filter(Boolean)));
+    },
+
     readStoredCartId() {
       if (typeof localStorage === 'undefined') return null;
-      for (const key of this.CART_STORAGE_KEYS) {
+      for (const key of this.resolveCartStorageKeys()) {
         const value = localStorage.getItem(key);
         if (value) return value;
       }
@@ -58,7 +65,7 @@
 
     persistStoredCartId(value) {
       if (typeof localStorage === 'undefined') return;
-      for (const key of this.CART_STORAGE_KEYS) {
+      for (const key of this.resolveCartStorageKeys()) {
         if (!value) {
           localStorage.removeItem(key);
         } else {
@@ -77,6 +84,15 @@
 
     get ACTIVE_URL() {
       return this.RUNTIME_BASE_URL;
+    },
+
+    resolveRuntimeBaseUrl(fallbackUrl = 'http://localhost:3000') {
+      return (this.STORE_RUNTIME_BASE_URL
+        || this.RUNTIME_BASE_URL
+        || this.LEGACY_STORE_BASE_URL
+        || this.VIVACOMMERCE_BASE_URL
+        || this.ACTIVE_URL
+        || fallbackUrl).replace(/\/$/, '');
     },
 
     get STORE_API() {
