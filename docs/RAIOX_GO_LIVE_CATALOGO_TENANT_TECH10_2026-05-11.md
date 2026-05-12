@@ -9,10 +9,10 @@ em runtime proprio, sem mistura com outros projetos.
 
 O bloqueio que restou nao e mais de deploy, nem de dominio, nem de integracao basica.
 
-O bloqueio atual e de **prontidao de catalogo**: hoje a Tech10 ja responde com
-`storeSlug=tech10` no ERP e o `tech10-portal` ja consome o backend oficial, mas
-o tenant ainda nao possui itens elegiveis para exposicao publica no contrato
-`/api/store/*`.
+O bloqueio atual nao e mais publicar itens no catalogo central.
+
+Essa etapa ja foi concluida. O foco agora e **lapidar a qualidade da vitrine**
+com taxonomia, categoria e imagem, antes do dominio oficial.
 
 ## O que foi confirmado
 
@@ -41,15 +41,15 @@ o tenant ainda nao possui itens elegiveis para exposicao publica no contrato
 
 ### Estado atual da resposta publica
 
-As rotas publicas respondem `200`, com identidade correta da loja, mas ainda com
-`products=[]`.
+As rotas publicas respondem `200`, com identidade correta da loja e agora com
+catalogo real publicado.
 
 Isso comprova que:
 
 1. o contrato tecnico esta no ar;
 2. o slug esta resolvendo corretamente;
 3. o tenant esta publicado;
-4. o gargalo restante e de dados de catalogo.
+4. o catalogo publico ja esta populado.
 
 ## Diagnostico do catalogo da Tech10
 
@@ -65,18 +65,19 @@ Contagens apuradas no ERP:
 - `totalParts`: `8`
 - `activeSaleOrBoth`: `7`
 - `priced`: `7`
-- `catalogLinked`: `0`
-- `eligible`: `0`
+- `catalogLinked`: `7`
+- `eligible`: `7`
 
 Interpretacao:
 
 - a Tech10 ja tem itens ativos e com preco de venda;
-- o que falta e vincular esses itens ao catalogo publico (`catalogProductId`);
-- por isso a loja fica tecnicamente saudavel, mas sem produtos.
+- os itens vendaveis ja foram promovidos para o catalogo central;
+- a vitrine publica ja tem produtos reais;
+- o proximo passo agora e qualidade comercial da apresentacao.
 
-## Amostra de itens prontos para saneamento de catalogo
+## Amostra de itens ja publicados na vitrine
 
-Itens com perfil comercial, mas ainda sem vinculacao ao catalogo:
+Itens com perfil comercial ja publicados:
 
 1. `Roteador Wireless TP-Link 300Mbps`
 2. `Suporte Veicular Magnetico Inova`
@@ -90,8 +91,8 @@ O proximo passo mais importante nao e criar mais infraestrutura.
 
 E executar uma rodada controlada no ERP para:
 
-1. vincular os produtos vendaveis da Tech10 ao catalogo publico;
-2. revisar categoria/taxonomia publica;
+1. revisar categoria/taxonomia publica;
+2. corrigir itens que ainda caiam em `Outros` ou sem imagem ideal;
 3. validar a loja em `quote_only` com itens reais;
 4. depois decidir se o checkout continua por atendimento ou evolui para pedido transacional.
 
@@ -105,7 +106,7 @@ Hoje a Tech10 ja esta:
 - com integracao canonica no ERP;
 - com slug publico ativo;
 - com portal e status conectados;
-- com loja pronta para receber catalogo.
+- com loja ja servindo catalogo real.
 
-O que falta agora e **curadoria operacional do estoque/catalogo**, nao nova
+O que falta agora e **curadoria operacional da vitrine/catalogo**, nao nova
 arquitetura.

@@ -22,6 +22,7 @@ Checklist para colocar no ar o runtime próprio da Tech10, usando
 - `TECH10_CHECKOUT_MODE=quote_only` configurado em produção
 - `storeSlug=tech10` ativo no tenant real da Tech10
 - ERP já responde `200` em `/api/store/lojas/tech10/produtos`
+- ERP já responde catálogo real com `total=7`
 - runtime do portal já responde `status=ok` em `/api/health`
 
 ## Variáveis mínimas
@@ -74,8 +75,8 @@ Opcional:
 Depois desta rodada, o go-live da Tech10 nao depende mais de reestruturacao
 arquitetural.
 
-O bloqueio remanescente e operacional de catalogo:
+O bloqueio remanescente e operacional de vitrine:
 
-1. vincular os produtos da Tech10 ao `catalogProductId`
-2. revisar taxonomia/categorias publicas
+1. revisar taxonomia/categorias publicas
+2. corrigir itens que ainda caiam em `Outros` ou sem imagem ideal
 3. validar a vitrine com itens reais antes do dominio oficial
