@@ -36,23 +36,29 @@
     };
   }
 
-  function getSupportWhatsappUrl(product) {
+  function getSupportWhatsappUrl(product, variant, quantity) {
     var runtime = global.__tech10_runtime_config || {};
     var support = runtime.support || {};
+    var tenantRoutes = global.TenantRoutes || {};
+    var tenantCompanyFromRoutes = tenantRoutes.company || {};
     var tenantCompany = (global.TENANT_CONFIG && global.TENANT_CONFIG.company) || {};
-    var whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
+    var whatsapp = String(tenantCompanyFromRoutes.whatsapp || support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
     if (!whatsapp) return '#';
 
-    var variant = product && product.variants && product.variants[0];
-    var price = variant && variant.prices && variant.prices[0] ? variant.prices[0].amount : 0;
+    var activeVariant = variant || (product && product.variants && product.variants[0]);
+    var price = activeVariant && activeVariant.prices && activeVariant.prices[0] ? activeVariant.prices[0].amount : 0;
     var brand = product && product.metadata && product.metadata.brand ? product.metadata.brand : '';
     var sku = product && product.metadata && product.metadata.sku ? product.metadata.sku : '';
+    var qty = parseInt(quantity, 10);
+    if (isNaN(qty) || qty < 1) qty = 1;
 
     var message = [
-      'Olá Tech10, tenho interesse neste produto:',
+      'Olá! Vim pela loja da Tech10 e tenho interesse neste produto:',
       product && product.title ? product.title : 'Produto da loja',
+      activeVariant && activeVariant.title ? 'Versão: ' + activeVariant.title : '',
       brand ? 'Marca: ' + brand : '',
       sku ? 'SKU: ' + sku : '',
+      qty > 1 ? 'Quantidade desejada: ' + qty : '',
       price ? 'Preço exibido: R$ ' + (price / 100).toFixed(2).replace('.', ',') : '',
       '',
       'Gostaria de confirmar disponibilidade e atendimento.'
@@ -314,7 +320,7 @@
     // WhatsApp link com nome do produto
     var waBtn = document.getElementById('pm-whatsapp-btn');
     if (waBtn) {
-      waBtn.href = getSupportWhatsappUrl(product);
+      waBtn.href = getSupportWhatsappUrl(product, product.variants && product.variants[0], _qty);
     }
 
     // Variantes
@@ -395,6 +401,7 @@
 
     var addBtn = document.getElementById('pm-btn-add');
     var buyBtn = document.getElementById('pm-btn-buy');
+    var waBtn = document.getElementById('pm-whatsapp-btn');
     var quoteOnly = isQuoteOnlyMode();
 
     var actionLabels = getModalActionLabels();
@@ -405,6 +412,10 @@
     buyBtn.disabled = !isInStock;
     addBtn.style.opacity = isInStock ? '1' : '0.5';
     buyBtn.style.opacity = isInStock ? '1' : '0.5';
+
+    if (waBtn) {
+      waBtn.href = getSupportWhatsappUrl(_currentProduct, variant, _qty);
+    }
   }
 
   function _changeQty(delta) {
@@ -414,12 +425,18 @@
     var max = (variant && typeof variant.inventory_quantity !== 'undefined') ? variant.inventory_quantity : 99;
     _qty = Math.max(1, Math.min(_qty + delta, max > 0 ? max : 99));
     document.getElementById('pm-qty-val').textContent = _qty;
+    var waBtn = document.getElementById('pm-whatsapp-btn');
+    if (waBtn) {
+      waBtn.href = getSupportWhatsappUrl(_currentProduct, variant, _qty);
+    }
   }
 
   async function _addToCart(buyNow) {
     if (!_currentProduct) return;
     if (isQuoteOnlyMode()) {
-      var supportUrl = getSupportWhatsappUrl(_currentProduct);
+      var variants = _currentProduct.variants || [];
+      var selectedVariant = variants[_selectedVariantIndex] || variants[0];
+      var supportUrl = getSupportWhatsappUrl(_currentProduct, selectedVariant, _qty);
       if (supportUrl && supportUrl !== '#') {
         window.open(supportUrl, '_blank', 'noopener,noreferrer');
       }
