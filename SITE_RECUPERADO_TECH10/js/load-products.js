@@ -197,6 +197,13 @@
       .slice(0, limit || 4);
   }
 
+  function getHomeCatalogSourceProducts(products) {
+    if (global.__tech10_products && global.__tech10_products.length) {
+      return global.__tech10_products;
+    }
+    return Array.isArray(products) ? products : [];
+  }
+
   function formatCatalogCategoryItemCount(count) {
     return count === 1 ? '1 item' : count + ' itens';
   }
@@ -237,7 +244,8 @@
     var filtersRoot = global.document && global.document.querySelector('section#produtos .filters');
     if (!filtersRoot) return;
 
-    var categories = getHomeCatalogCategorySummary(products, 4);
+    var sourceProducts = getHomeCatalogSourceProducts(products);
+    var categories = getHomeCatalogCategorySummary(sourceProducts, 4);
     if (!categories.length) return;
 
     var currentActive = 'all';
@@ -275,7 +283,8 @@
     if ((containerId || 'produtosGrid') !== 'produtosGrid') return;
     if (!global.document) return;
 
-    var categories = getHomeCatalogCategorySummary(products, 2);
+    var sourceProducts = getHomeCatalogSourceProducts(products);
+    var categories = getHomeCatalogCategorySummary(sourceProducts, 2);
     if (!categories.length) return;
 
     categories.forEach(function (category, index) {
@@ -311,6 +320,47 @@
         footerLink.textContent = category.label + ' na loja (' + category.count + ')';
       }
     });
+  }
+
+  function syncHomeCatalogLiveSummary(products, containerId) {
+    if ((containerId || 'produtosGrid') !== 'produtosGrid') return;
+    if (!global.document) return;
+
+    var sourceProducts = getHomeCatalogSourceProducts(products);
+    var categories = getHomeCatalogCategorySummary(sourceProducts, 4);
+    if (!sourceProducts.length || !categories.length) return;
+
+    var totalItemsNode = global.document.querySelector('[data-home-catalog-total]');
+    if (totalItemsNode) {
+      totalItemsNode.textContent = sourceProducts.length + (sourceProducts.length === 1 ? ' item público hoje' : ' itens públicos hoje');
+    }
+
+    var categoryCountNode = global.document.querySelector('[data-home-catalog-categories]');
+    if (categoryCountNode) {
+      categoryCountNode.textContent = categories.length + (categories.length === 1 ? ' categoria ativa' : ' categorias ativas');
+    }
+
+    var modeNode = global.document.querySelector('[data-home-catalog-mode]');
+    if (modeNode) {
+      modeNode.textContent = 'Fechamento assistido';
+    }
+
+    var summaryNode = global.document.querySelector('[data-home-catalog-summary]');
+    if (summaryNode) {
+      var categoryNames = categories.map(function (category) { return category.label; });
+      summaryNode.textContent = sourceProducts.length + ' itens públicos em ' + categories.length + (categories.length === 1 ? ' categoria' : ' categorias') + '. Destaque agora para ' + categoryNames.join(', ') + '.';
+    }
+
+    var tagsNode = global.document.querySelector('[data-home-catalog-tags]');
+    if (tagsNode) {
+      tagsNode.innerHTML = '';
+      categories.forEach(function (category) {
+        var tag = global.document.createElement('span');
+        tag.className = 'catalog-live-tag';
+        tag.textContent = category.label + ' · ' + category.count;
+        tagsNode.appendChild(tag);
+      });
+    }
   }
 
   function buildProductDescription(product, categoryName) {
@@ -486,6 +536,7 @@
 
     syncHomeCatalogFilters(products, containerId);
     syncHomeCatalogEntryPoints(products, containerId);
+    syncHomeCatalogLiveSummary(products, containerId);
 
     if (!products || !Array.isArray(products) || products.length === 0) {
       var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';

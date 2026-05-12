@@ -3016,6 +3016,27 @@ body.loaded {
     margin: 0;
 }
 
+.cta-banner__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.cta-banner__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
 .cta-banner__btn {
     background: #fff;
     color: #1e3a8a;
@@ -3055,6 +3076,39 @@ body.loaded {
     gap: 8px;
     flex-wrap: wrap;
     margin: 0;
+}
+
+.catalog-live-summary {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 2px 0 6px;
+}
+
+.catalog-live-summary__meta {
+    color: #334155;
+    font-size: 0.98rem;
+    font-weight: 600;
+}
+
+.catalog-live-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.catalog-live-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    font-size: 0.86rem;
+    font-weight: 700;
 }
 
 /* ===================== Servicos Intro ===================== */
@@ -3539,6 +3593,34 @@ body.loaded {
     .section-subtitle {
         font-size: 1rem;
         padding: 0 1rem;
+    }
+
+    .cta-banner__meta {
+        gap: 8px;
+    }
+
+    .cta-banner__pill {
+        font-size: 0.82rem;
+        padding: 7px 12px;
+    }
+
+    .catalog-live-summary {
+        gap: 10px;
+    }
+
+    .catalog-live-summary__meta {
+        font-size: 0.92rem;
+        padding: 0 1rem;
+    }
+
+    .catalog-live-tags {
+        gap: 8px;
+        padding: 0 1rem;
+    }
+
+    .catalog-live-tag {
+        font-size: 0.8rem;
+        padding: 8px 12px;
     }
     
     .dica-modal-content {
