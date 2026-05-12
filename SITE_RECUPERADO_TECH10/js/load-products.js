@@ -383,6 +383,16 @@
       }
     }
 
+    var bannerDescNode = global.document.querySelector('[data-home-catalog-banner-desc]');
+    if (bannerDescNode) {
+      bannerDescNode.textContent = categories[0].label + ' lidera o catálogo agora, com ' + formatCatalogCategoryItemCount(categories[0].count) + ' e fechamento assistido para concluir com segurança.';
+    }
+
+    var subtitleNode = global.document.querySelector('[data-home-catalog-subtitle]');
+    if (subtitleNode) {
+      subtitleNode.textContent = 'Comece por ' + categories[0].label + ' ou filtre o catálogo público para seguir com a seleção assistida da Tech10.';
+    }
+
     var summaryNode = global.document.querySelector('[data-home-catalog-summary]');
     if (summaryNode) {
       var categoryNames = categories.map(function (category) { return category.label; });
