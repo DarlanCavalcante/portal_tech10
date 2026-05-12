@@ -215,12 +215,22 @@
               return '<span class="lp-card-meta-chip"><strong>' + chip.label + ':</strong> ' + String(chip.value).replace(/</g, '&lt;') + '</span>';
             }).join('') + '</div>'
           : '';
+        var supportNoteHtml = !cartEnabled
+          ? '<div class="lp-card-mode-note"><i class="fas fa-headset"></i> Venda assistida via atendimento Tech10.</div>'
+          : '';
         var duplicateIdentityHtml = isDuplicateTitleProduct(product) && product.metadata && product.metadata.sku
           ? '<div class="lp-card-identity-note"><i class="fas fa-fingerprint"></i> Identifique este item pelo SKU <strong>' + String(product.metadata.sku).replace(/</g, '&lt;') + '</strong></div>'
           : '';
         var buttonLabel = cartEnabled
           ? '<i class="fas fa-shopping-cart"></i> Adicionar'
-          : '<i class="fas fa-comments"></i> Pedir atendimento';
+          : '<i class="fab fa-whatsapp"></i> Falar com a Tech10';
+        var qtyControlHtml = cartEnabled
+          ? '<div class="lp-qty-ctrl" data-pid="' + pid + '">' +
+              '<button class="lp-qty-btn lp-qty-minus" type="button" aria-label="Diminuir quantidade">−</button>' +
+              '<span class="lp-qty-val">1</span>' +
+              '<button class="lp-qty-btn lp-qty-plus" type="button" aria-label="Aumentar quantidade">+</button>' +
+            '</div>'
+          : '';
 
         return '<div class="lp-card ' + stockClass + '" data-product-id="' + pid + '" data-category="' + catSlug.replace(/"/g, '') + '" data-variant-id="' + variantId + '" data-max-qty="' + maxQty + '">' +
           '<div class="lp-card-img" onclick="window.__openProductModal && window.__openProductModal(\'' + pid + '\')" style="cursor:pointer">' +
@@ -240,12 +250,9 @@
               '<i class="fas ' + (isInStock ? 'fa-check-circle' : 'fa-times-circle') + '"></i>' +
               '<span>' + stockText + '</span>' +
             '</div>' +
-            '<div class="lp-card-actions">' +
-              '<div class="lp-qty-ctrl" data-pid="' + pid + '">' +
-                '<button class="lp-qty-btn lp-qty-minus" type="button" aria-label="Diminuir quantidade">−</button>' +
-                '<span class="lp-qty-val">1</span>' +
-                '<button class="lp-qty-btn lp-qty-plus" type="button" aria-label="Aumentar quantidade">+</button>' +
-              '</div>' +
+            supportNoteHtml +
+            '<div class="lp-card-actions ' + (cartEnabled ? 'cart-mode' : 'quote-mode') + '">' +
+              qtyControlHtml +
               '<button class="lp-btn-add ' + stockClass + '" type="button" data-pid="' + pid + '" data-vid="' + variantId + '" data-action="' + actionMode + '" data-product-title="' + (product.title || '').replace(/"/g, '&quot;') + '" ' + (!isInStock ? 'disabled' : '') + '>' +
                 (isInStock ? buttonLabel : '<i class="fas fa-times-circle"></i> Indisponível') +
               '</button>' +
