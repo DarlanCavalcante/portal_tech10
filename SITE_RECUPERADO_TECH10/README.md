@@ -21,6 +21,15 @@ Esta pasta deve ser publicada na Vercel com esta combinacao exata:
 
 Fluxo `GitHub -> Vercel` revalidado como origem canônica em `2026-05-13`.
 
+Se a Vercel nao reagir sozinha a um merge novo, o fallback validado e:
+
+```bash
+cd /Users/darlancavalcante/Documents/TECH/portal_tech10
+vercel deploy --prod --yes --scope darlancavalcantes-projects
+```
+
+Esse deploy deve sair do repo root, nao desta subpasta.
+
 Ela contém:
 
 - home institucional;
