@@ -45,7 +45,7 @@ contexto dos nomes legados ainda presentes no frontend.
 ### brand
 
 - `brand.logoUrl`
-  - valor atual: `/imagem/logo/tech10-logo-fundo-azul.png`
+  - valor atual: `/imagem/logo/tech10-logo-principal-pulso-hibrido.svg`
 - `brand.fallbackProductImageUrl`
   - valor atual: `/imagem/propaganda loja/tecnologia.jpeg`
 - `brand.primaryColor`

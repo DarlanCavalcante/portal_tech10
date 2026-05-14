@@ -15,8 +15,8 @@
     name: company.name || 'Tech10',
     slug: tenantMeta.slug || 'tech10',
     desc: company.description || 'Informática e tecnologia',
-    bannerUrl: brand.logoUrl || '/imagem/logo/tech10-logo-fundo-azul.png',
-    logoUrl: brand.logoUrl || '/imagem/logo/tech10-logo-fundo-azul.png',
+    bannerUrl: brand.logoUrl || '/imagem/logo/tech10-logo-principal-pulso-hibrido.svg',
+    logoUrl: brand.logoUrl || '/imagem/logo/tech10-logo-principal-pulso-hibrido.svg',
   };
 
   // Dados de exemplo — substituir por fetch da API /lojas

@@ -122,7 +122,7 @@
       '<div class="pm-container" role="document">',
         '<div class="pm-header-brand">',
           '<a href="' + basePath + '/" class="pm-logo-link" aria-label="Tech10">',
-            '<img src="' + basePath + '/imagem/logo/tech10-logo-fundo-azul.png" alt="Tech10" class="pm-logo-img">',
+            '<img src="' + basePath + '/imagem/logo/tech10-logo-principal-pulso-hibrido.svg" alt="Tech10" class="pm-logo-img">',
           '</a>',
         '</div>',
         '<button class="pm-close" id="pm-close" aria-label="Fechar">&times;</button>',

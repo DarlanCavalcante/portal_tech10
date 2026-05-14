@@ -51,7 +51,7 @@
       },
     },
     brand: {
-      logoUrl: '/imagem/logo/tech10-logo-fundo-azul.png',
+      logoUrl: '/imagem/logo/tech10-logo-principal-pulso-hibrido.svg',
       fallbackProductImageUrl: '/imagem/propaganda loja/tecnologia.jpeg',
       primaryColor: '#2563eb',
       accentColor: '#10b981',
