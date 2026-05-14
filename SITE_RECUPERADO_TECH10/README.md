@@ -19,6 +19,8 @@ Esta pasta deve ser publicada na Vercel com esta combinacao exata:
 
 `GitHub Actions` nao faz parte do caminho crítico desta publicação.
 
+Fluxo `GitHub -> Vercel` revalidado como origem canônica em `2026-05-13`.
+
 Ela contém:
 
 - home institucional;
