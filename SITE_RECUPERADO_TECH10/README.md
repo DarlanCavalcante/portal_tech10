@@ -30,6 +30,10 @@ vercel deploy --prod --yes --scope darlancavalcantes-projects
 
 Esse deploy deve sair do repo root, nao desta subpasta.
 
+Se a PR receber comentario da Vercel com `api-deployments-free-per-day`, o
+bloqueio e da cota diaria do plano Hobby e o fallback manual tambem nao vai
+contornar isso.
+
 Ela contém:
 
 - home institucional;

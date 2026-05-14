@@ -85,8 +85,9 @@ Se qualquer um desses pontos divergir, a publicacao deixa de ser canonica.
 2. abrir PR
 3. mergear na `main`
 4. validar se a Vercel reagiu ao merge
-5. se o deploy nao nascer sozinho, publicar manualmente a partir do mesmo repositorio
-6. validar o deploy publicado
+5. se o deploy falhar, checar primeiro o comentario do `vercel[bot]` na PR
+6. se nao houver bloqueio de cota, usar o fallback manual a partir do mesmo repositorio
+7. validar o deploy publicado
 
 ### Fallback manual
 
@@ -95,6 +96,8 @@ O deploy manual por CLI e o fallback oficial quando:
 - a Vercel nao reagir sozinha ao merge
 - a integracao Git estiver indisponivel
 - for necessario validar uma correcao urgente fora do ciclo normal
+
+Mas ele **nao contorna** o limite diario de builds da propria Vercel.
 
 Mesmo nesse caso, o deploy manual deve respeitar a mesma base:
 
@@ -123,6 +126,7 @@ Importante:
 - root directory corrigido de `./` para `SITE_RECUPERADO_TECH10`
 - PRs `#116`, `#117` e `#118`: usadas para revalidar governanca e gatilho
 - deploy de contingencia validado com sucesso: `dpl_4dVf8xYZukSTxUgcFSJGSnrKb8sb`
+- comentarios da Vercel nas PRs `#118` e `#119`: o gatilho Git funcionou, mas o build foi recusado por `api-deployments-free-per-day`
 
 ## Checklist rapido
 
@@ -142,5 +146,6 @@ O modelo profissional recomendado para a Tech10 agora e:
 - `Vercel` como plataforma de build e publicacao
 - `GitHub Actions` fora do caminho critico
 - `SITE_RECUPERADO_TECH10` como unica raiz valida de publicacao
-- `CLI manual` como fallback documentado e validado quando o webhook da Vercel
-  nao reagir ao merge
+- `CLI manual` como fallback documentado e validado quando for preciso publicar
+  fora do fluxo Git
+- limite operacional atual: a cota diaria de deploy do plano Hobby da Vercel
