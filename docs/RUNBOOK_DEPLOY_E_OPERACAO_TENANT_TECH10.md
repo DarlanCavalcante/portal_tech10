@@ -9,11 +9,12 @@ Data-base: `2026-05-11`
 3. manter `main` como branch de produção
 4. cadastrar variáveis do contrato de ambiente
 5. publicar por merge na `main`
-6. se o deploy nao nascer sozinho, rodar o fallback manual do repo root:
+6. checar o comentario do `vercel[bot]` na PR
+7. se o deploy nao nascer sozinho e nao houver bloqueio de cota, rodar o fallback manual do repo root:
    - `cd /Users/darlancavalcante/Documents/TECH/portal_tech10`
    - `vercel deploy --prod --yes --scope darlancavalcantes-projects`
-7. rodar smoke do runtime
-8. validar o alias `tech10.loja.tech10cloud.com`
+8. rodar smoke do runtime
+9. validar o alias `tech10.loja.tech10cloud.com`
 
 ## Checklist de operação diária
 
@@ -83,3 +84,4 @@ node scripts/smoke-runtime.mjs
 - modo comercial atual: `quote_only`
 - origem de código canônica: `GitHub`, sem dependência de `GitHub Actions`
 - release de contingencia validada: `dpl_4dVf8xYZukSTxUgcFSJGSnrKb8sb`
+- bloqueio operacional identificado nas PRs recentes: `api-deployments-free-per-day`
