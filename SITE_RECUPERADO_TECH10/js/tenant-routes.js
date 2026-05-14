@@ -26,7 +26,7 @@
     company: {
       whatsapp: company.whatsapp || '55974001960',
     },
-    logoUrl: (brand && brand.logoUrl) || '/imagem/logo/tech10-logo-fundo-azul.png',
+    logoUrl: (brand && brand.logoUrl) || '/imagem/logo/tech10-logo-principal-pulso-hibrido.svg',
     storeSlug: (tenant && tenant.slug) || 'tech10',
     legacyStoreSlugs,
     legacySitePaths,
