@@ -7,6 +7,18 @@ Data-base: `2026-05-11`
 `SITE_RECUPERADO_TECH10/` agora é a **base canônica de publicação** da Tech10
 dentro do repositório `portal_tech10`.
 
+## Publicacao canonica
+
+Esta pasta deve ser publicada na Vercel com esta combinacao exata:
+
+- repositório: `DarlanCavalcante/portal_tech10`
+- projeto: `tech10-portal`
+- branch de produção: `main`
+- root directory: `SITE_RECUPERADO_TECH10`
+- domínio público canônico: `https://tech10.loja.tech10cloud.com`
+
+`GitHub Actions` nao faz parte do caminho crítico desta publicação.
+
 Ela contém:
 
 - home institucional;
@@ -116,9 +128,9 @@ slug público canônico desta base agora é `tech10`.
 
 ## Próximo passo recomendado
 
-1. criar projeto dedicado de deploy da Tech10 com root dir `SITE_RECUPERADO_TECH10`
-2. configurar as variáveis acima
-3. anexar `tech10.tech10cloud.com`
+1. manter o projeto `tech10-portal` conectado ao GitHub certo
+2. preservar `SITE_RECUPERADO_TECH10` como root dir
+3. configurar as variáveis acima
 4. executar smoke em:
    - `/`
    - `/loja`
