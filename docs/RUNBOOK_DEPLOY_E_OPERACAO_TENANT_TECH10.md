@@ -16,6 +16,17 @@ Data-base: `2026-05-11`
 8. rodar smoke do runtime
 9. validar o alias `tech10.loja.tech10cloud.com`
 
+## Politica de release
+
+Antes de publicar, aplicar o protocolo:
+
+- `/Users/darlancavalcante/Documents/TECH/tmp-clean-tech10-vercel-docs/docs/PROTOCOLO_RELEASE_ENXUTO_TENANT_TECH10_2026-05-13.md`
+
+Regra curta:
+
+- merge pode acontecer antes
+- deploy so acontece quando o pacote estiver maduro ou critico
+
 ## Checklist de operação diária
 
 1. validar `GET /api/health`
