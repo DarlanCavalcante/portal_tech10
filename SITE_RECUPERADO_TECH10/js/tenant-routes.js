@@ -307,6 +307,13 @@
     return pathname === '/checkout' || pathname.endsWith('/checkout.html');
   }
 
+  function isListingPath(pathname) {
+    return pathname === '/loja'
+      || pathname.endsWith('/produtos.html')
+      || pathname === '/'
+      || pathname.endsWith('/index.html');
+  }
+
   function renderQuoteOnlyPage(runtimeConfig) {
     const pathname = currentPath();
     if (!isCartPath(pathname) && !isCheckoutPath(pathname)) return;
@@ -361,11 +368,22 @@
     const cartEnabled = capabilities.cart !== false;
     const checkoutEnabled = capabilities.checkout !== false;
     const quoteOnly = capabilities.quoteOnly === true || runtimeConfig.commerce.checkoutMode === 'quote_only';
+    const assistedCartBridge = capabilities.assistedCartBridge === true;
     const hasPrimarySupportEntry = document.querySelector('[data-tenant-support-link][data-support-primary="true"]');
+    const pathname = currentPath();
+    const preserveAssistedCartEntry = assistedCartBridge && isListingPath(pathname);
 
     if (!cartEnabled) {
-      document.querySelectorAll('.cart-count, .pp-cart-count').forEach(hideElement);
+      document.querySelectorAll('.cart-count, .pp-cart-count').forEach(function (element) {
+        if (preserveAssistedCartEntry && element.classList.contains('pp-cart-count')) {
+          return;
+        }
+        hideElement(element);
+      });
       document.querySelectorAll('.pp-cart-btn').forEach(function (element) {
+        if (preserveAssistedCartEntry && element.matches('[href="/carrinho"], [href="/carrinho.html"], .pp-selection-pill')) {
+          return;
+        }
         if (hasPrimarySupportEntry) {
           hideElement(element);
           return;
@@ -402,6 +420,9 @@
       });
 
       document.querySelectorAll('a[href="/carrinho"], a[href="/carrinho.html"]').forEach(function (link) {
+        if (preserveAssistedCartEntry) {
+          return;
+        }
         if (link.classList.contains('runtime-support-entry')) {
           return;
         }

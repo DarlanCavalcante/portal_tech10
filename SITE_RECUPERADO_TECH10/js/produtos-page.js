@@ -686,7 +686,7 @@
       if (cart && cart.getCount) {
         var n = cart.getCount();
         countEl.textContent = n;
-        countEl.style.display = n > 0 ? '' : 'none';
+        countEl.style.display = n > 0 ? 'flex' : 'none';
       }
     }
     update();
