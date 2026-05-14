@@ -13,10 +13,32 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: #f5f7fa; color: #111; }
+    body.pp-store-page {
+      padding-top: 84px;
+    }
     body:not(.loaded),
     body.loaded {
       visibility: visible;
       animation: none;
+    }
+
+    .pp-store-header {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+    }
+    .pp-store-header .container {
+      max-width: 1380px;
+    }
+    .pp-store-search {
+      width: min(290px, 100%);
+      flex: 0 1 290px;
+    }
+    .pp-store-search input {
+      width: 100%;
+      padding-right: 2.75rem;
+    }
+    .pp-store-search .search-box__submit {
+      right: 0.3rem;
     }
 
     /* ── Header ── */
@@ -460,6 +482,13 @@
     }
     @media (max-width: 900px) { .pp-mobile-filter-btn { display: flex; } }
     @media (max-width: 900px) {
+      body.pp-store-page {
+        padding-top: 132px;
+      }
+      .pp-store-search {
+        flex-basis: 100%;
+        width: 100%;
+      }
       .pp-layout {
         padding: 16px 12px 24px;
         gap: 16px;
@@ -655,6 +684,9 @@
       }
     }
     @media (max-width: 520px) {
+      body.pp-store-page {
+        padding-top: 128px;
+      }
       .pp-controls {
         grid-template-columns: auto minmax(0, 1fr);
         gap: 8px;
@@ -956,47 +988,64 @@
     .pp-whatsapp-float:hover::after { opacity: 1; }
   </style>
 </head>
-<body>
+<body class="pp-store-page loaded">
 
   <!-- Header -->
-  <header class="pp-header">
-    <a href="/" class="pp-logo">
-      <img src="imagem/logo/tech10-logo-principal-pulso-hibrido.svg" alt="Tech10" height="36">
-    </a>
+  <header class="header pp-store-header">
+    <div class="container">
+      <a href="/" class="logo" aria-label="Tech10 - Página inicial">
+        <img src="imagem/logo/tech10-logo-principal-pulso-hibrido.svg" alt="Tech10 - Informática e Tecnologia" height="40">
+      </a>
 
-    <div class="pp-header-right">
-      <a href="/" class="pp-back-link">
-        <i class="fas fa-arrow-left"></i> Início
-      </a>
-      <a href="/portal" class="pp-back-link" data-tenant-portal-link>
-        <i class="fas fa-receipt"></i> Portal
-      </a>
-      <a
-        href="/#contato"
-        class="pp-support-pill"
-        data-tenant-support-link
-        data-support-primary="true"
-        data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
-      >
-        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-        <span>
-          <small>Compra assistida</small>
-          Falar com a Tech10
-        </span>
-      </a>
-      <a href="/carrinho" class="pp-selection-pill" aria-label="Abrir carrinho assistido">
-        <span class="pp-selection-pill__icon">
-          <i class="fas fa-cart-shopping" aria-hidden="true"></i>
-        </span>
-        <span class="pp-selection-pill__copy">
-          <span class="pp-selection-pill__eyebrow">Carrinho assistido</span>
-          <span class="pp-selection-pill__title">Carrinho</span>
-        </span>
-        <span class="pp-cart-count" id="pp-cart-count" data-cart-count>0</span>
-      </a>
-      <div class="pp-search-wrap">
-        <i class="fas fa-search pp-search-icon"></i>
-        <input type="text" class="pp-search-input" id="pp-search" placeholder="Buscar por produto, marca ou SKU...">
+      <nav class="nav">
+        <ul class="nav-list">
+          <li><a href="/#home" class="nav-link">Início</a></li>
+          <li><a href="/loja" class="nav-link nav-link--highlight active"><i class="fas fa-store nav-link-icon"></i>Loja</a></li>
+          <li><a href="/portal" class="nav-link nav-link--highlight" data-tenant-portal-link><i class="fas fa-receipt nav-link-icon"></i>Portal</a></li>
+          <li><a href="/#produtos" class="nav-link">Destaques</a></li>
+          <li><a href="/#servicos" class="nav-link">Serviços</a></li>
+          <li><a href="/#empresas" class="nav-link nav-link--accent">Empresas</a></li>
+          <li><a href="/#dicas" class="nav-link">Dicas</a></li>
+          <li><a href="/#sobre" class="nav-link">Sobre</a></li>
+          <li><a href="/#contato" class="nav-link">Contato</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <div class="search-box pp-store-search">
+          <input type="text" placeholder="Buscar por produto, marca ou SKU..." id="pp-search">
+          <button type="button" class="search-box__submit" id="pp-search-submit" aria-label="Buscar na loja">
+            <i class="fas fa-search" aria-hidden="true"></i>
+          </button>
+        </div>
+        <a
+          href="/#contato"
+          class="header-support-pill"
+          data-tenant-support-link
+          data-support-primary="true"
+          data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
+        >
+          <i class="fab fa-whatsapp" aria-hidden="true"></i>
+          <span class="header-support-pill__copy">
+            <span class="header-support-pill__eyebrow">Compra assistida</span>
+            <span class="header-support-pill__title">Falar com a Tech10</span>
+          </span>
+        </a>
+        <a href="/carrinho" class="header-selection-pill" aria-label="Abrir carrinho assistido">
+          <span class="header-selection-pill__icon">
+            <i class="fas fa-cart-shopping" aria-hidden="true"></i>
+          </span>
+          <span class="header-selection-pill__copy">
+            <span class="header-selection-pill__eyebrow">Carrinho assistido</span>
+            <span class="header-selection-pill__title">Carrinho</span>
+          </span>
+          <span class="header-selection-pill__count" id="pp-cart-count" data-cart-count>0</span>
+        </a>
+        <button class="menu-toggle" id="menuToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
@@ -1116,6 +1165,33 @@
   <script src="js/load-products.js"></script>
   <script src="js/product-modal.js"></script>
   <script src="js/produtos-page.js"></script>
+  <script>
+    (function () {
+      var menuToggle = document.getElementById('menuToggle');
+      var nav = document.querySelector('.nav');
+      if (menuToggle && nav) {
+        menuToggle.addEventListener('click', function () {
+          nav.classList.toggle('active');
+          menuToggle.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-link').forEach(function (link) {
+          link.addEventListener('click', function () {
+            nav.classList.remove('active');
+            menuToggle.classList.remove('active');
+          });
+        });
+      }
+
+      var searchSubmit = document.getElementById('pp-search-submit');
+      var searchInput = document.getElementById('pp-search');
+      if (searchSubmit && searchInput) {
+        searchSubmit.addEventListener('click', function () {
+          searchInput.focus();
+          searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      }
+    })();
+  </script>
 
 </body>
 </html>

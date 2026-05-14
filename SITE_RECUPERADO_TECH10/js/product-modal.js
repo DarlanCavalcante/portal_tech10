@@ -179,15 +179,15 @@
             '<a class="pm-whatsapp-btn" id="pm-whatsapp-btn" href="#" target="_blank" rel="noopener noreferrer">',
               '<i class="fab fa-whatsapp"></i> Tirar dúvida no WhatsApp',
             '</a>',
-            // Tabs: Características | Especificações | Descrição
+            // Tabs: Descrição | Características | Especificações
             '<div class="pm-tabs">',
-              '<button class="pm-tab active" data-tab="features">Características</button>',
+              '<button class="pm-tab active" data-tab="desc">Descrição</button>',
+              '<button class="pm-tab" data-tab="features">Características</button>',
               '<button class="pm-tab" data-tab="specs">Especificações</button>',
-              '<button class="pm-tab" data-tab="desc">Descrição</button>',
             '</div>',
-            '<div class="pm-tab-content" id="pm-tab-features"></div>',
+            '<div class="pm-tab-content" id="pm-tab-desc"></div>',
+            '<div class="pm-tab-content" id="pm-tab-features" style="display:none"></div>',
             '<div class="pm-tab-content" id="pm-tab-specs" style="display:none"></div>',
-            '<div class="pm-tab-content" id="pm-tab-desc" style="display:none"></div>',
           '</div>',
         '</div>',
       '</div>',
@@ -406,8 +406,8 @@
     // Resetar tab ativa
     document.querySelectorAll('#' + MODAL_ID + ' .pm-tab').forEach(function (t) { t.classList.remove('active'); });
     document.querySelectorAll('#' + MODAL_ID + ' .pm-tab-content').forEach(function (tc) { tc.style.display = 'none'; });
-    document.querySelector('#' + MODAL_ID + ' .pm-tab[data-tab="features"]').classList.add('active');
-    document.getElementById('pm-tab-features').style.display = 'block';
+    document.querySelector('#' + MODAL_ID + ' .pm-tab[data-tab="desc"]').classList.add('active');
+    document.getElementById('pm-tab-desc').style.display = 'block';
   }
 
   function _updatePriceStock() {
