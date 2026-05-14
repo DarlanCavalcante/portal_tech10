@@ -248,10 +248,15 @@
       try {
         const cart = await this.getCart();
         const count = (cart && cart.items) ? cart.items.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0;
-        if (this.cartCountElement) {
-          this.cartCountElement.textContent = count;
-          this.cartCountElement.style.display = count > 0 ? 'flex' : 'none';
+        const countNodes = Array.from(document.querySelectorAll('[data-cart-count]'));
+        if (this.cartCountElement && !countNodes.includes(this.cartCountElement)) {
+          countNodes.push(this.cartCountElement);
         }
+        countNodes.forEach(function (node) {
+          if (!node) return;
+          node.textContent = count;
+          node.style.display = count > 0 ? 'flex' : 'none';
+        });
       } catch (_) {}
     }
 

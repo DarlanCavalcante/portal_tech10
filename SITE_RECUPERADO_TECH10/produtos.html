@@ -72,35 +72,71 @@
       color: #9ca3af;
       font-size: 14px;
     }
-    .pp-cart-btn {
+    .pp-selection-pill {
       position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 14px 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(37,99,235,0.16);
+      background: rgba(255,255,255,0.96);
+      color: #1f2937;
       text-decoration: none;
-      color: #374151;
-      font-size: 22px;
-      display: flex;
+      box-shadow: 0 10px 24px rgba(15,23,42,0.07);
+      transition: transform .15s, box-shadow .15s, border-color .15s, color .15s;
+    }
+    .pp-selection-pill:hover {
+      color: #2563eb;
+      border-color: rgba(37,99,235,0.28);
+      box-shadow: 0 14px 28px rgba(37,99,235,0.12);
+      transform: translateY(-1px);
+    }
+    .pp-selection-pill__icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(37,99,235,0.1);
+      color: #2563eb;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      transition: background .15s;
+      font-size: 13px;
     }
-    .pp-cart-btn:hover { background: #eff6ff; color: #2563eb; }
+    .pp-selection-pill__copy {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.05;
+    }
+    .pp-selection-pill__eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+    .pp-selection-pill__title {
+      font-size: 13px;
+      font-weight: 800;
+      color: inherit;
+    }
     .pp-cart-count {
       position: absolute;
-      top: 2px;
-      right: 2px;
-      background: #ef4444;
+      top: -4px;
+      right: -4px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       color: #fff;
       font-size: 10px;
-      font-weight: 700;
-      min-width: 18px;
-      height: 18px;
-      border-radius: 9px;
-      display: flex;
+      font-weight: 800;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      display: none;
       align-items: center;
       justify-content: center;
-      padding: 0 4px;
+      padding: 0 5px;
+      box-shadow: 0 8px 16px rgba(37,99,235,0.22);
     }
     .pp-back-link {
       text-decoration: none;
@@ -501,6 +537,14 @@
         padding: 8px 14px;
         font-size: 12.5px;
         box-shadow: none;
+      }
+      .pp-selection-pill {
+        min-height: 40px;
+        padding: 0 12px;
+        justify-content: center;
+      }
+      .pp-selection-pill__copy {
+        display: none;
       }
       .pp-support-pill small {
         font-size: 9px;
@@ -940,6 +984,16 @@
           Falar com a Tech10
         </span>
       </a>
+      <a href="/carrinho" class="pp-selection-pill" aria-label="Abrir minha seleção assistida">
+        <span class="pp-selection-pill__icon">
+          <i class="fas fa-list-check" aria-hidden="true"></i>
+        </span>
+        <span class="pp-selection-pill__copy">
+          <span class="pp-selection-pill__eyebrow">Seleção assistida</span>
+          <span class="pp-selection-pill__title">Minha seleção</span>
+        </span>
+        <span class="pp-cart-count" id="pp-cart-count" data-cart-count>0</span>
+      </a>
       <div class="pp-search-wrap">
         <i class="fas fa-search pp-search-icon"></i>
         <input type="text" class="pp-search-input" id="pp-search" placeholder="Buscar por produto, marca ou SKU...">
@@ -1017,9 +1071,9 @@
             <i class="fab fa-whatsapp" aria-hidden="true"></i>
             <span data-pp-quote-primary-label>Falar com a Tech10</span>
           </a>
-          <a href="/portal" class="pp-quote-banner-action secondary" data-tenant-portal-link>
-            <i class="fas fa-receipt" aria-hidden="true"></i>
-            Acompanhar minha O.S.
+          <a href="/carrinho" class="pp-quote-banner-action secondary">
+            <i class="fas fa-list-check" aria-hidden="true"></i>
+            Ver minha seleção
           </a>
         </div>
       </div>
