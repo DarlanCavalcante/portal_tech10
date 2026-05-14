@@ -356,7 +356,7 @@
 
     var eyebrow = 'Catálogo vivo';
     var title = formatCatalogCategoryCountLine(sourceProducts.length) + ' em destaque agora';
-    var meta = 'Filtre por categoria na home ou abra a loja completa para seguir com a seleção assistida.';
+    var meta = 'Filtre por categoria na home ou abra a loja completa para seguir com o carrinho assistido.';
     var primaryLabel = 'Ver catálogo completo';
     var primaryHref = buildHomeCatalogStoreHref(null, currentSearch);
     var supportMessage = 'Olá! Vim pela home da Tech10 e quero ajuda para escolher um item do catálogo público.';
@@ -366,7 +366,7 @@
       title = 'Resultado para "' + currentSearch + '"';
       meta = formatCatalogCategoryCountLine(resultCount)
         + (activeCategory ? ' em ' + activeCategory.label : '')
-        + ' para seguir com a seleção assistida na loja.';
+        + ' para seguir com o carrinho assistido na loja.';
       primaryLabel = resultCount === 1 ? 'Ver item na loja' : 'Ver resultados na loja';
       primaryHref = buildHomeCatalogStoreHref(activeCategory ? activeCategory.slug : null, currentSearch);
       supportMessage = 'Olá! Vim pela home da Tech10 e quero ajuda para encontrar "' + currentSearch + '"'
@@ -375,7 +375,7 @@
     } else if (activeCategory) {
       eyebrow = 'Filtro ativo';
       title = activeCategory.label + ' em destaque agora';
-      meta = formatCatalogCategoryCountLine(resultCount) + ' em ' + activeCategory.label + ' para seguir com a seleção assistida na loja.';
+      meta = formatCatalogCategoryCountLine(resultCount) + ' em ' + activeCategory.label + ' para seguir com o carrinho assistido na loja.';
       primaryLabel = 'Ver ' + formatCatalogCategoryItemCount(resultCount) + ' de ' + activeCategory.label + ' na loja';
       primaryHref = buildHomeCatalogStoreHref(activeCategory.slug, null);
       supportMessage = 'Olá! Vim pela home da Tech10 e quero ajuda para escolher um item de ' + activeCategory.label + ' com atendimento assistido.';
@@ -469,7 +469,7 @@
 
     var modeNode = global.document.querySelector('[data-home-catalog-mode]');
     if (modeNode) {
-      modeNode.textContent = currentSearch || activeCategory ? 'Seleção assistida' : 'Fechamento assistido';
+      modeNode.textContent = currentSearch || activeCategory ? 'Carrinho assistido' : 'Fechamento assistido';
     }
 
     var leaderNode = global.document.querySelector('[data-home-catalog-leader]');
@@ -483,7 +483,7 @@
     var bannerTitle = 'Catálogo Tech10 disponível';
     var sectionTitle = 'Produtos em Destaque';
     var bannerDesc = categories[0].label + ' lidera o catálogo agora, com ' + formatCatalogCategoryItemCount(categories[0].count) + ' e fechamento assistido para concluir com segurança.';
-    var subtitle = 'Comece por ' + categories[0].label + ' ou filtre o catálogo público para seguir com a seleção assistida da Tech10.';
+    var subtitle = 'Comece por ' + categories[0].label + ' ou filtre o catálogo público para seguir com o carrinho assistido da Tech10.';
     var leaderLabel = 'Categoria em foco: ' + categories[0].label;
     var leaderHref = buildHomeCatalogStoreHref(categories[0].slug, null);
     var primaryLabel = 'Explorar ' + categories[0].label;
@@ -496,10 +496,10 @@
       sectionTitle = visibleCount === 1 ? 'Resultado em Destaque' : 'Resultados em Destaque';
       bannerDesc = 'Busca ativa para "' + currentSearch + '" com ' + formatCatalogCategoryItemCount(visibleCount) + ' no catálogo público'
         + (contextualCategory ? ' em ' + resolvedSearchCategory : '')
-        + ' e seleção assistida para seguir com segurança.';
+        + ' e carrinho assistido para seguir com segurança.';
       subtitle = visibleCount === 1
-        ? 'Revise o item encontrado para "' + currentSearch + '" ou abra a loja completa para continuar com a seleção assistida da Tech10.'
-        : 'Revise os resultados para "' + currentSearch + '" ou abra a loja completa para continuar com a seleção assistida da Tech10.';
+        ? 'Revise o item encontrado para "' + currentSearch + '" ou abra a loja completa para continuar com o carrinho assistido da Tech10.'
+        : 'Revise os resultados para "' + currentSearch + '" ou abra a loja completa para continuar com o carrinho assistido da Tech10.';
       leaderLabel = 'Resultado em foco';
       leaderHref = buildHomeCatalogStoreHref(contextualCategory && contextualCategory.slug, currentSearch);
       primaryLabel = visibleCount === 1 ? 'Ver item na loja' : 'Ver resultados na loja';
@@ -517,7 +517,7 @@
       bannerTitle = activeCategory.label + ' em foco';
       sectionTitle = activeCategory.label + ' em Destaque';
       bannerDesc = activeCategory.label + ' está em foco agora, com ' + formatCatalogCategoryItemCount(visibleCount) + ' no catálogo público e atendimento assistido para seguir com segurança.';
-      subtitle = 'Veja os ' + formatCatalogCategoryItemCount(visibleCount) + ' de ' + activeCategory.label + ' ou abra a loja completa dessa categoria para continuar com a seleção assistida da Tech10.';
+      subtitle = 'Veja os ' + formatCatalogCategoryItemCount(visibleCount) + ' de ' + activeCategory.label + ' ou abra a loja completa dessa categoria para continuar com o carrinho assistido da Tech10.';
       leaderLabel = activeCategory.label + ' em foco';
       leaderHref = buildHomeCatalogStoreHref(activeCategory.slug, null);
       primaryLabel = 'Explorar ' + activeCategory.label;
@@ -564,13 +564,13 @@
     if (summaryNode) {
       if (currentSearch) {
         summaryNode.textContent = (visibleCount === 0
-          ? 'Nenhum item público encontrado para "' + currentSearch + '". Abra a loja completa ou ajuste a busca para seguir com a seleção assistida.'
+          ? 'Nenhum item público encontrado para "' + currentSearch + '". Abra a loja completa ou ajuste a busca para seguir com o carrinho assistido.'
           : formatCatalogCategoryCountLine(visibleCount)
             + (contextualCategory ? ' em ' + contextualCategory.label : '')
-            + ' para "' + currentSearch + '" no catálogo público. Abra a loja completa ou fale com a Tech10 para seguir com a seleção assistida.');
+            + ' para "' + currentSearch + '" no catálogo público. Abra a loja completa ou fale com a Tech10 para seguir com o carrinho assistido.');
       } else if (activeCategory) {
         summaryNode.textContent = activeCategory.label + ' com ' + formatCatalogCategoryCountLine(visibleCount)
-          + ' em destaque agora. Continue pela home ou abra a loja completa dessa categoria para seguir com a seleção assistida.';
+          + ' em destaque agora. Continue pela home ou abra a loja completa dessa categoria para seguir com o carrinho assistido.';
       } else {
         var categoryNames = categories.map(function (category) { return category.label; });
         summaryNode.textContent = sourceProducts.length + ' itens públicos em ' + categories.length + (categories.length === 1 ? ' categoria' : ' categorias') + '. Destaque agora para ' + categoryNames.join(', ') + '.';
@@ -828,7 +828,7 @@
 
     if (options && options.search) {
       title = 'Nenhum destaque para "' + options.search + '"';
-      description = 'Abra a loja completa para revisar esse termo ou ajuste a busca para seguir com a seleção assistida.';
+      description = 'Abra a loja completa para revisar esse termo ou ajuste a busca para seguir com o carrinho assistido.';
     } else if (options && options.categoryLabel) {
       title = 'Sem destaque visível em ' + options.categoryLabel;
       description = 'Abra a loja completa dessa categoria para revisar o catálogo público e seguir com atendimento assistido.';
@@ -1146,7 +1146,7 @@
             }).join('') + '</div>'
           : '';
         var supportNoteHtml = assistedSelectionEnabled
-          ? '<div class="lp-card-mode-note"><i class="fas fa-list-check"></i> Seleção assistida pela Tech10.</div>'
+          ? '<div class="lp-card-mode-note"><i class="fas fa-cart-shopping"></i> Carrinho assistido pela Tech10.</div>'
           : (!cartEnabled
           ? '<div class="lp-card-mode-note"><i class="fas fa-headset"></i> Atendimento assistido Tech10.</div>'
           : '');

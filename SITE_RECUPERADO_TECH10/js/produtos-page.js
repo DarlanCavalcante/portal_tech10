@@ -473,7 +473,7 @@
       eyebrow: 'Destaques Tech10',
       title: 'Vitrine editorial baseada no estoque público da Tech10.',
       desc: 'Abrimos a loja com uma leitura mais diversa do catálogo real para reduzir repetição na primeira dobra e facilitar a triagem comercial.',
-      chips: [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories)
+      chips: [_formatProductCount(currentCount), 'Carrinho assistido'].concat(topCategories)
     };
 
     if (currentCount === 0) {
@@ -482,7 +482,7 @@
         ? 'Nenhum item público encontrado para "' + searchTerm + '".'
         : 'Nenhum item público encontrado nesta combinação de filtros.';
       panelState.desc = 'A Tech10 continua atendendo de forma assistida. Ajuste a busca, volte para outra categoria ou fale com a equipe para confirmar alternativas.';
-      panelState.chips = ['Seleção assistida', 'Atendimento Tech10'];
+      panelState.chips = ['Carrinho assistido', 'Atendimento Tech10'];
       return panelState;
     }
 
@@ -490,15 +490,15 @@
       panelState.eyebrow = 'Busca ativa';
       panelState.title = 'Resultado para "' + searchDisplayTerm + '" no catálogo público.';
       panelState.desc = 'Exibindo ' + _formatProductCount(currentCount) + ' com confirmação assistida da Tech10 para disponibilidade, orientação e fechamento seguro.';
-      panelState.chips = [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories);
+      panelState.chips = [_formatProductCount(currentCount), 'Carrinho assistido'].concat(topCategories);
       return panelState;
     }
 
     if (_activeHandle && _activeHandle !== 'all') {
       panelState.eyebrow = 'Categoria em foco';
       panelState.title = _activeLabel + ' com estoque público agora.';
-      panelState.desc = 'Esta leitura mantém a seleção assistida da Tech10 e prioriza os itens mais claros comercialmente dentro da categoria ativa.';
-      panelState.chips = [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories);
+      panelState.desc = 'Esta leitura mantém o carrinho assistido da Tech10 e prioriza os itens mais claros comercialmente dentro da categoria ativa.';
+      panelState.chips = [_formatProductCount(currentCount), 'Carrinho assistido'].concat(topCategories);
       return panelState;
     }
 

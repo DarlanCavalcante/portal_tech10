@@ -536,7 +536,7 @@
       const matchedProduct = findProductByVariantId(variantId, productId);
 
       if (!matchedProduct) {
-        throw new Error('Não foi possível preparar a seleção assistida deste produto.');
+        throw new Error('Não foi possível preparar o carrinho assistido deste produto.');
       }
 
       const desiredQuantity = Math.max(1, parseInt(quantity, 10) || 1);
@@ -584,7 +584,7 @@
       });
 
       if (!targetItem) {
-        throw new Error('Item não encontrado na seleção assistida.');
+        throw new Error('Item não encontrado no carrinho assistido.');
       }
 
       const desiredQuantity = Math.max(1, parseInt(quantity, 10) || 1);

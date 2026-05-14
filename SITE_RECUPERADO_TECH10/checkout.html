@@ -436,7 +436,7 @@
                     <!-- Observações -->
                     <div class="form-group">
                         <label>Observações para a equipe (opcional)</label>
-                        <textarea name="notes" rows="3" placeholder="Alguma observação sobre sua seleção, entrega ou atendimento?"></textarea>
+                        <textarea name="notes" rows="3" placeholder="Alguma observação sobre seu carrinho, entrega ou atendimento?"></textarea>
                     </div>
 
                     <button type="submit" class="btn-submit" id="submit-btn">
@@ -447,11 +447,11 @@
 
             <!-- Resumo do Pedido -->
             <div class="checkout-summary">
-                <h2 class="section-title">Sua seleção</h2>
+                <h2 class="section-title">Seu carrinho assistido</h2>
                 <div id="cart-summary">
                     <div class="loading">
                         <i class="fas fa-spinner fa-spin"></i>
-                        <p>Carregando sua seleção...</p>
+                        <p>Carregando seu carrinho assistido...</p>
                     </div>
                 </div>
             </div>
@@ -546,7 +546,7 @@
 
         function buildAssistedCheckoutMessage(details) {
             const lines = [
-                'Olá! Vim pela loja da Tech10 e quero continuar o fechamento assistido da minha seleção.',
+                'Olá! Vim pela loja da Tech10 e quero continuar o fechamento assistido do meu carrinho.',
                 '',
                 '*Cliente*',
                 '- Nome: ' + (details.customerName || '-'),
@@ -763,7 +763,7 @@
             const summaryEl = document.getElementById('cart-summary');
             if (!summaryEl) return;
             if (!cart || !cart.items || cart.items.length === 0) {
-                summaryEl.innerHTML = '<div class="error"><p>Nenhum item selecionado ainda. <a href="/loja">Explorar catálogo</a></p></div>';
+                summaryEl.innerHTML = '<div class="error"><p>Seu carrinho assistido ainda está vazio. <a href="/loja">Explorar catálogo</a></p></div>';
                 return;
             }
             const imgFallback = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect fill='%23e5e7eb' width='60' height='60'/%3E%3C/svg%3E";
@@ -815,7 +815,7 @@
             cartId = getStoredCartId();
             const summaryEl = document.getElementById('cart-summary');
             if (!cartId) {
-                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhuma seleção ativa no momento. <a href="/loja">Explorar catálogo</a></p></div>';
+                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhum carrinho assistido ativo no momento. <a href="/loja">Explorar catálogo</a></p></div>';
                 return;
             }
             try {
@@ -830,13 +830,13 @@
                 }
                 if (!cart || !cart.items || cart.items.length === 0) {
                     clearStoredSelection();
-                    if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhum item selecionado ainda. <a href="/loja">Explorar catálogo</a></p></div>';
+                    if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Seu carrinho assistido ainda está vazio. <a href="/loja">Explorar catálogo</a></p></div>';
                     return;
                 }
                 renderCartSummary();
             } catch (err) {
                 console.error('[CHECKOUT] Erro ao carregar carrinho:', err);
-                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Não foi possível carregar sua seleção atual. <a href="/loja">Voltar ao catálogo</a> ou <a href="' + buildSupportUrl('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu fechamento assistido.') + '" target="_blank" rel="noopener noreferrer">falar com a Tech10</a>.</p></div>';
+                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Não foi possível carregar seu carrinho assistido atual. <a href="/loja">Voltar ao catálogo</a> ou <a href="' + buildSupportUrl('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu fechamento assistido.') + '" target="_blank" rel="noopener noreferrer">falar com a Tech10</a>.</p></div>';
             }
         }
 

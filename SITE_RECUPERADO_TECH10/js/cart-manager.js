@@ -39,7 +39,7 @@ class CartManager {
 
   getEmptyStateLabel() {
     return this.isQuoteOnlyRuntime()
-      ? 'Sua seleção está vazia'
+      ? 'Seu carrinho assistido está vazio'
       : 'Seu carrinho está vazio';
   }
 

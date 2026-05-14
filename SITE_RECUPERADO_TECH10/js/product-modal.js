@@ -46,7 +46,7 @@
     if (hasAssistedSelectionBridge()) {
       return {
         add: '<i class="fas fa-list-check"></i> Adicionar à seleção',
-        buy: '<i class="fas fa-receipt"></i> Ver minha seleção'
+        buy: '<i class="fas fa-cart-shopping"></i> Ver carrinho'
       };
     }
 

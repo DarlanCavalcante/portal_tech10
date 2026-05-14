@@ -317,6 +317,9 @@
   function renderQuoteOnlyPage(runtimeConfig) {
     const pathname = currentPath();
     if (!isCartPath(pathname) && !isCheckoutPath(pathname)) return;
+    const commerce = runtimeConfig && runtimeConfig.commerce ? runtimeConfig.commerce : {};
+    const capabilities = commerce.capabilities || {};
+    if (isCartPath(pathname) && capabilities.assistedCartBridge === true) return;
 
     const stateRoot = isCartPath(pathname)
       ? document.getElementById('cart-content')
@@ -328,7 +331,7 @@
     document.querySelectorAll('.cart-icon, .pp-cart-btn, #cartIcon').forEach(hideElement);
 
     const title = isCartPath(pathname)
-      ? 'Compra assistida pela Tech10'
+      ? 'Revise seus itens com calma antes de fechar'
       : 'Fechamento assistido do pedido';
     const copy = isCartPath(pathname)
       ? 'O catálogo público já está disponível, mas o fechamento do pedido continua pelo atendimento da Tech10. Escolha o item na loja e fale com o time para confirmar disponibilidade, entrega e pagamento.'
@@ -339,12 +342,14 @@
 
     const heading = document.querySelector('.cart-header h1, .header h1');
     if (heading) {
-      heading.innerHTML = '<i class="fas fa-headset"></i> ' + title;
+      heading.innerHTML = '<i class="fas ' + (isCartPath(pathname) ? 'fa-cart-shopping' : 'fa-headset') + '"></i> ' + title;
     }
 
-    const subtitle = document.querySelector('.header p');
+    const subtitle = document.querySelector('.cart-header p, .header p');
     if (subtitle) {
-      subtitle.textContent = 'Atendimento guiado pela Tech10 para confirmar produto, entrega e pagamento.';
+      subtitle.textContent = isCartPath(pathname)
+        ? 'Seu carrinho assistido reúne o que você escolheu na loja para a Tech10 confirmar estoque, orientar a melhor opção e concluir tudo com atendimento humano quando fizer sentido.'
+        : 'Atendimento guiado pela Tech10 para confirmar produto, entrega e pagamento.';
     }
 
     stateRoot.style.display = 'block';
