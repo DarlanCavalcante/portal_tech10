@@ -10,7 +10,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/DarlanCavalcante/portal_tech10/actions"><img src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" alt="Build"></a>
   <a href="https://github.com/DarlanCavalcante/portal_tech10"><img src="https://img.shields.io/badge/version-2.0-blue?style=flat-square" alt="Version"></a>
   <a href="https://github.com/DarlanCavalcante/portal_tech10/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License"></a>
   <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5">
@@ -130,10 +129,20 @@ npx live-server .
 
 ## 📦 Deploy
 
-### Vercel (Recomendado)
+### Vercel (Canonico)
+
+Fluxo recomendado:
+
+1. usar o repositorio `DarlanCavalcante/portal_tech10` como origem do codigo
+2. conectar esse repositorio ao projeto Vercel `tech10-portal`
+3. configurar `SITE_RECUPERADO_TECH10` como `Root Directory`
+4. publicar por merge na `main`
+
+Esse modelo **nao depende de GitHub Actions pagos**.
 
 ```bash
-# Via CLI
+# Fallback manual, se a integracao Git estiver indisponivel
+cd SITE_RECUPERADO_TECH10
 npx vercel --prod
 ```
 
@@ -154,6 +163,7 @@ Arraste a pasta do projeto para [app.netlify.com/drop](https://app.netlify.com/d
 
 Para a leitura atualizada do estado técnico deste projeto e da trilha de evolução por tenant, consulte:
 
+- [docs/OPERACAO_CANONICA_GITHUB_VERCEL_TENANT_TECH10_2026-05-13.md](docs/OPERACAO_CANONICA_GITHUB_VERCEL_TENANT_TECH10_2026-05-13.md)
 - [docs/DIAGNOSTICO_BASE_CANONICA_TENANT_TECH10_2026-05-13.md](docs/DIAGNOSTICO_BASE_CANONICA_TENANT_TECH10_2026-05-13.md)
 - [docs/RAIOX_PORTAL_TECH10_2026-05-11.md](docs/RAIOX_PORTAL_TECH10_2026-05-11.md)
 - [docs/VARIAVEIS_E_CONFIGURACAO_PORTAL_TECH10.md](docs/VARIAVEIS_E_CONFIGURACAO_PORTAL_TECH10.md)

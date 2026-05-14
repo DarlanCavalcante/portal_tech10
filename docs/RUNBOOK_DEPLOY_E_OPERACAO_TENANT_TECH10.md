@@ -4,13 +4,13 @@ Data-base: `2026-05-11`
 
 ## Deploy recomendado
 
-1. criar projeto dedicado `tech10-portal`
+1. conectar o projeto `tech10-portal` ao GitHub `DarlanCavalcante/portal_tech10`
 2. definir `SITE_RECUPERADO_TECH10/` como root directory
-3. cadastrar variáveis do contrato de ambiente
-4. publicar preview
-5. rodar smoke do runtime
-6. anexar `tech10.tech10cloud.com`
-7. repetir smoke no domínio final
+3. manter `main` como branch de produção
+4. cadastrar variáveis do contrato de ambiente
+5. publicar por merge na `main`
+6. rodar smoke do runtime
+7. validar o alias `tech10.loja.tech10cloud.com`
 
 ## Checklist de operação diária
 
@@ -74,8 +74,8 @@ node scripts/smoke-runtime.mjs
 
 ## Estado operacional mais recente
 
-- runtime público: `https://tech10-portal.vercel.app`
+- runtime público canônico: `https://tech10.loja.tech10cloud.com`
 - `GET /api/health`: `status=ok`
 - catálogo público: ativo, consumindo `https://core.tech10cloud.com`
 - modo comercial atual: `quote_only`
-- bloqueio externo remanescente: `tech10.tech10cloud.com` ainda sem resolução DNS
+- origem de código canônica: `GitHub`, sem dependência de `GitHub Actions`

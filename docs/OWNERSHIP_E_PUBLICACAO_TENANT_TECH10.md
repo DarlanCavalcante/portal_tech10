@@ -8,7 +8,7 @@ O ownership correto da Tech10 fica assim:
 
 - repositório canônico desta frente: `DarlanCavalcante/portal_tech10`
 - diretório canônico de deploy: `SITE_RECUPERADO_TECH10/`
-- domínio alvo recomendado: `tech10.tech10cloud.com`
+- domínio público canônico: `tech10.loja.tech10cloud.com`
 
 ## O que não faz parte do runtime canônico
 
@@ -33,15 +33,17 @@ Nunca como canonicidade automática de publicação.
 
 ## Publicação correta
 
-1. criar projeto dedicado da Tech10
-2. usar `SITE_RECUPERADO_TECH10/` como root directory
-3. anexar `tech10.tech10cloud.com`
-4. publicar sem qualquer alias ou dependência operacional externa
+1. usar o projeto dedicado `tech10-portal`
+2. conectar o GitHub `DarlanCavalcante/portal_tech10`
+3. usar `SITE_RECUPERADO_TECH10/` como root directory
+4. manter `main` como branch de produção
+5. anexar e preservar `tech10.loja.tech10cloud.com`
+6. publicar sem depender de GitHub Actions pagos
 
 ## Veredito
 
 O ownership está fechado:
 
 - **código e runtime da Tech10:** `portal_tech10`
-- **domínio final recomendado:** `tech10.tech10cloud.com`
+- **domínio final canônico:** `tech10.loja.tech10cloud.com`
 - **integração com ERP:** contrato explícito via `/portal` e `/status`
