@@ -39,7 +39,7 @@ O GitHub passa a ser apenas:
 1. editar codigo no repositorio `portal_tech10`
 2. abrir PR
 3. mergear na `main`
-4. deixar a Vercel publicar automaticamente a partir do GitHub
+4. deixar a Vercel usar esse repositorio como origem canonica do build
 5. validar smoke em:
    - `/`
    - `/loja`
@@ -84,13 +84,15 @@ Se qualquer um desses pontos divergir, a publicacao deixa de ser canonica.
 1. trabalhar em branch
 2. abrir PR
 3. mergear na `main`
-4. aguardar auto deploy da Vercel
-5. validar o deploy publicado
+4. validar se a Vercel reagiu ao merge
+5. se o deploy nao nascer sozinho, publicar manualmente a partir do mesmo repositorio
+6. validar o deploy publicado
 
 ### Fallback manual
 
-So usar deploy manual por CLI quando:
+O deploy manual por CLI e o fallback oficial quando:
 
+- a Vercel nao reagir sozinha ao merge
 - a integracao Git estiver indisponivel
 - for necessario validar uma correcao urgente fora do ciclo normal
 
@@ -99,12 +101,28 @@ Mesmo nesse caso, o deploy manual deve respeitar a mesma base:
 - repositorio: `portal_tech10`
 - root de deploy: `SITE_RECUPERADO_TECH10`
 
+O comando validado nesta rodada foi disparado do **repo root** ja ligado ao
+projeto correto:
+
+```bash
+cd /Users/darlancavalcante/Documents/TECH/portal_tech10
+vercel deploy --prod --yes --scope darlancavalcantes-projects
+```
+
+Importante:
+
+- nao disparar esse deploy de dentro de `SITE_RECUPERADO_TECH10/`
+- com `Root Directory = SITE_RECUPERADO_TECH10`, rodar de dentro da subpasta
+  duplica o caminho e falha
+
 ## Evidencias objetivas deste fechamento
 
 - PR `#114`: logo canonica mergeada na `main`
 - PR `#115`: entrada visivel de `Minha selecao` mergeada na `main`
 - projeto Vercel reconectado ao GitHub
 - root directory corrigido de `./` para `SITE_RECUPERADO_TECH10`
+- PRs `#116`, `#117` e `#118`: usadas para revalidar governanca e gatilho
+- deploy de contingencia validado com sucesso: `dpl_4dVf8xYZukSTxUgcFSJGSnrKb8sb`
 
 ## Checklist rapido
 
@@ -124,3 +142,5 @@ O modelo profissional recomendado para a Tech10 agora e:
 - `Vercel` como plataforma de build e publicacao
 - `GitHub Actions` fora do caminho critico
 - `SITE_RECUPERADO_TECH10` como unica raiz valida de publicacao
+- `CLI manual` como fallback documentado e validado quando o webhook da Vercel
+  nao reagir ao merge
