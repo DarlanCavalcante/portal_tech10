@@ -114,6 +114,24 @@
           _applyFilterAndRender();
         }, 300);
       });
+      searchInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          clearTimeout(_searchDebounce);
+          _applyFilterAndRender();
+        }
+      });
+    }
+
+    var searchSubmit = document.getElementById('pp-search-submit');
+    if (searchSubmit) {
+      searchSubmit.addEventListener('click', function () {
+        clearTimeout(_searchDebounce);
+        _applyFilterAndRender();
+        if (searchInput) {
+          searchInput.focus();
+        }
+      });
     }
 
     var sortSel = document.getElementById('pp-sort');
@@ -156,8 +174,29 @@
       overlay.addEventListener('click', closeSidebar);
     }
 
+    _setupHeaderMenu();
+
     // Atualizar contador do carrinho
     _updateCartCount();
+  }
+
+  function _setupHeaderMenu() {
+    var menuToggle = document.getElementById('menuToggle');
+    var nav = document.querySelector('.pp-store-nav');
+
+    if (!menuToggle || !nav) return;
+
+    menuToggle.addEventListener('click', function () {
+      nav.classList.toggle('active');
+      menuToggle.classList.toggle('active');
+    });
+
+    nav.querySelectorAll('.nav-link').forEach(function (link) {
+      link.addEventListener('click', function () {
+        nav.classList.remove('active');
+        menuToggle.classList.remove('active');
+      });
+    });
   }
 
   // ─────────────────────────────────────────────────────────────────────────
