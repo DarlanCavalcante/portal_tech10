@@ -508,7 +508,7 @@
     <header>
         <div class="header-content">
             <a href="/" class="logo">
-                <img src="imagem/logo/tech10-logo-fundo-azul.png" alt="Tech10" height="36">
+                <img src="imagem/logo/tech10-logo-principal-pulso-hibrido.svg" alt="Tech10" height="36">
             </a>
             <div class="header-actions">
                 <a href="/loja" class="continue-shopping" style="font-size:14px;">
@@ -728,11 +728,28 @@
             cart.items.forEach(function(item, index) {
                 var unitPrice = item.unit_price || 0;
                 var quantity = item.quantity || 1;
+                var availableQuantityRaw = Number(
+                    item.available_quantity != null
+                        ? item.available_quantity
+                        : item.inventory_quantity != null
+                            ? item.inventory_quantity
+                            : (item.variant && item.variant.inventory_quantity != null ? item.variant.inventory_quantity : NaN)
+                );
+                var hasInventoryLimit = Number.isFinite(availableQuantityRaw) && availableQuantityRaw >= 0;
+                var availableQuantity = hasInventoryLimit ? Math.max(0, Math.floor(availableQuantityRaw)) : null;
+                var reachedInventoryLimit = hasInventoryLimit && quantity >= availableQuantity;
                 var itemTotal = unitPrice * quantity;
                 subtotal += itemTotal;
                 var itemId = String(item.id || ('item_' + index)).replace(/'/g, "\\'");
                 var itemTitle = String(item.title || 'Produto sem nome').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 var itemMetaHtml = renderItemContextChips(item);
+                var stockNoteHtml = hasInventoryLimit
+                    ? `<div style="margin-top:8px;font-size:12px;color:${reachedInventoryLimit ? '#b45309' : '#6b7280'};">
+                        ${availableQuantity > 0
+                            ? `Estoque disponível agora: <strong>${availableQuantity}</strong>${reachedInventoryLimit ? ' · limite atual atingido' : ''}`
+                            : 'Item indisponível no momento'}
+                    </div>`
+                    : '';
                 var thumbnail = item.thumbnail ||
                     (item.variant && item.variant.product && item.variant.product.images && item.variant.product.images[0] && item.variant.product.images[0].url) ||
                     'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22120%22 height=%22120%22/%3E%3Ctext fill=%22%23999%22 x=%2260%22 y=%2260%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22%3ESem imagem%3C/text%3E%3C/svg%3E';
@@ -749,11 +766,12 @@
                                     <i class="fas fa-minus"></i>
                                 </button>
                                 <input type="text" class="quantity-input" value="${quantity}" readonly>
-                                <button class="quantity-btn" onclick="updateQuantity('${itemId}', ${quantity + 1})">
+                                <button class="quantity-btn" onclick="updateQuantity('${itemId}', ${quantity + 1})" ${reachedInventoryLimit ? 'disabled' : ''}>
                                     <i class="fas fa-plus"></i>
                                 </button>
                                 <span class="item-total">Total: R$ ${formatPrice(itemTotal)}</span>
                             </div>
+                            ${stockNoteHtml}
                         </div>
                         <button class="remove-btn" onclick="removeItem('${itemId}')">
                             <i class="fas fa-trash"></i> Remover

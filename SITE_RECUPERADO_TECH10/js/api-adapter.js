@@ -222,10 +222,47 @@
     return null;
   }
 
+  function findVariantInProduct(product, variantId) {
+    if (!product || !Array.isArray(product.variants) || !product.variants.length) {
+      return null;
+    }
+
+    const wantedVariantId = String(variantId || '');
+    return product.variants.find(function (variant) {
+      return String(variant && variant.id) === wantedVariantId;
+    }) || product.variants[0] || null;
+  }
+
+  function getVariantInventoryQuantity(product, variantId) {
+    const variant = findVariantInProduct(product, variantId);
+    const parsed = parseInt(variant && variant.inventory_quantity, 10);
+    return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+  }
+
+  async function resolveCurrentProductSnapshot(variantId, productId) {
+    if (productId) {
+      const liveProduct = await getProductById(productId);
+      const liveVariant = findVariantInProduct(liveProduct, variantId);
+      if (liveProduct && liveVariant) {
+        return { product: liveProduct, variant: liveVariant, source: 'live' };
+      }
+    }
+
+    const cachedProduct = findProductByVariantId(variantId, productId);
+    if (cachedProduct) {
+      return { product: cachedProduct.product, variant: cachedProduct.variant, source: 'cache' };
+    }
+
+    return null;
+  }
+
   function buildAssistedCartItem(product, variant, quantity) {
     const safeProduct = product || {};
     const safeVariant = variant || {};
     const variantTitle = normalizeVariantTitle(safeVariant.title);
+    const availableQuantity = getVariantInventoryQuantity({
+      variants: [safeVariant]
+    }, safeVariant.id);
     const amount = safeVariant && safeVariant.prices && safeVariant.prices[0] && safeVariant.prices[0].amount
       ? safeVariant.prices[0].amount
       : 0;
@@ -242,6 +279,8 @@
       base_title: title,
       variant_title: variantTitle,
       quantity: quantity || 1,
+      available_quantity: availableQuantity,
+      inventory_quantity: availableQuantity,
       unit_price: amount,
       subtotal: amount * (quantity || 1),
       thumbnail,
@@ -252,6 +291,7 @@
       variant: {
         id: safeVariant.id || null,
         title: safeVariant.title || '',
+        inventory_quantity: availableQuantity,
         product: {
           id: safeProduct.id || null,
           title,
@@ -333,6 +373,13 @@
       || (product && product.thumbnail)
       || (product && product.images && product.images[0] && (product.images[0].url || product.images[0]))
       || null;
+    const availableQuantity = Number(
+      safeItem.available_quantity != null
+        ? safeItem.available_quantity
+        : safeItem.inventory_quantity != null
+          ? safeItem.inventory_quantity
+          : (variant && variant.inventory_quantity != null ? variant.inventory_quantity : NaN)
+    );
 
     return {
       id: safeItem.id || `assist-item-${safeItem.variant_id || index}`,
@@ -340,6 +387,8 @@
       variant_id: safeItem.variant_id || (variant && variant.id) || null,
       title,
       quantity,
+      available_quantity: Number.isFinite(availableQuantity) ? Math.max(0, availableQuantity) : null,
+      inventory_quantity: Number.isFinite(availableQuantity) ? Math.max(0, availableQuantity) : null,
       unit_price: unitPrice,
       subtotal: safeItem.subtotal != null ? safeItem.subtotal : unitPrice * quantity,
       thumbnail,
@@ -490,13 +539,50 @@
     }
   }
 
+  function mergeAssistedItemWithLiveSnapshot(item, product, variant, quantity) {
+    const refreshed = buildAssistedCartItem(product, variant, quantity);
+    return Object.assign({}, item, refreshed, {
+      id: item.id || refreshed.id
+    });
+  }
+
+  async function reconcileAssistedCartStock(cart) {
+    const nextCart = ensureAssistedCart(cart && cart.id ? cart.id : null);
+    nextCart.items = Array.isArray(cart && cart.items) ? cart.items.map(function (item) {
+      return Object.assign({}, item);
+    }) : [];
+
+    const reconciledItems = [];
+    for (const item of nextCart.items) {
+      const snapshot = await resolveCurrentProductSnapshot(item.variant_id, item.product_id);
+      if (!snapshot || !snapshot.product || !snapshot.variant) {
+        reconciledItems.push(item);
+        continue;
+      }
+
+      const availableQuantity = getVariantInventoryQuantity(snapshot.product, snapshot.variant.id);
+      if (availableQuantity < 1) {
+        continue;
+      }
+
+      const desiredQuantity = Math.max(1, parseInt(item.quantity, 10) || 1);
+      const clampedQuantity = Math.min(desiredQuantity, availableQuantity);
+      reconciledItems.push(
+        mergeAssistedItemWithLiveSnapshot(item, snapshot.product, snapshot.variant, clampedQuantity)
+      );
+    }
+
+    nextCart.items = reconciledItems;
+    return nextCart;
+  }
+
   async function getCart(cartId) {
     if (!cartId) return null;
     if (await shouldUseAssistedCartBridge()) {
       const cart = readAssistedCart();
       if (!cart) return null;
       if (cart.id && String(cart.id) !== String(cartId)) return null;
-      return normalizeCart(cart);
+      return persistAssistedCartState(await reconcileAssistedCartStock(cart));
     }
     try {
       const res = await fetch(`${base()}/carts/${cartId}`);
@@ -533,22 +619,38 @@
   async function addLineItem(cartId, variantId, quantity = 1, productId) {
     if (await shouldUseAssistedCartBridge()) {
       const nextCart = ensureAssistedCart(cartId);
-      const matchedProduct = findProductByVariantId(variantId, productId);
+      const matchedProduct = await resolveCurrentProductSnapshot(variantId, productId);
 
       if (!matchedProduct) {
         throw new Error('Não foi possível preparar a seleção assistida deste produto.');
       }
 
       const desiredQuantity = Math.max(1, parseInt(quantity, 10) || 1);
+      const availableQuantity = getVariantInventoryQuantity(matchedProduct.product, matchedProduct.variant.id);
+      if (availableQuantity < 1) {
+        throw new Error('Este item ficou sem estoque no momento. Atualize a página para ver a disponibilidade atual.');
+      }
+
       const itemKey = `assist-item-${variantId}`;
       const existingItem = nextCart.items.find(function (item) {
         return String(item.id) === itemKey || String(item.variant_id) === String(variantId);
       });
 
       if (existingItem) {
-        existingItem.quantity = (existingItem.quantity || 0) + desiredQuantity;
+        const currentQuantity = Math.max(1, parseInt(existingItem.quantity, 10) || 1);
+        const nextQuantity = Math.min(currentQuantity + desiredQuantity, availableQuantity);
+        Object.assign(
+          existingItem,
+          mergeAssistedItemWithLiveSnapshot(existingItem, matchedProduct.product, matchedProduct.variant, nextQuantity)
+        );
       } else {
-        nextCart.items.push(buildAssistedCartItem(matchedProduct.product, matchedProduct.variant, desiredQuantity));
+        nextCart.items.push(
+          buildAssistedCartItem(
+            matchedProduct.product,
+            matchedProduct.variant,
+            Math.min(desiredQuantity, availableQuantity)
+          )
+        );
       }
 
       return {
@@ -587,8 +689,24 @@
         throw new Error('Item não encontrado na seleção assistida.');
       }
 
-      const desiredQuantity = Math.max(1, parseInt(quantity, 10) || 1);
-      targetItem.quantity = desiredQuantity;
+      const snapshot = await resolveCurrentProductSnapshot(targetItem.variant_id, targetItem.product_id);
+      if (!snapshot || !snapshot.product || !snapshot.variant) {
+        throw new Error('Não foi possível confirmar o estoque deste item agora.');
+      }
+
+      const availableQuantity = getVariantInventoryQuantity(snapshot.product, snapshot.variant.id);
+      if (availableQuantity < 1) {
+        nextCart.items = nextCart.items.filter(function (item) {
+          return String(item.id) !== String(itemId);
+        });
+      } else {
+        const desiredQuantity = Math.max(1, parseInt(quantity, 10) || 1);
+        const clampedQuantity = Math.min(desiredQuantity, availableQuantity);
+        Object.assign(
+          targetItem,
+          mergeAssistedItemWithLiveSnapshot(targetItem, snapshot.product, snapshot.variant, clampedQuantity)
+        );
+      }
 
       return {
         success: true,
