@@ -138,6 +138,38 @@
     {
       "source": "/status",
       "destination": "/portal/index.html?mode=status"
+    },
+    {
+      "source": "/assistencia-tecnica-apple-santa-maria",
+      "destination": "/categorias/apple.html"
+    },
+    {
+      "source": "/conserto-iphone-santa-maria",
+      "destination": "/categorias/smartphones.html"
+    },
+    {
+      "source": "/assistencia-samsung-santa-maria",
+      "destination": "/categorias/android.html"
+    },
+    {
+      "source": "/conserto-notebook-santa-maria",
+      "destination": "/categorias/notebooks.html"
+    },
+    {
+      "source": "/manutencao-computador-santa-maria",
+      "destination": "/categorias/computadores.html"
+    },
+    {
+      "source": "/redes-e-infraestrutura-santa-maria",
+      "destination": "/categorias/redes-infraestrutura.html"
+    },
+    {
+      "source": "/desenvolvimento-de-sistemas-santa-maria",
+      "destination": "/categorias/desenvolvimento.html"
+    },
+    {
+      "source": "/loja-de-informatica-santa-maria",
+      "destination": "/categorias/assistencia.html"
     }
   ]
 }

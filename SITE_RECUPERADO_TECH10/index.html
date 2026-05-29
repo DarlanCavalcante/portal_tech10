@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech10 Informática e Tecnologia - Santa Maria/RS</title>
+    <meta name="description" content="Assistência técnica Apple, iPhone, Samsung e Android, conserto de notebooks e computadores, redes, infraestrutura, desenvolvimento de sistemas e loja de informática em Santa Maria/RS.">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/products-medusa.css">
     <link rel="stylesheet" href="css/medusa-cart.css">
@@ -95,12 +96,15 @@
         <!-- Hero Content -->
         <div class="hero-container">
             <div class="hero-content">
-                <h1 class="hero-title">Tecnologia que Conecta Seu Mundo</h1>
-                <p class="hero-subtitle">Especialistas em Apple, Samsung e desenvolvimento Full Stack. Qualidade e confiança há 20 anos em Santa Maria/RS</p>
-                <div class="hero-buttons">
-                    <a href="/loja" class="btn btn-primary" style="text-decoration: none; display: inline-block;"><i class="fas fa-store" style="margin-right:6px"></i>Explorar catálogo</a>
-                    <a href="/portal" class="btn btn-secondary" style="text-decoration: none; display: inline-block;" data-tenant-portal-link><i class="fas fa-receipt" style="margin-right:6px"></i>Portal do cliente</a>
-                    <a href="#servicos" class="btn btn-secondary" style="text-decoration: none; display: inline-block;">Nossos Serviços</a>
+                <div class="hero-copy-frame">
+                    <span class="hero-eyebrow">Tech10 em Santa Maria/RS</span>
+                    <h1 class="hero-title">Tecnologia que Conecta Seu Mundo</h1>
+                    <p class="hero-subtitle">Especialistas em Apple, Samsung e desenvolvimento Full Stack. Qualidade e confiança há 20 anos em Santa Maria/RS</p>
+                    <div class="hero-buttons">
+                        <a href="/loja" class="btn btn-primary" style="text-decoration: none; display: inline-block;"><i class="fas fa-store" style="margin-right:6px"></i>Explorar catálogo</a>
+                        <a href="/portal" class="btn btn-secondary" style="text-decoration: none; display: inline-block;" data-tenant-portal-link><i class="fas fa-receipt" style="margin-right:6px"></i>Portal do cliente</a>
+                        <a href="#servicos" class="btn btn-secondary" style="text-decoration: none; display: inline-block;">Nossos Serviços</a>
+                    </div>
                 </div>
             </div>
             <div class="hero-image">
@@ -129,61 +133,130 @@
                     </a>
                 </div>
             </div>
-            <div class="categories-grid">
-                <a href="#contato" style="text-decoration: none; color: inherit;" data-tenant-support-link data-support-message="Olá! Quero atendimento especializado para Apple na Tech10.">
-                    <div class="category-card category-card--service" style="border: 2px solid #f59e0b; cursor: pointer;">
-                        <i class="fab fa-apple" style="color: #000;"></i>
-                        <h3>Especialista Apple</h3>
-                        <p>iPhone, iPad, MacBook e iMac</p>
-                        <span class="category-card-tag service">Atendimento especializado</span>
-                        <span class="category-card-route">Falar com especialista Apple</span>
+            <div class="categories-tabs" aria-label="Alternar grupos de categorias em destaque">
+                <button type="button" class="categories-tab is-active" data-category-tab="services" aria-pressed="true">
+                    <i class="fas fa-screwdriver-wrench" aria-hidden="true"></i>
+                    <span>Especialidades</span>
+                </button>
+                <button type="button" class="categories-tab" data-category-tab="catalog" aria-pressed="false">
+                    <i class="fas fa-store" aria-hidden="true"></i>
+                    <span>Loja &amp; apoio</span>
+                </button>
+            </div>
+            <div class="categories-showcase" data-categories-showcase>
+                <div class="categories-panel categories-panel--service is-active" data-category-panel="services">
+                    <div class="categories-panel__header">
+                        <div>
+                            <span class="categories-panel__eyebrow">Especialidades Tech10</span>
+                            <h3>Reparos e projetos com atendimento assistido</h3>
+                        </div>
+                        <p>Fluxo ideal para consertos, diagnósticos, suporte técnico especializado e projetos sob medida em Santa Maria.</p>
                     </div>
-                </a>
-                <a href="#contato" style="text-decoration: none; color: inherit;" data-tenant-support-link data-support-message="Olá! Quero atendimento especializado para Samsung e Android na Tech10.">
-                    <div class="category-card category-card--service" style="border: 2px solid #1f2937; cursor: pointer;">
-                        <i class="fab fa-android" style="color: #10b981;"></i>
-                        <h3>Samsung & Android</h3>
-                        <p>Galaxy e demais marcas Android</p>
-                        <span class="category-card-tag service">Atendimento especializado</span>
-                        <span class="category-card-route">Falar com especialista Android</span>
+                    <div class="categories-grid">
+                        <a href="/assistencia-tecnica-apple-santa-maria" class="category-link">
+                            <div class="category-card category-card--apple">
+                                <div class="category-card__icon">
+                                    <i class="fab fa-apple"></i>
+                                </div>
+                                <div class="category-card__body">
+                                    <h3>Especialista Apple</h3>
+                                    <p>iPhone, iPad, MacBook e iMac com atendimento técnico focado.</p>
+                                </div>
+                                <div class="category-card__footer">
+                                    <span class="category-card-tag service">Atendimento especializado</span>
+                                    <span class="category-card-route">Ver assistência Apple <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/assistencia-samsung-santa-maria" class="category-link">
+                            <div class="category-card category-card--android">
+                                <div class="category-card__icon">
+                                    <i class="fab fa-android"></i>
+                                </div>
+                                <div class="category-card__body">
+                                    <h3>Samsung &amp; Android</h3>
+                                    <p>Galaxy e outras linhas Android com reparo rápido e suporte claro.</p>
+                                </div>
+                                <div class="category-card__footer">
+                                    <span class="category-card-tag service">Reparo especializado</span>
+                                    <span class="category-card-route">Ver assistência Samsung <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/desenvolvimento-de-sistemas-santa-maria" class="category-link">
+                            <div class="category-card category-card--development">
+                                <div class="category-card__icon">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <div class="category-card__body">
+                                    <h3>Full Stack</h3>
+                                    <p>Sites, sistemas e automações com escopo técnico e comercial.</p>
+                                </div>
+                                <div class="category-card__footer">
+                                    <span class="category-card-tag service">Projeto sob medida</span>
+                                    <span class="category-card-route">Ver desenvolvimento <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                </a>
-                <a href="#contato" style="text-decoration: none; color: inherit;" data-tenant-support-link data-support-message="Olá! Quero atendimento para desenvolvimento Full Stack na Tech10.">
-                    <div class="category-card category-card--service" style="cursor: pointer;">
-                        <i class="fas fa-code"></i>
-                        <h3>Full Stack</h3>
-                        <p>Desenvolvimento profissional</p>
-                        <span class="category-card-tag service">Projeto sob medida</span>
-                        <span class="category-card-route">Falar sobre desenvolvimento</span>
+                </div>
+
+                <div class="categories-panel categories-panel--catalog" data-category-panel="catalog">
+                    <div class="categories-panel__header">
+                        <div>
+                            <span class="categories-panel__eyebrow">Loja &amp; apoio</span>
+                            <h3>Estoque público com apoio de atendimento humano</h3>
+                        </div>
+                        <p>Ideal para acessórios, periféricos e compras orientadas, com loja física e suporte para escolher o item certo.</p>
                     </div>
-                </a>
-                <a href="/loja?category=cabos" style="text-decoration: none; color: inherit;" data-home-catalog-slot="0">
-                    <div class="category-card category-card--catalog" style="cursor: pointer;">
-                        <i class="fas fa-plug" data-home-catalog-icon></i>
-                        <h3 data-home-catalog-title>Cabos &amp; Conectividade</h3>
-                        <p data-home-catalog-description>USB, Type-C e acessórios para conexão</p>
-                        <span class="category-card-tag catalog">Estoque público</span>
-                        <span class="category-card-route" data-home-catalog-route>Ver cabos na loja</span>
+                    <div class="categories-grid">
+                        <a href="/loja?category=cabos" class="category-link" data-home-catalog-slot="0">
+                            <div class="category-card category-card--catalog">
+                                <div class="category-card__icon">
+                                    <i class="fas fa-plug" data-home-catalog-icon></i>
+                                </div>
+                                <div class="category-card__body">
+                                    <h3 data-home-catalog-title>Cabos &amp; Conectividade</h3>
+                                    <p data-home-catalog-description>USB, Type-C e acessórios para conexão</p>
+                                </div>
+                                <div class="category-card__footer">
+                                    <span class="category-card-tag catalog">Estoque público</span>
+                                    <span class="category-card-route"><span data-home-catalog-route>Ver cabos na loja</span> <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/loja?category=mouse" class="category-link" data-home-catalog-slot="1">
+                            <div class="category-card category-card--catalog-alt">
+                                <div class="category-card__icon">
+                                    <i class="fas fa-computer-mouse" data-home-catalog-icon></i>
+                                </div>
+                                <div class="category-card__body">
+                                    <h3 data-home-catalog-title>Mouse &amp; Acessórios</h3>
+                                    <p data-home-catalog-description>Modelos com fio e sem fio para uso diário</p>
+                                </div>
+                                <div class="category-card__footer">
+                                    <span class="category-card-tag catalog">Seleção assistida</span>
+                                    <span class="category-card-route"><span data-home-catalog-route>Ver mouse na loja</span> <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/loja-de-informatica-santa-maria" class="category-link">
+                            <div class="category-card category-card--store">
+                                <div class="category-card__icon">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                <div class="category-card__body">
+                                    <h3>Loja de Informática</h3>
+                                    <p>Atendimento presencial, acessórios, orientação técnica e apoio na compra.</p>
+                                </div>
+                                <div class="category-card__footer">
+                                    <span class="category-card-tag service">Loja física</span>
+                                    <span class="category-card-route">Ver loja e assistência <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                </a>
-                <a href="/loja?category=mouse" style="text-decoration: none; color: inherit;" data-home-catalog-slot="1">
-                    <div class="category-card category-card--catalog" style="cursor: pointer;">
-                        <i class="fas fa-computer-mouse" data-home-catalog-icon></i>
-                        <h3 data-home-catalog-title>Mouse &amp; Acessórios</h3>
-                        <p data-home-catalog-description>Modelos com fio e sem fio para uso diário</p>
-                        <span class="category-card-tag catalog">Estoque público</span>
-                        <span class="category-card-route" data-home-catalog-route>Ver mouse na loja</span>
-                    </div>
-                </a>
-                <a href="#contato" style="text-decoration: none; color: inherit;" data-tenant-support-link data-support-message="Olá! Quero atendimento técnico da assistência da Tech10.">
-                    <div class="category-card category-card--service" style="cursor: pointer;">
-                        <i class="fas fa-tools"></i>
-                        <h3>Assistência</h3>
-                        <p>20 anos de experiência</p>
-                        <span class="category-card-tag service">Diagnóstico e reparo</span>
-                        <span class="category-card-route">Falar com atendimento técnico</span>
-                    </div>
-                </a>
+                </div>
             </div>
         </div>
     </section>
@@ -221,52 +294,58 @@
                 </div>
             </div>
 
-                <div class="section-header">
+                <div class="produtos-intro">
+                    <span class="section-eyebrow">Loja publica com apoio humano</span>
                     <h2 class="section-title" data-home-catalog-section-title>Produtos em Destaque</h2>
                     <p class="section-subtitle" data-home-catalog-subtitle>Escolha o item ideal e finalize pelo atendimento assistido da Tech10 nesta fase da loja.</p>
-                    <div class="catalog-live-summary">
-                        <div class="catalog-live-summary__meta" data-home-catalog-summary>Catálogo da Tech10 sincronizado com o ERP.</div>
-                        <div class="catalog-live-tags" data-home-catalog-tags>
-                            <a class="catalog-live-tag catalog-live-tag--link" href="/loja">Carregando categorias...</a>
-                        </div>
+                    <div class="produtos-pills">
+                        <span class="produtos-pill">Estoque em tempo real</span>
+                        <span class="produtos-pill">Selecao assistida</span>
+                        <span class="produtos-pill">Loja, suporte e retirada</span>
                     </div>
-                    <div class="catalog-live-spotlight" data-home-catalog-featured>
-                        <a class="catalog-spotlight-card catalog-spotlight-card--loading" href="/loja">
-                            <div class="catalog-spotlight-card__image">
-                                <i class="fas fa-box-open"></i>
-                            </div>
-                            <div class="catalog-spotlight-card__content">
-                                <span class="catalog-spotlight-card__eyebrow">Carregando destaque</span>
-                                <h3 class="catalog-spotlight-card__title">Lendo o catálogo público da Tech10</h3>
-                                <p class="catalog-spotlight-card__desc">Os produtos mais fortes do ERP aparecem aqui assim que a vitrine sincroniza.</p>
-                            </div>
+                </div>
+                <div class="catalog-live-summary">
+                    <div class="catalog-live-summary__meta" data-home-catalog-summary>Catálogo da Tech10 sincronizado com o ERP.</div>
+                    <div class="catalog-live-tags" data-home-catalog-tags>
+                        <a class="catalog-live-tag catalog-live-tag--link" href="/loja">Carregando categorias...</a>
+                    </div>
+                </div>
+                <div class="catalog-live-spotlight" data-home-catalog-featured>
+                    <a class="catalog-spotlight-card catalog-spotlight-card--loading" href="/loja">
+                        <div class="catalog-spotlight-card__image">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <div class="catalog-spotlight-card__content">
+                            <span class="catalog-spotlight-card__eyebrow">Carregando destaque</span>
+                            <h3 class="catalog-spotlight-card__title">Lendo o catálogo público da Tech10</h3>
+                            <p class="catalog-spotlight-card__desc">Os produtos mais fortes do ERP aparecem aqui assim que a vitrine sincroniza.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="cabos">Cabos</button>
+                    <button class="filter-btn" data-filter="mouse">Mouse</button>
+                    <button class="filter-btn" data-filter="redes-equipamentos">Redes e Equipamentos</button>
+                    <button class="filter-btn" data-filter="veiculos">Veículos</button>
+                </div>
+                <div class="catalog-filter-context" data-home-filter-context>
+                    <div class="catalog-filter-context__content">
+                        <span class="catalog-filter-context__eyebrow" data-home-filter-context-eyebrow>Catálogo vivo</span>
+                        <h3 class="catalog-filter-context__title" data-home-filter-context-title>Explore o catálogo público da Tech10</h3>
+                        <p class="catalog-filter-context__meta" data-home-filter-context-meta>Filtre por categoria na home ou abra a loja completa para seguir com a seleção assistida.</p>
+                    </div>
+                    <div class="catalog-filter-context__actions">
+                        <a class="catalog-filter-context__btn" data-home-filter-context-primary href="/loja">Ver catálogo completo</a>
+                        <a
+                            class="catalog-filter-context__link"
+                            data-home-filter-context-secondary
+                            data-tenant-support-link
+                            data-support-message="Olá! Vim pela home da Tech10 e quero ajuda para escolher um item do catálogo público."
+                            href="#contato"
+                        >
+                            Falar com a Tech10
                         </a>
-                    </div>
-                    <div class="filters">
-                        <button class="filter-btn active" data-filter="all">Todos</button>
-                        <button class="filter-btn" data-filter="cabos">Cabos</button>
-                        <button class="filter-btn" data-filter="mouse">Mouse</button>
-                        <button class="filter-btn" data-filter="redes-equipamentos">Redes e Equipamentos</button>
-                        <button class="filter-btn" data-filter="veiculos">Veículos</button>
-                    </div>
-                    <div class="catalog-filter-context" data-home-filter-context>
-                        <div class="catalog-filter-context__content">
-                            <span class="catalog-filter-context__eyebrow" data-home-filter-context-eyebrow>Catálogo vivo</span>
-                            <h3 class="catalog-filter-context__title" data-home-filter-context-title>Explore o catálogo público da Tech10</h3>
-                            <p class="catalog-filter-context__meta" data-home-filter-context-meta>Filtre por categoria na home ou abra a loja completa para seguir com a seleção assistida.</p>
-                        </div>
-                        <div class="catalog-filter-context__actions">
-                            <a class="catalog-filter-context__btn" data-home-filter-context-primary href="/loja">Ver catálogo completo</a>
-                            <a
-                                class="catalog-filter-context__link"
-                                data-home-filter-context-secondary
-                                data-tenant-support-link
-                                data-support-message="Olá! Vim pela home da Tech10 e quero ajuda para escolher um item do catálogo público."
-                                href="#contato"
-                            >
-                                Falar com a Tech10
-                            </a>
-                        </div>
                     </div>
                 </div>
             
@@ -280,174 +359,171 @@
     <section id="servicos" class="servicos">
         <div class="container">
             <div class="servicos-intro">
+                <span class="section-eyebrow">Assistência e soluções sob medida</span>
                 <h2 class="section-title">Nossos Serviços</h2>
-                <p>
+                <p class="section-subtitle">
                     Assistência técnica especializada e desenvolvimento profissional. 
                     <strong>20+ anos de experiência</strong> garantindo qualidade e confiança.
                 </p>
+                <div class="servicos-pills">
+                    <span class="servicos-pill">Apple e Samsung</span>
+                    <span class="servicos-pill">Redes e infraestrutura</span>
+                    <span class="servicos-pill">Sistemas, sites e automação</span>
+                </div>
             </div>
             
             <div class="servicos-grid">
                 <div class="servico-card servico-card--amber">
                     <div class="servico-badge servico-badge--amber">MAIS POPULAR</div>
-                    <div class="servico-icon servico-icon--amber">🍎</div>
+                    <div class="servico-icon servico-icon--amber"><i class="fab fa-apple" aria-hidden="true"></i></div>
                     <h3>Especialista Apple</h3>
                     <p>
                         Assistência técnica especializada para toda linha Apple com <strong>20 anos de experiência</strong>. 
                         Reparos rápidos, peças originais e garantia de qualidade.
                     </p>
                     <ul>
-                        <li>✅ iPhone (todas as versões)</li>
-                        <li>✅ iPad e iPad Pro</li>
-                        <li>✅ MacBook e iMac</li>
-                        <li>✅ Peças originais garantidas</li>
-                        <li>✅ 90 dias de garantia</li>
+                        <li>iPhone (todas as versões)</li>
+                        <li>iPad e iPad Pro</li>
+                        <li>MacBook e iMac</li>
+                        <li>Peças originais garantidas</li>
+                        <li>90 dias de garantia</li>
                     </ul>
                     <div class="servico-stat">
                         <div class="servico-stat__label">Tempo médio de reparo</div>
                         <div class="servico-stat__value servico-stat__value--green">2-4 horas</div>
                     </div>
-                    <a href="#contato"
-                       data-tenant-support-link
-                       data-support-message="Olá! Gostaria de um orçamento para assistência técnica Apple."
+                    <a href="/assistencia-tecnica-apple-santa-maria"
                        class="servico-cta servico-cta--amber">
-                        💬 Solicitar Orçamento Grátis
+                        Ver assistência Apple
                     </a>
                 </div>
                 
                 <div class="servico-card servico-card--green">
                     <div class="servico-badge servico-badge--green">ESPECIALIDADE</div>
-                    <div class="servico-icon servico-icon--green">📱</div>
+                    <div class="servico-icon servico-icon--green"><i class="fas fa-mobile-screen-button" aria-hidden="true"></i></div>
                     <h3>Reparo de Celulares</h3>
                     <p>
                         Reparo especializado em <strong>diversas marcas</strong>: Samsung, Motorola, Xiaomi, LG e mais. 
                         Troca de tela, bateria, desbloqueio e muito mais.
                     </p>
                     <ul>
-                        <li>✅ Samsung Galaxy (S, Note, A)</li>
-                        <li>✅ Motorola, Xiaomi, LG</li>
-                        <li>✅ Todas as marcas Android</li>
-                        <li>✅ Troca de tela e bateria</li>
-                        <li>✅ Desbloqueio e software</li>
-                        <li>✅ Recuperação de dados</li>
+                        <li>Samsung Galaxy (S, Note, A)</li>
+                        <li>Motorola, Xiaomi, LG</li>
+                        <li>Todas as marcas Android</li>
+                        <li>Troca de tela e bateria</li>
+                        <li>Desbloqueio e software</li>
+                        <li>Recuperação de dados</li>
                     </ul>
                     <div class="servico-stat">
                         <div class="servico-stat__label">Tempo médio de reparo</div>
                         <div class="servico-stat__value servico-stat__value--green">1-3 horas</div>
                     </div>
-                    <a href="#contato"
-                       data-tenant-support-link
-                       data-support-message="Olá! Gostaria de um orçamento para reparo de celular."
+                    <a href="/assistencia-samsung-santa-maria"
                        class="servico-cta servico-cta--green">
-                        💬 Solicitar Orçamento Grátis
+                        Ver assistência Samsung
                     </a>
                 </div>
                 
                 <div class="servico-card servico-card--purple">
                     <div class="servico-badge servico-badge--purple">COMPUTADORES</div>
-                    <div class="servico-icon servico-icon--purple">💻</div>
+                    <div class="servico-icon servico-icon--purple"><i class="fas fa-laptop-code" aria-hidden="true"></i></div>
                     <h3>Computadores e Notebooks</h3>
                     <p>
                         Reparo e manutenção de <strong>computadores e notebooks</strong> de todas as marcas. 
                         Formatação, limpeza, upgrade e muito mais.
                     </p>
                     <ul>
-                        <li>✅ Notebooks (Dell, HP, Lenovo, etc.)</li>
-                        <li>✅ Computadores desktop</li>
-                        <li>✅ Formatação e instalação</li>
-                        <li>✅ Limpeza e manutenção</li>
-                        <li>✅ Upgrade de hardware</li>
-                        <li>✅ Recuperação de dados</li>
+                        <li>Notebooks (Dell, HP, Lenovo, etc.)</li>
+                        <li>Computadores desktop</li>
+                        <li>Formatação e instalação</li>
+                        <li>Limpeza e manutenção</li>
+                        <li>Upgrade de hardware</li>
+                        <li>Recuperação de dados</li>
                     </ul>
                     <div class="servico-stat">
                         <div class="servico-stat__label">Tempo médio de reparo</div>
                         <div class="servico-stat__value servico-stat__value--purple">2-6 horas</div>
                     </div>
-                    <a href="#contato"
-                       data-tenant-support-link
-                       data-support-message="Olá! Gostaria de um orçamento para reparo de computador ou notebook."
+                    <a href="/conserto-notebook-santa-maria"
                        class="servico-cta servico-cta--purple">
-                        💬 Solicitar Orçamento Grátis
+                        Ver notebook e computador
                     </a>
                 </div>
                 
                 <div class="servico-card servico-card--cyan">
                     <div class="servico-badge servico-badge--cyan">REDES</div>
-                    <div class="servico-icon servico-icon--cyan">🌐</div>
+                    <div class="servico-icon servico-icon--cyan"><i class="fas fa-network-wired" aria-hidden="true"></i></div>
                     <h3>Redes e Infraestrutura</h3>
                     <p>
                         Serviços de <strong>redes para empresas e residencial</strong>. 
                         Projetos completos com e sem fio, instalação e manutenção.
                     </p>
                     <ul>
-                        <li>✅ Redes empresariais</li>
-                        <li>✅ Redes residenciais</li>
-                        <li>✅ Projetos de redes com fio</li>
-                        <li>✅ Projetos de redes sem fio (Wi-Fi)</li>
-                        <li>✅ Instalação e configuração</li>
-                        <li>✅ Manutenção e suporte</li>
+                        <li>Redes empresariais</li>
+                        <li>Redes residenciais</li>
+                        <li>Projetos de redes com fio</li>
+                        <li>Projetos de redes sem fio (Wi-Fi)</li>
+                        <li>Instalação e configuração</li>
+                        <li>Manutenção e suporte</li>
                     </ul>
                     <div class="servico-stat">
                         <div class="servico-stat__label">Atendimento</div>
                         <div class="servico-stat__value servico-stat__value--cyan">Empresas e Residencial</div>
                     </div>
-                    <a href="#contato"
-                       data-tenant-support-link
-                       data-support-message="Olá! Gostaria de um orçamento para projeto de rede."
+                    <a href="/redes-e-infraestrutura-santa-maria"
                        class="servico-cta servico-cta--cyan">
-                        💬 Solicitar Orçamento Grátis
+                        Ver redes e infraestrutura
                     </a>
                 </div>
                 
                 <div class="servico-card servico-card--blue">
                     <div class="servico-badge servico-badge--blue">DESENVOLVIMENTO</div>
-                    <div class="servico-icon servico-icon--blue">💻</div>
+                    <div class="servico-icon servico-icon--blue"><i class="fas fa-code" aria-hidden="true"></i></div>
                     <h3>Desenvolvimento Full Stack</h3>
                     <p>
                         Desenvolvimento profissional de sistemas e aplicações web. 
                         Do conceito à entrega, com qualidade e prazo garantidos.
                     </p>
                     <ul>
-                        <li>✅ Sites e sistemas web</li>
-                        <li>✅ E-commerce personalizado</li>
-                        <li>✅ Aplicações mobile</li>
-                        <li>✅ Consultoria em TI</li>
-                        <li>✅ Manutenção e suporte</li>
+                        <li>Sites e sistemas web</li>
+                        <li>E-commerce personalizado</li>
+                        <li>Aplicações mobile</li>
+                        <li>Consultoria em TI</li>
+                        <li>Manutenção e suporte</li>
                     </ul>
                     <div class="servico-stat">
                         <div class="servico-stat__label">Tecnologias</div>
                         <div class="servico-stat__value servico-stat__value--blue">React, Node.js, Next.js, TypeScript</div>
                     </div>
-                    <a href="#contato"
-                       data-tenant-support-link
-                       data-support-message="Olá! Gostaria de um orçamento para desenvolvimento de sistema ou site."
+                    <a href="/desenvolvimento-de-sistemas-santa-maria"
                        class="servico-cta servico-cta--blue">
-                        💬 Solicitar Orçamento Grátis
+                        Ver desenvolvimento de sistemas
                     </a>
                 </div>
             </div>
             
             <!-- Seção "Por Que Escolher Nossos Serviços" -->
             <div class="why-choose">
+                <span class="section-eyebrow">Por que a Tech10</span>
                 <h3>Por Que Escolher Nossos Serviços?</h3>
                 <div class="why-choose__grid">
                     <div class="why-choose__item">
-                        <div class="why-choose__icon">⭐</div>
+                        <div class="why-choose__icon"><i class="fas fa-star" aria-hidden="true"></i></div>
                         <h4>20+ Anos de Experiência</h4>
                         <p>Mais de duas décadas atendendo com excelência</p>
                     </div>
                     <div class="why-choose__item">
-                        <div class="why-choose__icon">🛡️</div>
+                        <div class="why-choose__icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></div>
                         <h4>90 Dias de Garantia</h4>
                         <p>Garantia em todos os reparos e serviços</p>
                     </div>
                     <div class="why-choose__item">
-                        <div class="why-choose__icon">⚡</div>
+                        <div class="why-choose__icon"><i class="fas fa-bolt" aria-hidden="true"></i></div>
                         <h4>Reparo Rápido</h4>
                         <p>Tempo médio de 2-4 horas para reparos</p>
                     </div>
                     <div class="why-choose__item">
-                        <div class="why-choose__icon">💯</div>
+                        <div class="why-choose__icon"><i class="fas fa-users" aria-hidden="true"></i></div>
                         <h4>1000+ Clientes</h4>
                         <p>Mais de mil clientes satisfeitos</p>
                     </div>
@@ -460,25 +536,31 @@
     <section id="empresas" class="empresas">
         <div class="container">
             <div class="empresas-intro">
+                <span class="section-eyebrow section-eyebrow--inverted">TI para empresas sem improviso</span>
                 <h2 class="section-title">Soluções Empresariais em TI</h2>
-                <p>
+                <p class="section-subtitle section-subtitle--inverted">
                     Garanta a <strong>continuidade do seu negócio</strong> com nossos contratos premium. 
                     Zero paragens, suporte completo e tecnologia sempre atualizada.
                 </p>
+                <div class="empresas-highlights">
+                    <span class="empresas-highlight">Continuidade operacional</span>
+                    <span class="empresas-highlight">Suporte híbrido</span>
+                    <span class="empresas-highlight">Tecnologia sempre atualizada</span>
+                </div>
             </div>
             
             <div class="contratos-grid">
                 <div class="contrato-card">
                     <div class="contrato-badge contrato-badge--amber">PREMIUM</div>
-                    <div class="contrato-icon">🛡️</div>
+                    <div class="contrato-icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></div>
                     <h3>Business Continuity</h3>
                     <p><strong>Foco em Zero Paragens.</strong> Garanta que sua empresa nunca pare.</p>
                     <ul>
-                        <li>✅ Monitorização remota 24/7</li>
-                        <li>✅ Backups automáticos na nuvem</li>
-                        <li>✅ Limpeza física semestral</li>
-                        <li>✅ <strong>Equipamento de substituição imediato</strong></li>
-                        <li>✅ Reparo em menos de 4 horas</li>
+                        <li>Monitorização remota 24/7</li>
+                        <li>Backups automáticos na nuvem</li>
+                        <li>Limpeza física semestral</li>
+                        <li><strong>Equipamento de substituição imediato</strong></li>
+                        <li>Reparo em menos de 4 horas</li>
                     </ul>
                     <div class="contrato-quote contrato-quote--amber">
                         <div class="contrato-quote__label">Argumento de Venda:</div>
@@ -488,21 +570,21 @@
                        data-tenant-support-link
                        data-support-message="Olá! Gostaria de saber mais sobre o contrato Business Continuity."
                        class="contrato-cta contrato-cta--amber">
-                        💼 Solicitar Proposta
+                        <i class="fas fa-briefcase" aria-hidden="true"></i> Solicitar Proposta
                     </a>
                 </div>
                 
                 <div class="contrato-card">
                     <div class="contrato-badge contrato-badge--blue">MAIS POPULAR</div>
-                    <div class="contrato-icon">🔄</div>
+                    <div class="contrato-icon"><i class="fas fa-arrows-rotate" aria-hidden="true"></i></div>
                     <h3>Suporte Híbrido</h3>
                     <p><strong>Hardware + Software.</strong> Um contrato único que cobre tudo.</p>
                     <ul>
-                        <li>✅ Manutenção de PCs e periféricos</li>
-                        <li>✅ Suporte à rede</li>
-                        <li>✅ Suporte técnico aos sistemas</li>
-                        <li>✅ <strong>Horas de evolução mensais</strong></li>
-                        <li>✅ Melhorias contínuas (2-5h/mês)</li>
+                        <li>Manutenção de PCs e periféricos</li>
+                        <li>Suporte à rede</li>
+                        <li>Suporte técnico aos sistemas</li>
+                        <li><strong>Horas de evolução mensais</strong></li>
+                        <li>Melhorias contínuas (2-5h/mês)</li>
                     </ul>
                     <div class="contrato-quote contrato-quote--blue">
                         <div class="contrato-quote__label">Argumento de Venda:</div>
@@ -512,21 +594,21 @@
                        data-tenant-support-link
                        data-support-message="Olá! Gostaria de saber mais sobre o contrato Suporte Híbrido."
                        class="contrato-cta contrato-cta--blue">
-                        💼 Solicitar Proposta
+                        <i class="fas fa-briefcase" aria-hidden="true"></i> Solicitar Proposta
                     </a>
                 </div>
                 
                 <div class="contrato-card">
                     <div class="contrato-badge contrato-badge--green">ECONÔMICO</div>
-                    <div class="contrato-icon">🔄</div>
+                    <div class="contrato-icon"><i class="fas fa-laptop-medical" aria-hidden="true"></i></div>
                     <h3>Gestão de Ciclo de Vida</h3>
                     <p><strong>Hardware as a Service.</strong> Tecnologia sempre atualizada sem grandes investimentos.</p>
                     <ul>
-                        <li>✅ Gestão completa do parque informático</li>
-                        <li>✅ Manutenção incluída</li>
-                        <li>✅ Troca programada de equipamentos</li>
-                        <li>✅ <strong>Mensalidade fixa</strong></li>
-                        <li>✅ Renovação automática a cada 3 anos</li>
+                        <li>Gestão completa do parque informático</li>
+                        <li>Manutenção incluída</li>
+                        <li>Troca programada de equipamentos</li>
+                        <li><strong>Mensalidade fixa</strong></li>
+                        <li>Renovação automática a cada 3 anos</li>
                     </ul>
                     <div class="contrato-quote contrato-quote--green">
                         <div class="contrato-quote__label">Argumento de Venda:</div>
@@ -536,35 +618,35 @@
                        data-tenant-support-link
                        data-support-message="Olá! Gostaria de saber mais sobre o contrato Gestão de Ciclo de Vida."
                        class="contrato-cta contrato-cta--green">
-                        💼 Solicitar Proposta
+                        <i class="fas fa-briefcase" aria-hidden="true"></i> Solicitar Proposta
                     </a>
                 </div>
             </div>
             
             <div class="relatorio-saude">
                 <div class="relatorio-saude__header">
-                    <div class="relatorio-saude__icon">📊</div>
+                    <div class="relatorio-saude__icon"><i class="fas fa-chart-column" aria-hidden="true"></i></div>
                     <h3>Relatório de Saúde Mensal</h3>
                     <p class="relatorio-saude__desc">Monitorização proativa da sua infraestrutura com relatórios mensais detalhados</p>
                 </div>
                 <div class="relatorio-saude__grid">
                     <div class="relatorio-saude__item">
-                        <div class="relatorio-saude__item-icon">✅</div>
+                        <div class="relatorio-saude__item-icon"><i class="fas fa-gauge-high" aria-hidden="true"></i></div>
                         <h4>Análise de Performance</h4>
                         <p>Monitorização contínua do desempenho</p>
                     </div>
                     <div class="relatorio-saude__item">
-                        <div class="relatorio-saude__item-icon">🔔</div>
+                        <div class="relatorio-saude__item-icon"><i class="fas fa-bell" aria-hidden="true"></i></div>
                         <h4>Alertas Preventivos</h4>
                         <p>Detecção de problemas antes que ocorram</p>
                     </div>
                     <div class="relatorio-saude__item">
-                        <div class="relatorio-saude__item-icon">💡</div>
+                        <div class="relatorio-saude__item-icon"><i class="fas fa-lightbulb" aria-hidden="true"></i></div>
                         <h4>Recomendações</h4>
                         <p>Sugestões de melhorias e otimizações</p>
                     </div>
                     <div class="relatorio-saude__item">
-                        <div class="relatorio-saude__item-icon">📈</div>
+                        <div class="relatorio-saude__item-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></div>
                         <h4>Histórico</h4>
                         <p>Registo completo de manutenções</p>
                     </div>
@@ -574,7 +656,7 @@
                        data-tenant-support-link
                        data-support-message="Olá! Gostaria de saber mais sobre o Relatório de Saúde Mensal."
                        class="relatorio-saude__btn">
-                        📊 Solicitar Demonstração
+                        <i class="fas fa-chart-column" aria-hidden="true"></i> Solicitar Demonstração
                     </a>
                 </div>
             </div>
@@ -584,8 +666,11 @@
     <!-- Dicas do Especialista -->
     <section id="dicas" class="dicas-especialista">
         <div class="container">
-            <h2 class="section-title">Dicas do Especialista</h2>
-            <p class="section-subtitle">Aprenda com nossos especialistas como cuidar melhor dos seus equipamentos</p>
+            <div class="section-header section-header--tips">
+                <span class="section-eyebrow">Conteúdo que ajuda na decisão</span>
+                <h2 class="section-title">Dicas do Especialista</h2>
+                <p class="section-subtitle">Aprenda com nossos especialistas como cuidar melhor dos seus equipamentos e comprar com mais segurança.</p>
+            </div>
             
             <div class="dicas-grid" id="dicasGrid">
                 <!-- Dicas serão carregadas via JavaScript -->
@@ -610,13 +695,20 @@
         <div class="container">
             <div class="sobre-content">
                 <div class="sobre-text">
+                    <span class="section-eyebrow">Nossa história em tecnologia</span>
                     <h2 class="section-title">Sobre a Tech10 Informática e Tecnologia</h2>
                     
-                    <p>A Tech10 Informática e Tecnologia é uma empresa consolidada em Santa Maria há 3 anos, fruto de um projeto construído com dedicação, conhecimento e paixão pela área da tecnologia. Apesar de jovem em sua estrutura atual, a Tech10 carrega consigo mais de 20 anos de experiência e atuação no setor, unindo tradição, inovação e compromisso com a qualidade.</p>
+                    <p class="sobre-lead">A Tech10 Informática e Tecnologia é uma empresa consolidada em Santa Maria há 3 anos, fruto de um projeto construído com dedicação, conhecimento e paixão pela área da tecnologia. Apesar de jovem em sua estrutura atual, a Tech10 carrega consigo mais de 20 anos de experiência e atuação no setor, unindo tradição, inovação e compromisso com a qualidade.</p>
                     
                     <p>Nossa trajetória foi marcada por constante aprimoramento técnico e estrutural, até que o sonho de transformar todo esse know-how em uma loja completa se tornasse realidade. Hoje, a Tech10 representa a concretização de anos de aprendizado, desafios e conquistas — um espaço pensado para oferecer soluções modernas, confiáveis e personalizadas em tecnologia e informática.</p>
                     
                     <p>Mais do que uma loja, somos o resultado de uma história construída com propósito, dedicação e a certeza de que tecnologia e confiança caminham juntas.</p>
+
+                    <div class="sobre-pills">
+                        <span class="sobre-pill">Assistência especializada</span>
+                        <span class="sobre-pill">Loja física em Santa Maria</span>
+                        <span class="sobre-pill">Projetos e soluções digitais</span>
+                    </div>
                     
                     <div class="stats">
                         <div class="stat">
@@ -672,10 +764,38 @@
     <!-- Contato -->
     <section id="contato" class="contato">
         <div class="container">
-            <h2 class="section-title">Entre em Contato</h2>
+            <div class="section-header section-header--contact">
+                <span class="section-eyebrow">Atendimento Tech10</span>
+                <h2 class="section-title">Entre em Contato</h2>
+                <p class="section-subtitle">Fale com a Tech10 para assistência técnica, orientação de compra, redes, infraestrutura e projetos sob medida.</p>
+            </div>
             <div class="contato-content">
                 <div class="contato-info">
                     <h3>Informações de Contato</h3>
+                    <div class="contact-quick-actions">
+                        <a href="#"
+                           class="contact-quick-action"
+                           data-tenant-support-link
+                           data-support-message="Olá! Quero falar com a Tech10 pelo WhatsApp."
+                           id="contactQuickWhatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="#"
+                           class="contact-quick-action"
+                           id="contactQuickRoute"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <i class="fas fa-map-signs"></i>
+                            <span>Como chegar</span>
+                        </a>
+                        <a href="/portal"
+                           class="contact-quick-action"
+                           data-tenant-portal-link>
+                            <i class="fas fa-receipt"></i>
+                            <span>Portal do cliente</span>
+                        </a>
+                    </div>
                     <div class="info-item">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
@@ -695,7 +815,7 @@
                                     <div class="map-overlay">
                                         <div class="map-info">
                                             <i class="fas fa-map-marker-alt"></i>
-                                            <span>Tech10 Informática</span>
+                                            <span>Tech10 Informática e Tecnologia</span>
                                         </div>
                                     </div>
                                 </div>
@@ -751,7 +871,16 @@
                         <i class="fas fa-clock"></i>
                         <div>
                             <h4>Horário de Funcionamento</h4>
-                            <p data-info="horarios">Segunda a Sexta: 8h às 18h<br>Sábado: 9h às 17h</p>
+                            <p data-info="horarios">Segunda a Sexta: 9h às 12h e 13h às 18h<br>Sábado: 9h às 13h</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fab fa-facebook"></i>
+                        <div>
+                            <h4>Facebook</h4>
+                            <a href="https://www.facebook.com/Tech10Infor/" class="instagram-link" data-social="facebook" target="_blank" rel="noopener noreferrer">
+                                facebook.com/Tech10Infor
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -784,12 +913,23 @@
                     <div class="logo">
                         <img src="imagem/logo/tech10-logo-principal-pulso-hibrido.svg" alt="Tech10 - Informática e Tecnologia" height="36">
                     </div>
+                    <span class="footer-eyebrow">Tech10 em Santa Maria/RS</span>
                     <p data-info="descricao">Mais de 20 anos de experiência em tecnologia e informática em Santa Maria/RS.</p>
+                    <div class="footer-contact-chips">
+                        <a href="#contato" class="footer-contact-chip" data-tenant-support-link data-support-message="Olá! Vim pelo rodapé do site da Tech10 e quero atendimento.">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                            <span>Atendimento rápido</span>
+                        </a>
+                        <a href="/portal" class="footer-contact-chip" data-tenant-portal-link>
+                            <i class="fas fa-receipt" aria-hidden="true"></i>
+                            <span>Portal do cliente</span>
+                        </a>
+                    </div>
                     <div class="social-links">
-                        <a href="#" data-social="facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.facebook.com/Tech10Infor/" data-social="facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook da Tech10"><i class="fab fa-facebook"></i></a>
                         <a href="https://www.instagram.com/tech10info/" data-social="instagram" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-                        <a href="#" data-social="twitter" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
-                        <a href="#" data-social="whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://tech10.loja.tech10cloud.com/" data-social="site" target="_blank" rel="noopener noreferrer" aria-label="Site da Tech10"><i class="fas fa-globe"></i></a>
+                        <a href="#contato" data-social="whatsapp" data-tenant-support-link data-support-message="Olá! Vim pelo rodapé do site da Tech10 e quero atendimento no WhatsApp." aria-label="WhatsApp da Tech10"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
                 
@@ -809,20 +949,21 @@
                 <div class="footer-section">
                     <h4>Categorias</h4>
                     <ul>
-                        <li><a href="#contato" data-tenant-support-link data-support-message="Olá! Quero atendimento especializado para Apple na Tech10.">Apple</a></li>
-                        <li><a href="#contato" data-tenant-support-link data-support-message="Olá! Quero atendimento especializado para Samsung e Android na Tech10.">Android</a></li>
+                        <li><a href="/assistencia-tecnica-apple-santa-maria">Apple</a></li>
+                        <li><a href="/conserto-iphone-santa-maria">iPhone</a></li>
                         <li><a href="/loja?category=cabos" data-home-footer-catalog-slot="0">Cabos na loja</a></li>
                         <li><a href="/loja?category=mouse" data-home-footer-catalog-slot="1">Mouse na loja</a></li>
-                        <li><a href="#contato" data-tenant-support-link data-support-message="Olá! Quero atendimento para desenvolvimento Full Stack na Tech10.">Desenvolvimento</a></li>
-                        <li><a href="#contato" data-tenant-support-link data-support-message="Olá! Quero atendimento técnico da assistência da Tech10.">Assistência</a></li>
+                        <li><a href="/assistencia-samsung-santa-maria">Samsung</a></li>
+                        <li><a href="/desenvolvimento-de-sistemas-santa-maria">Desenvolvimento</a></li>
+                        <li><a href="/loja-de-informatica-santa-maria">Loja e assistência</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Atendimento</h4>
                     <ul>
-                        <li data-info="horarios-semana">Segunda a Sexta: 8h às 18h</li>
-                        <li data-info="horarios-sabado">Sábado: 9h às 17h</li>
+                        <li data-info="horarios-semana">Segunda a Sexta: 9h às 12h e 13h às 18h</li>
+                        <li data-info="horarios-sabado">Sábado: 9h às 13h</li>
                         <li data-info="horarios-domingo">Domingo: Fechado</li>
                         <li>Suporte: <span data-info="telefone">(55) 3317-0762</span></li>
                     </ul>
@@ -850,6 +991,7 @@
 
     <!-- Scripts auxiliares (defer para nao bloquear renderizacao) -->
     <script src="js/tenant-config.js"></script>
+    <script src="js/site-seo.js"></script>
     <script src="js/tenant-routes.js"></script>
     <script src="js/modal-manager.js" defer></script>
     <script src="js/api-client.js" defer></script>
@@ -860,6 +1002,7 @@
     <script src="js/api-adapter.js"></script>
     <script src="js/cart-storefront.js"></script>
     <script src="js/load-products.js"></script>
+    <script src="js/categories-showcase.js" defer></script>
     <script src="js/product-modal.js" defer></script>
 
     <script src="js/script.js"></script>
@@ -873,14 +1016,14 @@
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (refreshing) return;
                 refreshing = true;
-                console.log('🔄 Tech10: Novo Service Worker ativo, recarregando...');
+                    console.log('Tech10: Novo Service Worker ativo, recarregando...');
                 window.location.reload();
             });
 
             // Registrar Service Worker com path relativo para o runtime standalone.
             navigator.serviceWorker.register('sw.js')
                 .then(registration => {
-                    console.log('✅ Tech10 SW registrado:', registration.scope);
+                    console.log('Tech10: SW registrado:', registration.scope);
                     
                     // Verificar atualizações a cada 60 segundos
                     setInterval(() => {

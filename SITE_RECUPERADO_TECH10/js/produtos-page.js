@@ -23,9 +23,69 @@
     return document.getElementById('pp-search');
   }
 
-  function _getCurrentSearchTerm() {
+  function _getSearchClearButton() {
+    return document.getElementById('pp-search-clear');
+  }
+
+  function _getCurrentSearchDisplayTerm() {
     var searchInput = _getSearchInput();
-    return searchInput ? String(searchInput.value || '').toLowerCase().trim() : '';
+    return searchInput ? String(searchInput.value || '').trim() : '';
+  }
+
+  function _normalizeSearchText(value) {
+    return String(value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  }
+
+  function _getCurrentSearchTerm() {
+    return _normalizeSearchText(_getCurrentSearchDisplayTerm());
+  }
+
+  function _updateSearchControls() {
+    var clearBtn = _getSearchClearButton();
+    if (clearBtn) {
+      clearBtn.classList.toggle('is-visible', !!_getCurrentSearchDisplayTerm());
+    }
+  }
+
+  function _syncListingRuntimeState(mode) {
+    global.__tech10_listing_state = {
+      mode: mode || 'ready',
+      activeHandle: _activeHandle,
+      activeLabel: _activeLabel,
+      searchTerm: _getCurrentSearchDisplayTerm(),
+      normalizedSearchTerm: _getCurrentSearchTerm(),
+      resultCount: _currentProducts.length,
+      totalCount: _allProducts.length,
+      sortValue: _sortValue
+    };
+    _updateSearchControls();
+  }
+
+  function _clearSearch(options) {
+    var searchInput = _getSearchInput();
+    if (!searchInput || !searchInput.value) return;
+    searchInput.value = '';
+    _updateSearchControls();
+    if (options && options.focus) {
+      searchInput.focus();
+    }
+    _applyFilterAndRender();
+  }
+
+  function _renderCatalogErrorState() {
+    var grid = document.getElementById('produtosGrid');
+    if (!grid) return;
+
+    if (typeof global.renderTech10EmptyState === 'function') {
+      global.renderTech10EmptyState(grid, { mode: 'error' });
+      return;
+    }
+
+    grid.innerHTML = '<div class="lp-empty"><i class="fas fa-exclamation-circle"></i><p>Erro ao carregar produtos. Tente novamente.</p></div>';
   }
 
   function _syncListingUrlState() {
@@ -58,10 +118,9 @@
       product && product.category && (product.category.name || product.category.handle),
     ]
       .filter(Boolean)
-      .join(' ')
-      .toLowerCase();
+      .join(' ');
 
-    return haystack.indexOf(term) !== -1;
+    return _normalizeSearchText(haystack).indexOf(_normalizeSearchText(term)) !== -1;
   }
 
   function _normalizeHandle(value) {
@@ -108,11 +167,20 @@
     var searchInput = _getSearchInput();
     if (searchInput) {
       searchInput.value = initSearch;
+      _updateSearchControls();
       searchInput.addEventListener('input', function () {
+        _updateSearchControls();
         clearTimeout(_searchDebounce);
         _searchDebounce = setTimeout(function () {
           _applyFilterAndRender();
         }, 300);
+      });
+    }
+
+    var searchClearBtn = _getSearchClearButton();
+    if (searchClearBtn) {
+      searchClearBtn.addEventListener('click', function () {
+        _clearSearch({ focus: true });
       });
     }
 
@@ -137,6 +205,7 @@
     var filterToggle = document.getElementById('pp-filter-toggle');
     var sidebar = document.getElementById('pp-sidebar');
     var overlay = document.getElementById('pp-sidebar-overlay');
+    var sidebarClose = document.getElementById('pp-sidebar-close');
     function closeSidebar() {
       if (sidebar) sidebar.classList.remove('open');
       if (overlay) overlay.classList.remove('visible');
@@ -155,6 +224,33 @@
     if (overlay) {
       overlay.addEventListener('click', closeSidebar);
     }
+    if (sidebarClose) {
+      sidebarClose.addEventListener('click', closeSidebar);
+    }
+
+    document.addEventListener('click', function (event) {
+      var suggestion = event.target.closest('[data-search-suggestion]');
+      if (suggestion) {
+        var nextTerm = suggestion.getAttribute('data-search-suggestion') || '';
+        var searchField = _getSearchInput();
+        if (searchField) {
+          searchField.value = nextTerm;
+          _updateSearchControls();
+          searchField.focus();
+        }
+        _applyFilterAndRender();
+        return;
+      }
+
+      if (event.target.closest('[data-clear-search]')) {
+        _clearSearch({ focus: true });
+        return;
+      }
+
+      if (event.target.closest('[data-empty-retry]')) {
+        _loadAllProducts();
+      }
+    });
 
     // Atualizar contador do carrinho
     _updateCartCount();
@@ -379,6 +475,7 @@
   // Carregar todos os produtos
   // ─────────────────────────────────────────────────────────────────────────
   async function _loadAllProducts() {
+    _syncListingRuntimeState('loading');
     try {
       var products = await (global.loadProductsFromAPI ? global.loadProductsFromAPI({ limit: 200, offset: 0 }) : Promise.resolve([]));
       _allProducts = products || [];
@@ -386,8 +483,9 @@
       _applyFilterAndRender();
     } catch (err) {
       console.error('[produtos-page] Erro ao carregar produtos:', err);
-      var grid = document.getElementById('produtosGrid');
-      if (grid) grid.innerHTML = '<div class="lp-empty"><i class="fas fa-exclamation-circle"></i><p>Erro ao carregar produtos. Tente novamente.</p></div>';
+      _currentProducts = [];
+      _syncListingRuntimeState('error');
+      _renderCatalogErrorState();
     }
   }
 
@@ -420,6 +518,9 @@
 
     _currentProducts = filtered;
     _offset = 0;
+    _syncListingRuntimeState(filtered.length === 0
+      ? (search ? 'search-empty' : (handle && handle !== 'all' ? 'category-empty' : 'generic-empty'))
+      : 'ready');
     _syncListingUrlState();
     _syncCurationPanel();
     _syncQuoteBanner();

@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desenvolvimento Full Stack em Santa Maria/RS - Tech10 Informática</title>
-    <meta name="description" content="Desenvolvimento de sites, sistemas e e-commerce em Santa Maria/RS. React, Node.js, Next.js. Projetos completos com suporte contínuo.">
+    <title>Desenvolvimento de Sistemas, Automações e Integrações em Santa Maria/RS - Tech10</title>
+    <meta name="description" content="Sites, sistemas, automações, integrações, e-commerce, IA aplicada e suporte evolutivo para empresas de Santa Maria/RS. Tecnologia com governança, centralização e foco em resultado.">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dev-page">
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -46,182 +46,319 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white; padding: 100px 0 80px; margin-top: 70px;">
-        <div class="container">
-            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
-                <div style="font-size: 80px; margin-bottom: 20px;">💻</div>
-                <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 20px;">Desenvolvimento Full Stack</h1>
-                <h2 style="font-size: 28px; font-weight: 400; margin-bottom: 30px; opacity: 0.95;">Sites, Sistemas e E-commerce em Santa Maria/RS</h2>
-                <p style="font-size: 18px; margin-bottom: 40px; line-height: 1.6;">
-                    Desenvolvimento profissional de sistemas e aplicações web. Do conceito à entrega, 
-                    com qualidade, prazo garantido e suporte contínuo.
-                </p>
-                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                    <a href="/#contato"
-                       data-tenant-support-link
-                       data-support-message="Olá! Gostaria de um orçamento para desenvolvimento de sistema ou site."
-                       style="background: white; color: #2563eb; padding: 15px 40px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 18px; transition: all 0.3s;"
-                       onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.2)';"
-                       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                        💬 Solicitar Orçamento Grátis
-                    </a>
-                    <a href="/loja"
-                       style="background: transparent; color: white; padding: 15px 40px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 18px; border: 2px solid white; transition: all 0.3s;"
-                       onmouseover="this.style.background='rgba(255,255,255,0.1)';"
-                       onmouseout="this.style.background='transparent';">
-                        Explorar catálogo
-                    </a>
+    <main class="dev-content">
+        <section class="dev-hero">
+            <div class="container">
+                <div class="dev-hero__content">
+                    <span class="dev-hero__eyebrow">Desenvolvimento, automação e integração</span>
+                    <h1>Sistemas, automações e integrações para empresas que querem vender mais e operar melhor</h1>
+                    <p class="dev-hero__lead">
+                        A Tech10 cria sites, sistemas web, automações com WhatsApp, integrações, catálogos,
+                        e-commerce e soluções com IA para empresas de Santa Maria e região.
+                    </p>
+                    <div class="dev-hero__chips">
+                        <span class="dev-chip">Sistemas sob medida</span>
+                        <span class="dev-chip">Automação com IA e WhatsApp</span>
+                        <span class="dev-chip">Suporte contínuo</span>
+                    </div>
+                    <div class="dev-hero__actions">
+                        <a href="/#contato" class="dev-button dev-button--primary" data-tenant-support-link data-support-message="Olá! Quero conversar sobre um projeto de site, sistema, automação ou integração com a Tech10.">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Solicitar diagnóstico</span>
+                        </a>
+                        <a href="/loja" class="dev-button dev-button--secondary">
+                            <i class="fas fa-store"></i>
+                            <span>Explorar catálogo</span>
+                        </a>
+                    </div>
+                    <div class="dev-hero__meta">
+                        <div class="dev-meta-card">
+                            <strong>Entrega governada</strong>
+                            <span>Escopo, versionamento, validação e handoff claro.</span>
+                        </div>
+                        <div class="dev-meta-card">
+                            <strong>Centralização real</strong>
+                            <span>Domínios, acessos, integrações e ambiente organizados.</span>
+                        </div>
+                        <div class="dev-meta-card">
+                            <strong>Evolução contínua</strong>
+                            <span>Projeto inicial, suporte mensal e melhorias por sprint.</span>
+                        </div>
+                    </div>
+                    <p class="dev-hero__portal-note">
+                        Já tem uma O.S.? <a href="/portal" data-tenant-portal-link>Acompanhe pelo portal do cliente</a>.
+                    </p>
                 </div>
-                <p style="margin-top: 18px; font-size: 15px; opacity: 0.92;">
-                    Já tem uma O.S.? <a href="/portal" data-tenant-portal-link style="color: white; text-decoration: underline; font-weight: 700;">Acompanhe pelo portal do cliente</a>.
-                </p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Serviços Específicos -->
-    <section style="padding: 80px 0; background: #f9fafb;">
-        <div class="container">
-            <h2 class="section-title">Nossos Serviços de Desenvolvimento</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #2563eb;">
-                    <div style="font-size: 48px; margin-bottom: 15px;">🌐</div>
-                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Sites e Sistemas Web</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 10px;">✅ Sites institucionais</li>
-                        <li style="margin-bottom: 10px;">✅ Sistemas web personalizados</li>
-                        <li style="margin-bottom: 10px;">✅ Landing pages</li>
-                        <li style="margin-bottom: 10px;">✅ Portais corporativos</li>
-                        <li style="margin-bottom: 10px;">✅ Sistemas de gestão</li>
-                    </ul>
+        <section class="dev-section dev-section--surface">
+            <div class="container">
+                <div class="section-header dev-section-header">
+                    <h2 class="section-title">Serviços com mais saída no mercado atual</h2>
+                    <p class="section-subtitle">
+                        Em vez de vender só “site, app e sistema”, a página agora passa a posicionar a Tech10
+                        com ofertas mais alinhadas ao que empresas realmente contratam hoje.
+                    </p>
                 </div>
-                
-                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #2563eb;">
-                    <div style="font-size: 48px; margin-bottom: 15px;">🛒</div>
-                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">E-commerce</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 10px;">✅ Loja virtual completa</li>
-                        <li style="margin-bottom: 10px;">✅ Integração com pagamentos</li>
-                        <li style="margin-bottom: 10px;">✅ Gestão de produtos</li>
-                        <li style="margin-bottom: 10px;">✅ Painel administrativo</li>
-                        <li style="margin-bottom: 10px;">✅ Integração com frete</li>
-                    </ul>
-                </div>
-                
-                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #2563eb;">
-                    <div style="font-size: 48px; margin-bottom: 15px;">📱</div>
-                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Aplicações Mobile</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 10px;">✅ Apps iOS e Android</li>
-                        <li style="margin-bottom: 10px;">✅ PWA (Progressive Web Apps)</li>
-                        <li style="margin-bottom: 10px;">✅ Apps híbridos</li>
-                        <li style="margin-bottom: 10px;">✅ Integração com APIs</li>
-                    </ul>
-                </div>
-                
-                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #2563eb;">
-                    <div style="font-size: 48px; margin-bottom: 15px;">🔧</div>
-                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Consultoria e Suporte</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="margin-bottom: 10px;">✅ Consultoria em TI</li>
-                        <li style="margin-bottom: 10px;">✅ Manutenção e suporte</li>
-                        <li style="margin-bottom: 10px;">✅ Otimização SEO</li>
-                        <li style="margin-bottom: 10px;">✅ Migração de sistemas</li>
-                    </ul>
+                <div class="dev-services-grid">
+                    <article class="dev-service-card">
+                        <div class="dev-service-card__icon"><i class="fas fa-globe"></i></div>
+                        <h3>Sites e landing pages de conversão</h3>
+                        <p>Páginas institucionais, páginas de campanha, catálogos e funis com foco em SEO local, captação e WhatsApp.</p>
+                        <ul>
+                            <li>Site institucional</li>
+                            <li>Landing page para campanhas</li>
+                            <li>Blog e páginas de serviço</li>
+                        </ul>
+                    </article>
+                    <article class="dev-service-card">
+                        <div class="dev-service-card__icon"><i class="fas fa-window-maximize"></i></div>
+                        <h3>Sistemas web sob medida</h3>
+                        <p>Painéis, portais, fluxos internos, cadastros, aprovações, chamados, O.S. e gestão operacional conforme o processo do cliente.</p>
+                        <ul>
+                            <li>Portais do cliente</li>
+                            <li>Painéis administrativos</li>
+                            <li>Sistemas internos</li>
+                        </ul>
+                    </article>
+                    <article class="dev-service-card">
+                        <div class="dev-service-card__icon"><i class="fas fa-robot"></i></div>
+                        <h3>Automação com WhatsApp, IA e CRM</h3>
+                        <p>Automação de atendimento, pré-venda, follow-up e tarefas repetitivas com IA aplicada à rotina comercial e operacional.</p>
+                        <ul>
+                            <li>Triagem automática</li>
+                            <li>Agentes e fluxos com IA</li>
+                            <li>Integração com CRM</li>
+                        </ul>
+                    </article>
+                    <article class="dev-service-card">
+                        <div class="dev-service-card__icon"><i class="fas fa-plug"></i></div>
+                        <h3>Integrações e APIs</h3>
+                        <p>Conexão entre ERP, gateways, planilhas, CRMs, catálogos, sistemas legados e serviços externos com rastreabilidade.</p>
+                        <ul>
+                            <li>Integração REST</li>
+                            <li>Sincronização de dados</li>
+                            <li>Automação entre plataformas</li>
+                        </ul>
+                    </article>
+                    <article class="dev-service-card">
+                        <div class="dev-service-card__icon"><i class="fas fa-cart-shopping"></i></div>
+                        <h3>E-commerce e catálogo integrado</h3>
+                        <p>Lojas virtuais, catálogos públicos, fluxos de pedido e integrações comerciais para vender com mais organização.</p>
+                        <ul>
+                            <li>Loja virtual</li>
+                            <li>Catálogo com estoque</li>
+                            <li>Pagamentos e pedidos</li>
+                        </ul>
+                    </article>
+                    <article class="dev-service-card">
+                        <div class="dev-service-card__icon"><i class="fas fa-shield-halved"></i></div>
+                        <h3>Suporte evolutivo, cloud e segurança</h3>
+                        <p>Manutenção, melhorias contínuas, backups, monitoramento, hardening e organização técnica para não virar caos depois do deploy.</p>
+                        <ul>
+                            <li>Suporte mensal</li>
+                            <li>Cloud e deploy</li>
+                            <li>Backups e observabilidade</li>
+                        </ul>
+                    </article>
                 </div>
             </div>
-            
-            <!-- Tecnologias -->
-            <div style="margin-top: 60px; text-align: center; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 30px; color: #1e3a8a;">Tecnologias que Utilizamos</h3>
-                <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-                    <div style="background: #f0f9ff; padding: 15px 30px; border-radius: 10px; font-weight: 600; color: #2563eb;">React</div>
-                    <div style="background: #f0f9ff; padding: 15px 30px; border-radius: 10px; font-weight: 600; color: #2563eb;">Next.js</div>
-                    <div style="background: #f0f9ff; padding: 15px 30px; border-radius: 10px; font-weight: 600; color: #2563eb;">Node.js</div>
-                    <div style="background: #f0f9ff; padding: 15px 30px; border-radius: 10px; font-weight: 600; color: #2563eb;">TypeScript</div>
-                    <div style="background: #f0f9ff; padding: 15px 30px; border-radius: 10px; font-weight: 600; color: #2563eb;">PostgreSQL</div>
-                    <div style="background: #f0f9ff; padding: 15px 30px; border-radius: 10px; font-weight: 600; color: #2563eb;">MongoDB</div>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Por Que Escolher Tech10 -->
-    <section style="padding: 80px 0; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
-        <div class="container">
-            <h2 class="section-title">Por Que Escolher Tech10?</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
-                <div style="text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="font-size: 64px; margin-bottom: 20px;">✅</div>
-                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Projetos Completos</h3>
-                    <p style="color: #666; line-height: 1.6;">Do conceito à entrega, cuidamos de todo o processo</p>
-                </div>
-                
-                <div style="text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="font-size: 64px; margin-bottom: 20px;">⏰</div>
-                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Prazo Garantido</h3>
-                    <p style="color: #666; line-height: 1.6;">Entregamos no prazo combinado, sempre</p>
-                </div>
-                
-                <div style="text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="font-size: 64px; margin-bottom: 20px;">🔧</div>
-                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Suporte Contínuo</h3>
-                    <p style="color: #666; line-height: 1.6;">Manutenção e suporte após a entrega</p>
-                </div>
-                
-                <div style="text-align: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="font-size: 64px; margin-bottom: 20px;">💻</div>
-                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1e3a8a;">Tecnologia Moderna</h3>
-                    <p style="color: #666; line-height: 1.6;">Utilizamos as tecnologias mais atuais do mercado</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        <section class="dev-section">
+            <div class="container">
+                <div class="dev-split">
+                    <div class="dev-panel">
+                        <span class="dev-panel__eyebrow">Pacotes que vendem melhor</span>
+                        <h2>Ofertas mais fáceis de explicar, vender e evoluir</h2>
+                        <div class="dev-offers-grid">
+                            <article class="dev-offer-card">
+                                <h3>Pacote Start</h3>
+                                <p>Landing page + WhatsApp + formulário + SEO local básico para começar a captar com organização.</p>
+                            </article>
+                            <article class="dev-offer-card">
+                                <h3>Pacote Operação</h3>
+                                <p>Sistema web simples para cadastro, pedidos, O.S., aprovações ou relatórios internos.</p>
+                            </article>
+                            <article class="dev-offer-card">
+                                <h3>Pacote Automação</h3>
+                                <p>WhatsApp, CRM, formulários, disparos, integrações e IA aplicada ao atendimento e à rotina.</p>
+                            </article>
+                            <article class="dev-offer-card">
+                                <h3>Pacote Evolução Mensal</h3>
+                                <p>Horas recorrentes, suporte, melhorias, backup, monitoramento e novas funcionalidades.</p>
+                            </article>
+                        </div>
+                    </div>
 
-    <!-- FAQ -->
-    <section style="padding: 80px 0; background: white;">
-        <div class="container">
-            <h2 class="section-title">Perguntas Frequentes</h2>
-            <div style="max-width: 800px; margin: 0 auto;">
-                <div style="background: #f9fafb; padding: 25px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #2563eb;">
-                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1e3a8a;">Quanto custa desenvolver um site?</h3>
-                    <p style="color: #666; line-height: 1.6;">O valor varia conforme a complexidade do projeto. Entre em contato para um orçamento personalizado.</p>
-                </div>
-                
-                <div style="background: #f9fafb; padding: 25px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #2563eb;">
-                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1e3a8a;">Quanto tempo leva para desenvolver um site?</h3>
-                    <p style="color: #666; line-height: 1.6;">Depende da complexidade. Sites simples: 2-4 semanas. E-commerce: 4-8 semanas. Sistemas complexos: 8-12 semanas.</p>
-                </div>
-                
-                <div style="background: #f9fafb; padding: 25px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #2563eb;">
-                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1e3a8a;">Vocês oferecem suporte após a entrega?</h3>
-                    <p style="color: #666; line-height: 1.6;">Sim! Oferecemos suporte contínuo e manutenção para garantir que seu sistema funcione perfeitamente.</p>
+                    <aside class="dev-panel dev-panel--accent">
+                        <span class="dev-panel__eyebrow">Leitura de mercado</span>
+                        <h2>O que empresas melhor posicionadas estão oferecendo hoje</h2>
+                        <ul class="dev-trend-list">
+                            <li>Automação com IA e WhatsApp para atendimento e pré-venda.</li>
+                            <li>Integrações entre sistemas, APIs, ERPs, CRMs e plataformas externas.</li>
+                            <li>SaaS, portais, dashboards e fluxos orientados por operação real.</li>
+                            <li>Cloud, DevOps, monitoramento e suporte contínuo no pacote.</li>
+                            <li>Segurança, governança e continuidade como diferencial de confiança.</li>
+                        </ul>
+                        <p>
+                            Esse posicionamento foi usado como benchmark para esta página com base em referências do
+                            mercado local e nacional que hoje vendem desenvolvimento junto com automação, integração e
+                            evolução contínua.
+                        </p>
+                    </aside>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA Final -->
-    <section style="padding: 80px 0; background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white;">
-        <div class="container">
-            <div style="text-align: center; max-width: 700px; margin: 0 auto;">
-                <h2 style="font-size: 42px; font-weight: 700; margin-bottom: 20px;">Pronto para Desenvolver Seu Projeto?</h2>
-                <p style="font-size: 20px; margin-bottom: 40px; opacity: 0.95;">
-                    Entre em contato agora e receba um orçamento personalizado. 
-                    Vamos transformar sua ideia em realidade!
-                </p>
-                <a href="/#contato"
-                   data-tenant-support-link
-                   data-support-message="Olá! Gostaria de um orçamento para desenvolvimento de sistema ou site."
-                   style="background: white; color: #2563eb; padding: 20px 50px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 20px; display: inline-block; transition: all 0.3s;"
-                   onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.3)';"
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                    💬 Solicitar Orçamento no WhatsApp
-                </a>
+        <section class="dev-section dev-section--surface">
+            <div class="container">
+                <div class="section-header dev-section-header">
+                    <h2 class="section-title">Governança, centralização e continuidade</h2>
+                    <p class="section-subtitle">
+                        Para a Tech10, isso precisa ser parte da oferta. Não basta “entregar o sistema”: é preciso
+                        entregar organização, ownership e capacidade de evolução.
+                    </p>
+                </div>
+                <div class="dev-governance-grid">
+                    <article class="dev-governance-card">
+                        <h3>Centralização de acessos e ativos</h3>
+                        <p>Organização de e-mails, contas, domínios, permissões, integrações e responsáveis sem depender de improviso.</p>
+                    </article>
+                    <article class="dev-governance-card">
+                        <h3>Ambientes, versionamento e deploy</h3>
+                        <p>Separação entre homologação e produção, versionamento, publicação controlada e rollback quando necessário.</p>
+                    </article>
+                    <article class="dev-governance-card">
+                        <h3>Documentação e handoff</h3>
+                        <p>Registro do que foi feito, do que depende do cliente, do que fica com a equipe técnica e de como evoluir depois.</p>
+                    </article>
+                    <article class="dev-governance-card">
+                        <h3>Backups, monitoramento e suporte</h3>
+                        <p>Rotina de continuidade para evitar que o projeto dependa de memória informal ou de uma pessoa só.</p>
+                    </article>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <section class="dev-section">
+            <div class="container">
+                <div class="dev-columns">
+                    <div class="dev-panel">
+                        <span class="dev-panel__eyebrow">Soluções por tipo de negócio</span>
+                        <h2>Onde essa oferta ganha força comercial</h2>
+                        <div class="dev-solutions-grid">
+                            <article class="dev-solution-card">
+                                <h3>Clínicas e consultórios</h3>
+                                <p>Agendamento, formulários, WhatsApp, lembretes, prontuário simples e dashboards.</p>
+                            </article>
+                            <article class="dev-solution-card">
+                                <h3>Lojas e comércio local</h3>
+                                <p>Catálogo, pedidos, estoque, meios de pagamento, integração com WhatsApp e Google.</p>
+                            </article>
+                            <article class="dev-solution-card">
+                                <h3>Assistências técnicas</h3>
+                                <p>Ordem de serviço, status do reparo, portal do cliente, orçamento e histórico.</p>
+                            </article>
+                            <article class="dev-solution-card">
+                                <h3>Prestadores de serviço</h3>
+                                <p>Landing page, CRM simples, funil de orçamento, assinatura mensal e automação de follow-up.</p>
+                            </article>
+                            <article class="dev-solution-card">
+                                <h3>Indústrias e distribuidores</h3>
+                                <p>Pedidos internos, relatórios, aprovação de compras, integrações e painéis de gestão.</p>
+                            </article>
+                            <article class="dev-solution-card">
+                                <h3>Empresas com operação manual</h3>
+                                <p>Planilhas virando sistema, alertas, permissões, rotinas automatizadas e relatórios.</p>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="dev-panel">
+                        <span class="dev-panel__eyebrow">Modelos de contratação</span>
+                        <h2>Formatos que organizam escopo, entrega e continuidade</h2>
+                        <div class="dev-contract-list">
+                            <div class="dev-contract-item">
+                                <strong>Diagnóstico e roadmap</strong>
+                                <p>Descoberta, levantamento e plano de execução antes do projeto maior.</p>
+                            </div>
+                            <div class="dev-contract-item">
+                                <strong>Projeto fechado</strong>
+                                <p>Escopo definido, cronograma, entregas e publicação com aceite claro.</p>
+                            </div>
+                            <div class="dev-contract-item">
+                                <strong>MVP e validação</strong>
+                                <p>Versão inicial para testar operação, adesão ou produto digital com menor risco.</p>
+                            </div>
+                            <div class="dev-contract-item">
+                                <strong>Mensalidade evolutiva</strong>
+                                <p>Horas recorrentes para manter, corrigir, automatizar e expandir sem recomeçar do zero.</p>
+                            </div>
+                        </div>
+                        <p class="dev-panel__note">
+                            A combinação de desenvolvimento com infraestrutura, redes, suporte e visão de operação ajuda
+                            a Tech10 a entregar projetos mais completos e mais sustentáveis no dia a dia do cliente.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dev-section dev-section--faq">
+            <div class="container">
+                <div class="section-header dev-section-header">
+                    <h2 class="section-title">Perguntas frequentes</h2>
+                    <p class="section-subtitle">Perguntas mais alinhadas com a compra real desse tipo de serviço.</p>
+                </div>
+                <div class="dev-faq-list">
+                    <article class="dev-faq-item">
+                        <h3>Vocês desenvolvem só sites ou também sistemas completos?</h3>
+                        <p>Fazemos desde sites e landing pages até sistemas web, portais, automações, integrações e projetos com evolução contínua.</p>
+                    </article>
+                    <article class="dev-faq-item">
+                        <h3>Dá para integrar com ERP, CRM, WhatsApp ou planilhas?</h3>
+                        <p>Sim. Esse é um dos serviços mais importantes hoje: conectar ferramentas e reduzir retrabalho operacional.</p>
+                    </article>
+                    <article class="dev-faq-item">
+                        <h3>Vocês trabalham com IA aplicada ao negócio?</h3>
+                        <p>Sim. Podemos usar IA em atendimento, triagem, automação, resumo de dados, fluxos internos e integração com canais digitais.</p>
+                    </article>
+                    <article class="dev-faq-item">
+                        <h3>Como funciona a governança do projeto?</h3>
+                        <p>Organizamos escopo, ambientes, acessos, documentação, deploy, handoff e suporte para que o projeto não fique solto nem dependa de improviso.</p>
+                    </article>
+                    <article class="dev-faq-item">
+                        <h3>Depois da entrega vocês continuam atendendo?</h3>
+                        <p>Sim. A Tech10 pode atuar com suporte mensal, melhorias evolutivas, monitoramento, ajustes e novas integrações.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="dev-cta">
+            <div class="container">
+                <div class="dev-cta__box">
+                    <span class="dev-panel__eyebrow">Próximo passo</span>
+                    <h2>Vamos transformar a necessidade da sua empresa em um projeto claro, centralizado e evolutivo?</h2>
+                    <p>
+                        Fale com a Tech10 para alinhar escopo, integrações, automações, governança e o melhor formato de contratação
+                        para o seu cenário.
+                    </p>
+                    <div class="dev-hero__actions">
+                        <a href="/#contato" class="dev-button dev-button--primary" data-tenant-support-link data-support-message="Olá! Quero um diagnóstico para site, sistema, automação, integração ou suporte evolutivo com a Tech10.">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Solicitar orçamento</span>
+                        </a>
+                        <a href="/#sobre" class="dev-button dev-button--secondary">
+                            <i class="fas fa-circle-info"></i>
+                            <span>Conhecer a Tech10</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -248,17 +385,17 @@
                 <div class="footer-section">
                     <h4>Categorias</h4>
                     <ul>
-                        <li><a href="apple.html">Apple</a></li>
-                        <li><a href="android.html">Android</a></li>
-                        <li><a href="notebooks.html">Notebooks</a></li>
-                        <li><a href="desenvolvimento.html">Desenvolvimento</a></li>
+                        <li><a href="/assistencia-tecnica-apple-santa-maria">Apple</a></li>
+                        <li><a href="/assistencia-samsung-santa-maria">Android</a></li>
+                        <li><a href="/conserto-notebook-santa-maria">Notebooks</a></li>
+                        <li><a href="/desenvolvimento-de-sistemas-santa-maria">Desenvolvimento</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Atendimento</h4>
                     <ul>
-                        <li>Segunda a Sexta: 9h às 18h</li>
+                        <li>Segunda a Sexta: 9h às 12h e 13h às 18h</li>
                         <li>Tel: (55) 3317-0762</li>
                     </ul>
                 </div>
@@ -285,6 +422,7 @@
         backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     </script>
     <script src="../js/tenant-config.js"></script>
+    <script src="../js/site-seo.js"></script>
     <script src="../js/tenant-routes.js"></script>
 </body>
 </html>
