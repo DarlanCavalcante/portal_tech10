@@ -535,6 +535,21 @@
             return 'https://wa.me/' + whatsapp + '?text=' + text;
         }
 
+        function buildSupportTargets(message) {
+            const supportMessage = message || 'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.';
+            const tenantRoutes = window.TenantRoutes || {};
+            const company = tenantRoutes.company || {};
+            const whatsapp = String(company.whatsapp || '55974001960').replace(/\D/g, '');
+            const text = encodeURIComponent(supportMessage);
+
+            return {
+                phone: whatsapp,
+                message: supportMessage,
+                appUrl: 'whatsapp://send?phone=' + whatsapp + '&text=' + text,
+                webUrl: buildSupportUrl(supportMessage)
+            };
+        }
+
         function getStoredCartId() {
             return (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function')
                 ? window.API_CONFIG.readStoredCartId()
@@ -648,14 +663,68 @@
 
                 link.addEventListener('click', function(event) {
                     const supportMessage = resolveLatestSupportMessage();
-                    const nextUrl = buildSupportUrl(supportMessage);
+                    const targets = buildSupportTargets(supportMessage);
+                    const nextUrl = targets.webUrl;
                     link.setAttribute('data-support-message', supportMessage);
                     link.setAttribute('href', nextUrl);
                     link.setAttribute('target', '_blank');
                     link.setAttribute('rel', 'noopener noreferrer');
 
                     event.preventDefault();
-                    window.open(nextUrl, '_blank', 'noopener,noreferrer');
+
+                    let fallbackHandled = false;
+                    let fallbackTimer = null;
+
+                    function cleanupFallback() {
+                        document.removeEventListener('visibilitychange', handleVisibilityChange, true);
+                        window.removeEventListener('blur', handleWindowBlur, true);
+                        if (fallbackTimer) {
+                            clearTimeout(fallbackTimer);
+                            fallbackTimer = null;
+                        }
+                    }
+
+                    function openWebFallback() {
+                        if (fallbackHandled) return;
+                        fallbackHandled = true;
+                        cleanupFallback();
+                        window.open(targets.webUrl, '_blank', 'noopener,noreferrer');
+                    }
+
+                    function cancelFallback() {
+                        fallbackHandled = true;
+                        cleanupFallback();
+                    }
+
+                    function handleVisibilityChange() {
+                        if (document.hidden) {
+                            cancelFallback();
+                        }
+                    }
+
+                    function handleWindowBlur() {
+                        cancelFallback();
+                    }
+
+                    document.addEventListener('visibilitychange', handleVisibilityChange, true);
+                    window.addEventListener('blur', handleWindowBlur, true);
+
+                    fallbackTimer = window.setTimeout(openWebFallback, 900);
+
+                    try {
+                        const appAnchor = document.createElement('a');
+                        appAnchor.href = targets.appUrl;
+                        appAnchor.setAttribute('aria-hidden', 'true');
+                        appAnchor.style.display = 'none';
+                        document.body.appendChild(appAnchor);
+                        appAnchor.click();
+                        window.setTimeout(function() {
+                            appAnchor.remove();
+                        }, 0);
+                    } catch (error) {
+                        console.warn('[CHECKOUT] Falha ao abrir o app do WhatsApp, usando fallback web.', error);
+                        openWebFallback();
+                    }
                 });
             });
         }
