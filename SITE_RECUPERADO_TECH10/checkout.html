@@ -637,6 +637,29 @@
             });
         }
 
+        function resolveLatestSupportMessage() {
+            return buildAssistedSelectionMessage(cart);
+        }
+
+        function bindSupportLinkInteractions() {
+            document.querySelectorAll('[data-tenant-support-link]').forEach(function(link) {
+                if (link.dataset.checkoutSupportBound === 'true') return;
+                link.dataset.checkoutSupportBound = 'true';
+
+                link.addEventListener('click', function(event) {
+                    const supportMessage = resolveLatestSupportMessage();
+                    const nextUrl = buildSupportUrl(supportMessage);
+                    link.setAttribute('data-support-message', supportMessage);
+                    link.setAttribute('href', nextUrl);
+                    link.setAttribute('target', '_blank');
+                    link.setAttribute('rel', 'noopener noreferrer');
+
+                    event.preventDefault();
+                    window.open(nextUrl, '_blank', 'noopener,noreferrer');
+                });
+            });
+        }
+
         function buildAssistedCheckoutMessage(details) {
             const lines = [
                 'Olá! Vim pela loja da Tech10 e quero continuar o fechamento assistido da minha seleção.',
@@ -1134,6 +1157,7 @@
             const checkedShipping = document.querySelector('input[name="shipping_method"]:checked');
             selectShipping(checkedShipping ? checkedShipping.value : 'standard', 0, true);
             syncSupportLinks();
+            bindSupportLinkInteractions();
             bindCheckoutForm();
             loadCartSummary();
             if (isQuoteOnlyRuntime(runtimeConfigCache)) {
