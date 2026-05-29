@@ -542,6 +542,23 @@
                     || localStorage.getItem((window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id');
         }
 
+        function readPersistedAssistedCart() {
+            if (window.API_CONFIG && typeof window.API_CONFIG.readAssistedCart === 'function') {
+                return window.API_CONFIG.readAssistedCart();
+            }
+
+            try {
+                const storageKey = (window.API_CONFIG && window.API_CONFIG.ASSISTED_CART_STORAGE_KEY) || 'tech10-portal_assisted_cart';
+                const rawValue = localStorage.getItem(storageKey);
+                if (!rawValue) return null;
+                const parsedValue = JSON.parse(rawValue);
+                return parsedValue && typeof parsedValue === 'object' ? parsedValue : null;
+            } catch (error) {
+                console.warn('[CHECKOUT] Não foi possível ler o carrinho assistido persistido:', error);
+                return null;
+            }
+        }
+
         function clearStoredSelection() {
             if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
                 window.API_CONFIG.persistStoredCartId(null);
@@ -577,13 +594,16 @@
         }
 
         function buildAssistedSelectionMessage(cartData) {
-            const items = extractCartItemsForSupport(cartData);
+            const sourceCart = cartData && Array.isArray(cartData.items) && cartData.items.length
+                ? cartData
+                : readPersistedAssistedCart();
+            const items = extractCartItemsForSupport(sourceCart);
             if (!items.length) {
                 return 'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.';
             }
 
-            const subtotal = cartData && cartData.subtotal
-                ? cartData.subtotal
+            const subtotal = sourceCart && sourceCart.subtotal
+                ? sourceCart.subtotal
                 : items.reduce(function(sum, item) {
                     return sum + ((item.unitPrice || 0) * (item.quantity || 1));
                 }, 0);
