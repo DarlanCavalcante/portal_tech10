@@ -557,9 +557,64 @@
                 : '<i class="fas fa-lock"></i> Finalizar Pedido';
         }
 
-        function formatCurrencyForMessage(value) {
-            const number = Number(value || 0);
+        function formatCurrencyForMessage(valueInMinorUnits) {
+            const number = Number(valueInMinorUnits || 0) / 100;
             return 'R$ ' + number.toFixed(2).replace('.', ',');
+        }
+
+        function extractCartItemsForSupport(cartData) {
+            if (!cartData || !Array.isArray(cartData.items)) return [];
+            return cartData.items.map(function(item) {
+                return {
+                    title: item.title || 'Produto',
+                    thumbnail: item.thumbnail || null,
+                    brand: item.metadata && item.metadata.brand ? item.metadata.brand : '',
+                    sku: item.metadata && item.metadata.sku ? item.metadata.sku : '',
+                    quantity: item.quantity || 1,
+                    unitPrice: item.unit_price || 0
+                };
+            });
+        }
+
+        function buildAssistedSelectionMessage(cartData) {
+            const items = extractCartItemsForSupport(cartData);
+            if (!items.length) {
+                return 'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.';
+            }
+
+            const subtotal = cartData && cartData.subtotal
+                ? cartData.subtotal
+                : items.reduce(function(sum, item) {
+                    return sum + ((item.unitPrice || 0) * (item.quantity || 1));
+                }, 0);
+
+            const lines = [
+                'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.',
+                '',
+                '*Seleção atual*'
+            ];
+
+            items.forEach(function(item) {
+                const context = [
+                    item.brand ? 'Marca: ' + item.brand : '',
+                    item.sku ? 'SKU: ' + item.sku : ''
+                ].filter(Boolean).join(' | ');
+                lines.push('- ' + item.title + (context ? ' | ' + context : '') + ' | Qtd: ' + item.quantity + ' | ' + formatCurrencyForMessage(item.unitPrice));
+            });
+
+            lines.push('- Subtotal estimado: ' + formatCurrencyForMessage(subtotal));
+            lines.push('', 'Quero validar disponibilidade, entrega e pagamento com a equipe.');
+            return lines.join('\n');
+        }
+
+        function syncSupportLinks(message) {
+            const supportMessage = message || buildAssistedSelectionMessage(cart);
+            document.querySelectorAll('[data-tenant-support-link]').forEach(function(link) {
+                link.setAttribute('data-support-message', supportMessage);
+                link.setAttribute('href', buildSupportUrl(supportMessage));
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            });
         }
 
         function buildAssistedCheckoutMessage(details) {
@@ -782,6 +837,7 @@
             if (!summaryEl) return;
             if (!cart || !cart.items || cart.items.length === 0) {
                 summaryEl.innerHTML = '<div class="error"><p>Nenhum item selecionado ainda. <a href="/loja">Explorar catálogo</a></p></div>';
+                syncSupportLinks();
                 return;
             }
             const imgFallback = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect fill='%23e5e7eb' width='60' height='60'/%3E%3C/svg%3E";
@@ -826,6 +882,7 @@
                 </div>
                 <div class="summary-item summary-total"><span>Total</span><span>R$ ${formatPrice(total)}</span></div>
             `;
+            syncSupportLinks();
         }
 
         // Carregar carrinho para exibir no resumo
@@ -834,6 +891,7 @@
             const summaryEl = document.getElementById('cart-summary');
             if (!cartId) {
                 if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhuma seleção ativa no momento. <a href="/loja">Explorar catálogo</a></p></div>';
+                syncSupportLinks();
                 return;
             }
             try {
@@ -849,12 +907,14 @@
                 if (!cart || !cart.items || cart.items.length === 0) {
                     clearStoredSelection();
                     if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Nenhum item selecionado ainda. <a href="/loja">Explorar catálogo</a></p></div>';
+                    syncSupportLinks();
                     return;
                 }
                 renderCartSummary();
             } catch (err) {
                 console.error('[CHECKOUT] Erro ao carregar carrinho:', err);
                 if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Não foi possível carregar sua seleção atual. <a href="/loja">Voltar ao catálogo</a> ou <a href="' + buildSupportUrl('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu fechamento assistido.') + '" target="_blank" rel="noopener noreferrer">falar com a Tech10</a>.</p></div>';
+                syncSupportLinks('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu fechamento assistido.');
             }
         }
 
@@ -939,16 +999,7 @@
                             debit_card: 'Cartão de débito',
                             boleto: 'Boleto bancário'
                         };
-                        const items = (cart && Array.isArray(cart.items)) ? cart.items.map(function(item) {
-                            return {
-                                title: item.title || 'Produto',
-                                thumbnail: item.thumbnail || null,
-                                brand: item.metadata && item.metadata.brand ? item.metadata.brand : '',
-                                sku: item.metadata && item.metadata.sku ? item.metadata.sku : '',
-                                quantity: item.quantity || 1,
-                                unitPrice: item.unit_price || 0
-                            };
-                        }) : [];
+                        const items = extractCartItemsForSupport(cart);
                         const subtotal = cart && cart.subtotal
                             ? cart.subtotal
                             : items.reduce(function(sum, item) {
@@ -1062,6 +1113,7 @@
             runtimeConfigCache = await fetchRuntimeConfig();
             const checkedShipping = document.querySelector('input[name="shipping_method"]:checked');
             selectShipping(checkedShipping ? checkedShipping.value : 'standard', 0, true);
+            syncSupportLinks();
             bindCheckoutForm();
             loadCartSummary();
             if (isQuoteOnlyRuntime(runtimeConfigCache)) {
