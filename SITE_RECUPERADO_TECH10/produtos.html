@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Produtos — Tech10 Informática e Tecnologia</title>
+  <title>Loja de Informática em Santa Maria/RS | Tech10 Informática e Tecnologia</title>
+  <meta name="description" content="Loja de informática em Santa Maria/RS com acessórios, cabos, periféricos e atendimento assistido da Tech10 para escolher o produto certo e fechar com segurança.">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/products-medusa.css">
@@ -57,7 +58,7 @@
     }
     .pp-search-input {
       width: 260px;
-      padding: 9px 14px 9px 38px;
+      padding: 9px 46px 9px 38px;
       border: 1.5px solid #e5e7eb;
       border-radius: 24px;
       font-size: 14px;
@@ -71,6 +72,33 @@
       left: 12px;
       color: #9ca3af;
       font-size: 14px;
+    }
+    .pp-search-clear {
+      position: absolute;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.14);
+      color: #64748b;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.92);
+      transition: opacity .15s, transform .15s, background .15s, color .15s;
+    }
+    .pp-search-clear.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+    .pp-search-clear:hover {
+      background: #eff6ff;
+      color: #2563eb;
     }
     .pp-selection-pill {
       position: relative;
@@ -215,60 +243,146 @@
 
     /* ── Sidebar de categorias ── */
     .pp-sidebar {
-      background: #fff;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      position: relative;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 18px 38px rgba(15,23,42,0.08);
+      border: 1px solid rgba(37,99,235,0.08);
       position: sticky;
       top: 80px;
       max-height: calc(100vh - 100px);
       overflow-y: auto;
     }
-    .pp-sidebar-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #9ca3af;
-      text-transform: uppercase;
-      letter-spacing: .06em;
+    .pp-sidebar::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      border-radius: 18px 18px 0 0;
+      background: linear-gradient(90deg, rgba(37,99,235,0.9) 0%, rgba(14,165,233,0.72) 50%, rgba(16,185,129,0.72) 100%);
+      pointer-events: none;
+    }
+    .pp-sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       margin-bottom: 14px;
+    }
+    .pp-sidebar-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      font-size: 12px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .pp-sidebar-title i {
+      color: #2563eb;
+    }
+    .pp-sidebar-close {
+      display: none;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(148,163,184,0.24);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      color: #334155;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform .15s, background .15s, color .15s;
+    }
+    .pp-sidebar-close:hover {
+      background: #eff6ff;
+      color: #2563eb;
+      transform: translateY(-1px);
     }
     .pp-cat-list { list-style: none; }
     .pp-cat-all {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 9px 12px;
-      border-radius: 8px;
+      gap: 10px;
+      min-height: 44px;
+      padding: 10px 12px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 13.5px;
+      font-weight: 700;
       color: #374151;
-      transition: background .15s, color .15s;
-      margin-bottom: 4px;
+      transition: background .15s, color .15s, box-shadow .15s;
+      margin-bottom: 6px;
+      border: 1px solid transparent;
     }
-    .pp-cat-all:hover, .pp-cat-all.active { background: #eff6ff; color: #2563eb; }
+    .pp-cat-all::before,
+    .pp-cat-pai-btn::before,
+    .pp-cat-filho-btn::before,
+    .pp-cat-neto-btn::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #2563eb 0%, #0ea5e9 100%);
+      opacity: 0;
+      transition: opacity .15s;
+    }
+    .pp-cat-all:hover,
+    .pp-cat-all.active {
+      background: linear-gradient(135deg, rgba(239,246,255,0.95) 0%, rgba(240,253,250,0.92) 100%);
+      color: #2563eb;
+      border-color: rgba(37,99,235,0.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+    }
+    .pp-cat-all.active::before { opacity: 1; }
+    .pp-cat-all i {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      color: #2563eb !important;
+      flex-shrink: 0;
+    }
 
     /* Pai */
     .pp-cat-pai {
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .pp-cat-pai-btn {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       width: 100%;
       background: none;
-      border: none;
-      padding: 9px 12px;
-      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 10px 12px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 13.5px;
+      font-weight: 800;
       color: #111827;
       text-align: left;
-      transition: background .15s;
+      transition: background .15s, border-color .15s, color .15s;
     }
-    .pp-cat-pai-btn:hover { background: #f3f4f6; }
+    .pp-cat-pai-btn:hover,
+    .pp-cat-pai-btn.active {
+      background: linear-gradient(135deg, rgba(239,246,255,0.92) 0%, rgba(255,255,255,0.95) 100%);
+      border-color: rgba(37,99,235,0.12);
+      color: #1d4ed8;
+    }
+    .pp-cat-pai-btn.active::before { opacity: 1; }
     .pp-cat-pai-btn .pp-cat-arrow {
       margin-left: auto;
       font-size: 10px;
@@ -276,33 +390,64 @@
       transition: transform .2s;
     }
     .pp-cat-pai.open > .pp-cat-pai-btn .pp-cat-arrow { transform: rotate(90deg); }
-    .pp-cat-pai-icon { font-size: 16px; }
+    .pp-cat-pai-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #eff6ff 0%, #eefcf7 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
 
     /* Filhos */
-    .pp-cat-filhos { display: none; padding-left: 12px; margin-top: 2px; }
+    .pp-cat-filhos {
+      display: none;
+      position: relative;
+      padding-left: 14px;
+      margin: 4px 0 2px 12px;
+    }
+    .pp-cat-filhos::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      bottom: 6px;
+      left: 4px;
+      width: 1px;
+      background: linear-gradient(180deg, rgba(191,219,254,0.95) 0%, rgba(226,232,240,0.35) 100%);
+    }
     .pp-cat-pai.open > .pp-cat-filhos { display: block; }
 
     .pp-cat-filho {
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
     .pp-cat-filho-btn {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       width: 100%;
       background: none;
-      border: none;
-      padding: 7px 10px;
-      border-radius: 7px;
+      border: 1px solid transparent;
+      padding: 8px 10px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 12.5px;
+      font-weight: 700;
       color: #374151;
       text-align: left;
-      transition: background .15s, color .15s;
+      transition: background .15s, color .15s, border-color .15s;
     }
     .pp-cat-filho-btn:hover,
-    .pp-cat-filho-btn.active { background: #eff6ff; color: #2563eb; }
+    .pp-cat-filho-btn.active {
+      background: rgba(239,246,255,0.9);
+      color: #2563eb;
+      border-color: rgba(37,99,235,0.12);
+    }
+    .pp-cat-filho-btn.active::before { opacity: 1; }
     .pp-cat-filho-btn .pp-cat-arrow {
       margin-left: auto;
       font-size: 10px;
@@ -312,37 +457,236 @@
     .pp-cat-filho.open > .pp-cat-filho-btn .pp-cat-arrow { transform: rotate(90deg); }
 
     /* Netos */
-    .pp-cat-netos { display: none; padding-left: 14px; margin-top: 2px; }
+    .pp-cat-netos {
+      display: none;
+      position: relative;
+      padding-left: 12px;
+      margin: 4px 0 0 10px;
+    }
+    .pp-cat-netos::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      bottom: 6px;
+      left: 3px;
+      width: 1px;
+      background: rgba(226,232,240,0.9);
+    }
     .pp-cat-filho.open > .pp-cat-netos { display: block; }
     .pp-cat-neto-btn {
+      position: relative;
       display: block;
       width: 100%;
       background: none;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 6px;
+      border: 1px solid transparent;
+      padding: 7px 10px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 12.5px;
+      font-size: 12px;
       color: #6b7280;
       text-align: left;
-      transition: background .15s, color .15s;
-      margin-bottom: 2px;
+      transition: background .15s, color .15s, border-color .15s;
+      margin-bottom: 3px;
     }
     .pp-cat-neto-btn:hover,
-    .pp-cat-neto-btn.active { background: #eff6ff; color: #2563eb; font-weight: 600; }
+    .pp-cat-neto-btn.active {
+      background: rgba(239,246,255,0.9);
+      color: #2563eb;
+      font-weight: 700;
+      border-color: rgba(37,99,235,0.12);
+    }
+    .pp-cat-neto-btn.active::before { opacity: 1; }
 
     .pp-cat-count {
       margin-left: auto;
-      font-size: 11px;
-      color: #9ca3af;
-      background: #f3f4f6;
-      padding: 1px 7px;
-      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #64748b;
+      background: rgba(248,250,252,0.96);
+      border: 1px solid #e2e8f0;
+      padding: 3px 8px;
+      border-radius: 999px;
       flex-shrink: 0;
     }
 
     /* ── Coluna principal ── */
     .pp-main { }
+
+    .pp-store-hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 36%),
+        linear-gradient(135deg, #0f172a 0%, #1e3a8a 52%, #0f766e 100%);
+      color: #fff;
+      border-radius: 24px;
+      padding: 22px 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 24px 56px rgba(15, 23, 42, 0.18);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      isolation: isolate;
+    }
+    .pp-store-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 36px 36px;
+      opacity: 0.22;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .pp-store-hero__title {
+      font-size: clamp(1.75rem, 3.3vw, 2.3rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      margin: 0 0 10px;
+      max-width: 14ch;
+    }
+    .pp-store-hero__desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.84);
+      margin: 0 0 14px;
+      max-width: 58ch;
+    }
+    .pp-store-hero__pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+    .pp-store-hero__pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.94);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .pp-store-hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .pp-store-hero__action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      transition: transform .15s, box-shadow .15s, background .15s, color .15s;
+    }
+    .pp-store-hero__action:hover {
+      transform: translateY(-1px);
+    }
+    .pp-store-hero__action--primary {
+      background: #fff;
+      color: #0f172a;
+      box-shadow: 0 14px 26px rgba(255,255,255,0.16);
+    }
+    .pp-store-hero__action--secondary {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+    }
+    .pp-sidebar-assist {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+      border: 1px solid rgba(37, 99, 235, 0.14);
+      box-shadow: 0 14px 26px rgba(15, 23, 42, 0.05);
+    }
+    .pp-sidebar-assist__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.1);
+      color: #1d4ed8;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .pp-sidebar-assist h3 {
+      font-size: 15px;
+      line-height: 1.35;
+      color: #0f172a;
+      margin: 0 0 8px;
+    }
+    .pp-sidebar-assist p {
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: #475569;
+      margin: 0 0 12px;
+    }
+    .pp-sidebar-assist__list {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .pp-sidebar-assist__item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #334155;
+      font-weight: 600;
+    }
+    .pp-sidebar-assist__item i {
+      color: #0f766e;
+      width: 14px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .pp-sidebar-assist__actions {
+      display: grid;
+      gap: 8px;
+    }
+    .pp-sidebar-assist__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 800;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .pp-sidebar-assist__btn:hover {
+      transform: translateY(-1px);
+    }
+    .pp-sidebar-assist__btn--primary {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(37,99,235,0.16);
+    }
+    .pp-sidebar-assist__btn--secondary {
+      background: #fff;
+      color: #0f172a;
+      border: 1px solid #dbeafe;
+    }
 
     /* Breadcrumb + Controles */
     .pp-controls {
@@ -464,6 +808,35 @@
         padding: 16px 12px 24px;
         gap: 16px;
       }
+      .pp-store-hero {
+        padding: 18px 16px;
+        border-radius: 20px;
+        gap: 12px;
+      }
+      .pp-store-hero__title {
+        max-width: 15ch;
+      }
+      .pp-store-hero__desc {
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .pp-store-hero__pills {
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+      .pp-store-hero__pill {
+        font-size: 11px;
+        padding: 7px 10px;
+      }
+      .pp-store-hero__actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .pp-store-hero__action {
+        min-height: 40px;
+        font-size: 12px;
+        padding: 0 12px;
+      }
       .pp-sidebar {
         display: block;
         position: fixed;
@@ -481,6 +854,18 @@
       .pp-sidebar.open {
         left: 0;
         box-shadow: 4px 0 24px rgba(0,0,0,0.18);
+      }
+      .pp-sidebar-head {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        padding-top: 4px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.96) 88%, rgba(255,255,255,0) 100%);
+      }
+      .pp-sidebar-close {
+        display: inline-flex;
       }
       .pp-header {
         height: auto;
@@ -520,7 +905,7 @@
       .pp-search-input {
         width: 100%;
         min-height: 40px;
-        padding: 8px 14px 8px 36px;
+        padding: 8px 42px 8px 36px;
         font-size: 13px;
       }
       .pp-search-icon {
@@ -580,6 +965,10 @@
         padding: 12px 14px;
         margin-bottom: 16px;
         gap: 10px;
+      }
+      .pp-sidebar-assist {
+        margin-top: 14px;
+        padding: 14px;
       }
       .pp-curation-panel__eyebrow {
         margin-bottom: 8px;
@@ -655,6 +1044,23 @@
       }
     }
     @media (max-width: 520px) {
+      .pp-store-hero {
+        padding: 16px 14px;
+        margin-bottom: 14px;
+      }
+      .pp-store-hero__eyebrow {
+        font-size: 9.5px;
+        padding: 6px 9px;
+      }
+      .pp-store-hero__title {
+        font-size: 1.65rem;
+      }
+      .pp-store-hero__desc {
+        font-size: 12.5px;
+      }
+      .pp-store-hero__actions {
+        grid-template-columns: 1fr;
+      }
       .pp-controls {
         grid-template-columns: auto minmax(0, 1fr);
         gap: 8px;
@@ -684,6 +1090,10 @@
       .pp-search-input {
         min-height: 38px;
         font-size: 12.5px;
+      }
+      .pp-search-clear {
+        width: 26px;
+        height: 26px;
       }
       .pp-mobile-filter-btn {
         width: max-content;
@@ -997,6 +1407,9 @@
       <div class="pp-search-wrap">
         <i class="fas fa-search pp-search-icon"></i>
         <input type="text" class="pp-search-input" id="pp-search" placeholder="Buscar por produto, marca ou SKU...">
+        <button class="pp-search-clear" id="pp-search-clear" type="button" aria-label="Limpar busca">
+          <i class="fas fa-xmark" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -1006,7 +1419,12 @@
 
     <!-- Sidebar de categorias -->
     <aside class="pp-sidebar" id="pp-sidebar">
-      <p class="pp-sidebar-title"><i class="fas fa-tag"></i> Categorias</p>
+      <div class="pp-sidebar-head">
+        <p class="pp-sidebar-title"><i class="fas fa-tag"></i> Categorias</p>
+        <button class="pp-sidebar-close" id="pp-sidebar-close" type="button" aria-label="Fechar filtros">
+          <i class="fas fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
       <ul class="pp-cat-list" id="pp-cat-list">
         <li class="pp-cat-all active" id="pp-cat-all" data-handle="all">
           <i class="fas fa-th-large" style="color:#2563eb"></i>
@@ -1017,10 +1435,61 @@
       <div id="pp-cat-loading" style="text-align:center;padding:20px;color:#9ca3af;font-size:13px;">
         <i class="fas fa-spinner fa-spin"></i> Carregando categorias...
       </div>
+      <div class="pp-sidebar-assist">
+        <span class="pp-sidebar-assist__eyebrow"><i class="fas fa-headset" aria-hidden="true"></i> Apoio da Tech10</span>
+        <h3>Precisa ajuda para escolher sem erro?</h3>
+        <p>A Tech10 cruza compatibilidade, disponibilidade e melhor custo-benefício antes do fechamento.</p>
+        <div class="pp-sidebar-assist__list">
+          <div class="pp-sidebar-assist__item"><i class="fas fa-circle-check" aria-hidden="true"></i><span>Orientação por WhatsApp</span></div>
+          <div class="pp-sidebar-assist__item"><i class="fas fa-store" aria-hidden="true"></i><span>Loja física em Santa Maria</span></div>
+          <div class="pp-sidebar-assist__item"><i class="fas fa-clock" aria-hidden="true"></i><span>Seg-Sex 9h-12h | 13h-18h</span></div>
+        </div>
+        <div class="pp-sidebar-assist__actions">
+          <a
+            href="/#contato"
+            class="pp-sidebar-assist__btn pp-sidebar-assist__btn--primary"
+            data-tenant-support-link
+            data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher o produto certo."
+          >
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            Falar com a Tech10
+          </a>
+          <a href="/portal" class="pp-sidebar-assist__btn pp-sidebar-assist__btn--secondary" data-tenant-portal-link>
+            <i class="fas fa-receipt" aria-hidden="true"></i>
+            Portal do cliente
+          </a>
+        </div>
+      </div>
     </aside>
 
     <!-- Conteúdo principal -->
     <main class="pp-main">
+      <section class="pp-store-hero" aria-label="Apresentação da vitrine Tech10">
+        <div class="pp-store-hero__copy">
+          <h1 class="pp-store-hero__title">Catálogo Tech10</h1>
+          <p class="pp-store-hero__desc">Explore os produtos com estoque público e, se precisar, fale com a Tech10 para confirmar compatibilidade e disponibilidade.</p>
+          <div class="pp-store-hero__pills">
+            <span class="pp-store-hero__pill"><i class="fas fa-box-open" aria-hidden="true"></i> Estoque público</span>
+            <span class="pp-store-hero__pill"><i class="fab fa-whatsapp" aria-hidden="true"></i> Seleção assistida</span>
+          </div>
+          <div class="pp-store-hero__actions">
+            <a
+              href="/#contato"
+              class="pp-store-hero__action pp-store-hero__action--primary"
+              data-tenant-support-link
+              data-support-message="Olá! Vim pela vitrine da Tech10 e quero ajuda para escolher um produto."
+            >
+              <i class="fab fa-whatsapp" aria-hidden="true"></i>
+              Falar com a Tech10
+            </a>
+            <a href="/carrinho" class="pp-store-hero__action pp-store-hero__action--secondary">
+              <i class="fas fa-list-check" aria-hidden="true"></i>
+              Abrir minha seleção
+            </a>
+          </div>
+        </div>
+      </section>
+
       <!-- Controles -->
       <div class="pp-controls">
         <button class="pp-mobile-filter-btn" id="pp-filter-toggle">
@@ -1108,6 +1577,7 @@
 
   <!-- Scripts (mesma ordem de index.html) -->
   <script src="js/tenant-config.js"></script>
+  <script src="js/site-seo.js"></script>
   <script src="js/tenant-routes.js"></script>
   <script src="js/api-config.js"></script>
   <script src="js/empresa-config.js"></script>

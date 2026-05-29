@@ -1300,7 +1300,8 @@ function initializeBackToTop() {
     
     // Show/hide button based on scroll position
     window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) {
+        const threshold = window.innerWidth <= 768 ? 820 : 300;
+        if (window.pageYOffset > threshold) {
             backToTopBtn.classList.add('visible');
         } else {
             backToTopBtn.classList.remove('visible');

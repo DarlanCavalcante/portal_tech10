@@ -92,6 +92,101 @@
     return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
   }
 
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function getCatalogSupportUrl(message) {
+    var tenantRoutes = global.TenantRoutes || {};
+    if (tenantRoutes.supportUrl) {
+      return tenantRoutes.supportUrl(message);
+    }
+
+    var runtime = global.__tech10_runtime_config || {};
+    var support = runtime.support || {};
+    var tenantCompany = (global.TENANT_CONFIG && global.TENANT_CONFIG.company) || {};
+    var whatsapp = String(support.whatsapp || tenantCompany.whatsapp || '').replace(/\D/g, '');
+    if (!whatsapp) return '#contato';
+    return 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(message);
+  }
+
+  function buildCatalogEmptyStateHtml(options) {
+    var state = global.__tech10_listing_state || {};
+    var mode = (options && options.mode) || state.mode || 'generic-empty';
+    var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';
+    var searchTerm = String(state.searchTerm || '');
+    var categoryLabel = String(state.activeLabel || 'esta categoria');
+    var suggestions = ['iPhone', 'carregador', 'notebook', 'cabo', 'fonte', 'pelicula', 'perifericos'];
+
+    var title = 'Nenhum produto público disponível agora.';
+    var desc = 'Tente outra categoria ou fale com a Tech10 para localizar uma opção compatível.';
+    var icon = 'fa-box-open';
+    var actions = [];
+    var suggestionsHtml = '';
+    var supportMessage = 'Olá! Vim pela loja da Tech10 e quero ajuda para localizar um produto no catálogo.';
+
+    if (mode === 'search-empty') {
+      title = 'Não encontramos "' + searchTerm + '" no catálogo público agora.';
+      desc = 'A Tech10 pode verificar disponibilidade, compatibilidade ou indicar uma opção equivalente para você.';
+      icon = 'fa-magnifying-glass';
+      supportMessage = 'Olá! Procurei "' + searchTerm + '" na loja da Tech10 e quero ajuda para encontrar uma opção equivalente ou confirmar disponibilidade.';
+      actions = [
+        '<a class="lp-empty-btn lp-empty-btn--primary" href="' + escapeHtml(getCatalogSupportUrl(supportMessage)) + '" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Consultar no WhatsApp</a>',
+        '<button class="lp-empty-btn lp-empty-btn--secondary" type="button" data-clear-search><i class="fas fa-eraser" aria-hidden="true"></i> Limpar busca</button>',
+        '<a class="lp-empty-btn lp-empty-btn--ghost" href="' + escapeHtml(emptyShopHref) + '"><i class="fas fa-grid-2" aria-hidden="true"></i> Ver todos os produtos</a>'
+      ];
+      suggestionsHtml = '<div class="lp-empty__suggestions">' +
+        '<span class="lp-empty__suggestions-label">Tente buscar por:</span>' +
+        '<div class="lp-empty__suggestions-chips">' +
+          suggestions.map(function (term) {
+            return '<button class="lp-empty-suggestion" type="button" data-search-suggestion="' + escapeHtml(term) + '">' + escapeHtml(term) + '</button>';
+          }).join('') +
+        '</div>' +
+      '</div>';
+    } else if (mode === 'category-empty') {
+      title = 'Esta categoria ainda não tem produtos públicos.';
+      desc = 'Mesmo assim, a Tech10 pode consultar opções disponíveis, encomendas ou alternativas compatíveis.';
+      icon = 'fa-layer-group';
+      supportMessage = 'Olá! Vim pela categoria "' + categoryLabel + '" na loja da Tech10 e quero consultar disponibilidade ou alternativas.';
+      actions = [
+        '<a class="lp-empty-btn lp-empty-btn--primary" href="' + escapeHtml(getCatalogSupportUrl(supportMessage)) + '" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Consultar disponibilidade</a>',
+        '<a class="lp-empty-btn lp-empty-btn--secondary" href="' + escapeHtml(emptyShopHref) + '"><i class="fas fa-grid-2" aria-hidden="true"></i> Voltar para todos os produtos</a>'
+      ];
+    } else if (mode === 'error') {
+      title = 'Não conseguimos carregar o catálogo agora.';
+      desc = 'Você ainda pode falar com a Tech10 para consultar produtos, preços e disponibilidade.';
+      icon = 'fa-triangle-exclamation';
+      supportMessage = 'Olá! A loja da Tech10 não carregou agora e quero consultar produtos, preços e disponibilidade.';
+      actions = [
+        '<button class="lp-empty-btn lp-empty-btn--primary" type="button" data-empty-retry><i class="fas fa-rotate-right" aria-hidden="true"></i> Tentar novamente</button>',
+        '<a class="lp-empty-btn lp-empty-btn--secondary" href="' + escapeHtml(getCatalogSupportUrl(supportMessage)) + '" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Consultar no WhatsApp</a>'
+      ];
+    } else {
+      actions = [
+        '<a class="lp-empty-btn lp-empty-btn--primary" href="' + escapeHtml(getCatalogSupportUrl(supportMessage)) + '" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Falar com a Tech10</a>',
+        '<a class="lp-empty-btn lp-empty-btn--secondary" href="' + escapeHtml(emptyShopHref) + '"><i class="fas fa-grid-2" aria-hidden="true"></i> Ver todos os produtos</a>'
+      ];
+    }
+
+    return '<div class="lp-empty lp-empty--' + escapeHtml(mode) + '">' +
+      '<div class="lp-empty__icon"><i class="fas ' + escapeHtml(icon) + '" aria-hidden="true"></i></div>' +
+      '<h3 class="lp-empty__title">' + escapeHtml(title) + '</h3>' +
+      '<p class="lp-empty__desc">' + escapeHtml(desc) + '</p>' +
+      '<div class="lp-empty__actions">' + actions.join('') + '</div>' +
+      suggestionsHtml +
+    '</div>';
+  }
+
+  global.renderTech10EmptyState = function renderTech10EmptyState(container, options) {
+    if (!container) return;
+    container.innerHTML = buildCatalogEmptyStateHtml(options);
+  };
+
   function getProductMetaChips(product) {
     var metadata = product && product.metadata ? product.metadata : {};
     var chips = [];
@@ -1104,8 +1199,12 @@
     syncHomeCatalogFeaturedProducts(products, containerId);
 
     if (!renderList || !Array.isArray(renderList) || renderList.length === 0) {
-      var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';
-      container.innerHTML = '<div class="lp-empty"><i class="fas fa-box-open"></i><p>Nenhum produto encontrado nesta categoria.</p><a href="' + emptyShopHref + '" class="lp-empty-link">Ver todos os produtos</a></div>';
+      if (typeof global.renderTech10EmptyState === 'function') {
+        global.renderTech10EmptyState(container);
+      } else {
+        var emptyShopHref = (global.TenantRoutes && global.TenantRoutes.shopHome) || '/loja';
+        container.innerHTML = '<div class="lp-empty"><i class="fas fa-box-open"></i><p>Nenhum produto encontrado nesta categoria.</p><a href="' + emptyShopHref + '" class="lp-empty-link">Ver todos os produtos</a></div>';
+      }
       return;
     }
 

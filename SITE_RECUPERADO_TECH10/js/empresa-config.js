@@ -7,18 +7,18 @@ const tenantSeo = tenantConfig.seo || {};
 
 const empresaConfig = {
     // INFORMAÇÕES BÁSICAS
-    nome: tenantCompany.name || "Tech10 Informática", // Nome da empresa
-    slogan: tenantCompany.slogan || "20 Anos de Experiência em Tecnologia", // Slogan da empresa
-    descricao: tenantCompany.description || "Especialistas em equipamentos Apple, Samsung e desenvolvimento Full Stack há 20 anos.", // Descrição breve
+    nome: tenantCompany.name || "Tech10 Informática e Tecnologia", // Nome da empresa
+    slogan: tenantCompany.slogan || "Tecnologia que Conecta Seu Mundo", // Slogan da empresa
+    descricao: tenantCompany.description || "Assistência técnica Apple, iPhone, Samsung e Android, conserto de notebooks e computadores, redes, infraestrutura, desenvolvimento de sistemas e loja de informática em Santa Maria/RS.", // Descrição breve
     
     // CONTATO
-    telefone: tenantCompany.phone || "(55) 3317-0762", // Telefone fixo
+    telefone: tenantCompany.phone || "(55) 3317-0762", // Telefone principal
     whatsapp: tenantCompany.whatsapp || "55974001960", // WhatsApp (formato: 55 + DDD + número)
     email: tenantCompany.email || "tech10.infor@gmail.com", // Email da empresa
     
     // ENDEREÇO
     endereco: {
-        rua: tenantCompany.address?.street || "Rua Doutor Bozano, 968 - Loja 8", // Endereço da loja
+        rua: tenantCompany.address?.street || "Rua Dr. Bozano, 968 - Loja 8", // Endereço da loja
         bairro: tenantCompany.address?.neighborhood || "Centro", // Assumindo centro (pode ajustar se necessário)
         cidade: tenantCompany.address?.city || "Santa Maria", // Assumindo Santa Maria pelo DDD 55
         estado: tenantCompany.address?.state || "RS", // Rio Grande do Sul
@@ -27,14 +27,14 @@ const empresaConfig = {
     
     // HORÁRIOS
     horarios: {
-        semana: tenantCompany.hours?.weekdays || "Segunda a Sexta: 9h às 18h", // Horário informado
-        sabado: tenantCompany.hours?.saturday || "Sábado: Fechado", // Não informado, assumindo fechado
+        semana: tenantCompany.hours?.weekdays || "Segunda a Sexta: 9h às 12h e 13h às 18h", // Horário informado
+        sabado: tenantCompany.hours?.saturday || "Sábado: 9h às 13h", // Horário de sábado
         domingo: tenantCompany.hours?.sunday || "Domingo: Fechado" // Fechado aos domingos
     },
     
     // REDES SOCIAIS
     social: {
-        facebook: tenantCompany.facebook || "https://www.facebook.com/share/19wtZjc61F/", // Facebook da Tech10
+        facebook: tenantCompany.facebook || "https://www.facebook.com/Tech10Infor/", // Facebook da Tech10
         instagram: tenantCompany.instagram || "https://www.instagram.com/tech10info/", // Instagram da Tech10
         twitter: "", // Não informado
         whatsappLink: `https://wa.me/${tenantCompany.whatsapp || "55974001960"}`, // Link do WhatsApp
@@ -57,24 +57,14 @@ const empresaConfig = {
     
     // SEO
     seo: {
-        titulo: tenantSeo.title || "Tech10 Informática - 20 Anos de Experiência em Tecnologia", // Título da página
-        descricao: tenantSeo.description || "Tech10 Informática em Santa Maria/RS. Especialistas em Apple, Samsung e desenvolvimento Full Stack há 20 anos. Assistência técnica e vendas com qualidade garantida!" // Descrição para SEO
+        titulo: tenantSeo.title || "Tech10 Informática e Tecnologia em Santa Maria/RS | Assistência Apple, Samsung, notebooks, redes e sistemas", // Título da página
+        descricao: tenantSeo.description || "Assistência técnica Apple, iPhone, Samsung e Android, conserto de notebooks e computadores, redes, infraestrutura, desenvolvimento de sistemas e loja de informática em Santa Maria/RS." // Descrição para SEO
     }
 };
 
 // Função para aplicar as configurações automaticamente
 function aplicarConfiguracoes() {
-    // Atualizar título da página
-    document.title = empresaConfig.seo.titulo;
-    
-    // Atualizar meta description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-        metaDesc = document.createElement('meta');
-        metaDesc.name = 'description';
-        document.head.appendChild(metaDesc);
-    }
-    metaDesc.content = empresaConfig.seo.descricao;
+    // site-seo.js controla title, description, canonical e JSON-LD.
     
     // Atualizar logo/nome da empresa
     const logos = document.querySelectorAll('.logo span');
