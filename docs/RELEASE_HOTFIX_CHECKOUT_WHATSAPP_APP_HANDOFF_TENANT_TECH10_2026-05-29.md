@@ -57,3 +57,59 @@ Esta frente deve terminar com uma decisão explícita:
 
 - `app desktop aprovado`, ou
 - `web draft mantido como fluxo oficial`.
+
+## Checklist executado
+
+- [x] abrir fluxo web com mensagem pré-preenchida
+- [x] abrir fluxo via `whatsapp://send`
+- [x] comparar conversa, conteúdo e revisão antes do envio
+- [x] capturar evidência visual do web e do app desktop
+- [x] decidir fluxo oficial com base no comportamento real
+
+## Evidências
+
+- web: `/Users/darlancavalcante/Documents/TECH/tmp-tech10-checkout-issue-124/tmp-handoff-evidence/web-draft.png`
+- app via handoff: `/Users/darlancavalcante/Documents/TECH/tmp-tech10-checkout-issue-124/tmp-handoff-evidence/app-handoff.png`
+- app em primeiro plano após o handoff: `/Users/darlancavalcante/Documents/TECH/tmp-tech10-checkout-issue-124/tmp-handoff-evidence/app-frontmost.png`
+
+## Resultado dos testes
+
+### WhatsApp Web
+
+- preservou o comportamento de rascunho revisável;
+- manteve a mensagem em edição antes do envio;
+- carregou o texto com os itens da seleção.
+
+### WhatsApp Desktop
+
+- abriu a conversa correta;
+- carregou o conteúdo da mensagem;
+- **não preservou a revisão manual com segurança**;
+- na evidência final, a mensagem de teste aparece na linha da conversa com
+  timestamp e checkmarks, caracterizando envio real;
+- o fluxo também gerou conflito de instância entre web e app, com aviso de
+  "Outra instância do WhatsApp já está em execução".
+
+## Decisão
+
+**App desktop rejeitado como fluxo oficial do checkout.**
+
+Motivo:
+
+1. o app não se comportou de forma equivalente ao WhatsApp Web;
+2. houve evidência de envio real no app durante o handoff;
+3. o protocolo nativo não garante rascunho seguro revisável.
+
+## Fluxo oficial mantido
+
+O checkout da Tech10 deve continuar em:
+
+- `WhatsApp Web`
+- modo `draft seguro`
+- com a seleção atual do carrinho pré-preenchida
+- sem dependência do protocolo `whatsapp://`
+
+## Próximo passo
+
+Encerrar esta frente como investigação concluída e manter a produção no fluxo
+web seguro já publicado.
