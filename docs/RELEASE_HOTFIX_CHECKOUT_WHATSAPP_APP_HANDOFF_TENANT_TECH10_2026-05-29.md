@@ -113,3 +113,9 @@ O checkout da Tech10 deve continuar em:
 
 Encerrar esta frente como investigação concluída e manter a produção no fluxo
 web seguro já publicado.
+
+## Status final
+
+- frente encerrada: sim
+- alteração de produção necessária: não
+- decisão vigente em produção: `WhatsApp Web draft seguro`
