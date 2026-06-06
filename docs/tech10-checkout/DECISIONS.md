@@ -34,3 +34,17 @@
 - decisao: publicar `codex/tech10-checkout-whatsapp-app-handoff-20260529` em `origin` antes de abrir a branch nova
 - motivo: preservar a recuperacao fiel da trilha original em outro computador
 - status: aplicado
+
+## ADR-006 - `tech10-portal` permanece como projeto canonico de deploy
+
+- data: `2026-06-06`
+- decisao: tratar `tech10-portal` como projeto Vercel oficial do tenant Tech10
+- motivo: ele usa `Root Directory = SITE_RECUPERADO_TECH10`, expoe o dominio canonico `tech10.loja.tech10cloud.com` e retornou `runtime-config` com backend de catalogo configurado
+- status: aplicado
+
+## ADR-007 - `site-recuperado-tech-10` e projeto Vercel paralelo, nao outro repositorio
+
+- data: `2026-06-06`
+- decisao: registrar `site-recuperado-tech-10` como projeto Vercel legado/paralelo e nao como base canonica
+- motivo: o projeto existe no mesmo time, mas esta com `Root Directory = .` e `runtime-config` sem backend configurado
+- status: aplicado

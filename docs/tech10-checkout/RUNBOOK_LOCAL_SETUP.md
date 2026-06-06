@@ -69,7 +69,13 @@ vercel dev --listen 127.0.0.1:4112
 
 - se a CLI perguntar sobre pull de variaveis de ambiente, responder `no`
 - nao puxar credenciais para esta validacao documental
-- se `.vercel/project.json` apontar para projeto diferente do canonicamente documentado, registrar a divergencia antes de qualquer deploy
+- se `.vercel/project.json` apontar para projeto diferente do canonicamente documentado, relincar localmente antes de qualquer deploy
+
+Projeto canonico esperado no arquivo local:
+
+- `projectName`: `tech10-portal`
+- `projectId`: `prj_JydCVoSW39Cfcnd1Lne0CAeo9FYI`
+- `orgId`: `team_gc5PSv0gAWtdcGUVK33GHLZV`
 
 ## URL local esperada
 
@@ -88,6 +94,11 @@ SMOKE_BASE_URL=http://127.0.0.1:4112 npm run smoke:runtime
 - navegador: `http://127.0.0.1:4112/checkout`
 - apoio tecnico: `http://127.0.0.1:4112/api/runtime-config`
 - health local: `http://127.0.0.1:4112/api/health`
+
+## Como relincar a pasta ao projeto canonico
+
+Se a subpasta estiver ligada ao projeto errado, corrigir o arquivo local `.vercel/project.json`
+ou relincar pela CLI para o projeto `tech10-portal` no escopo `darlancavalcantes-projects`.
 
 ## Como limpar cache e estado local
 

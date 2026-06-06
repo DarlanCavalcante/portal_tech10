@@ -63,10 +63,22 @@
 - a branch documental original `codex/tech10-checkout-whatsapp-app-handoff-20260529` foi publicada no remoto em `2026-06-06`
 - a branch `docs/tech10-checkout-project-handover` foi publicada e recebeu o PR `#131` em `2026-06-06`
 
+## Estado Vercel confirmado em 2026-06-06
+
+- existe um segundo projeto Vercel chamado `site-recuperado-tech-10`
+- ele nao representa outro repositorio; aponta para a mesma base de codigo em outra configuracao de deploy
+- `tech10-portal` segue como projeto canonico
+- `tech10-portal` usa `Root Directory = SITE_RECUPERADO_TECH10`
+- `site-recuperado-tech-10` usa `Root Directory = .`
+- `tech10-portal` expoe o dominio customizado `https://tech10.loja.tech10cloud.com`
+- `site-recuperado-tech-10` nao expoe o dominio customizado canonico
+- `tech10-portal/api/runtime-config` retornou catalogo configurado e `browseCatalog=true`
+- `site-recuperado-tech-10/api/runtime-config` retornou sem backend configurado e `browseCatalog=false`
+
 ## O que esta pendente
 
 - revisar e mergear o PR `#131` da branch `docs/tech10-checkout-project-handover`
-- reconciliar, antes de qualquer deploy, a divergencia entre o link local observado em `.vercel/project.json` desta worktree (`site-recuperado-tech-10`) e a documentacao canonica (`tech10-portal`)
+- decidir explicitamente se o projeto Vercel legado `site-recuperado-tech-10` sera apenas mantido sem uso ou aposentado depois
 - manter o manifesto de evidencias atualizado sem versionar os arquivos locais
 
 ## O que esta proibido reativar ou alterar nesta frente

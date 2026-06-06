@@ -11,11 +11,25 @@ Producao so muda com validacao explicita. Esta frente de handover nao inclui pro
 - root directory de publicacao: `SITE_RECUPERADO_TECH10`
 - projeto Vercel descrito na documentacao canonica: `tech10-portal`
 
-## Divergencia observada nesta retomada
+## Estado confirmado dos projetos Vercel
 
-- o `vercel dev` desta worktree local gerou `.vercel/project.json` apontando para `site-recuperado-tech-10`
-- o repo principal auditado fora desta worktree aponta para `tech10-portal`
-- antes de qualquer preview ou deploy intencional, reconciliar essa diferenca conscientemente
+- `tech10-portal`
+  - projeto canonico
+  - `Root Directory = SITE_RECUPERADO_TECH10`
+  - alias canonico: `https://tech10-portal.vercel.app`
+  - dominio customizado observado: `https://tech10.loja.tech10cloud.com`
+  - `runtime-config` retornou backend configurado
+
+- `site-recuperado-tech-10`
+  - projeto paralelo/legado
+  - `Root Directory = .`
+  - alias observado: `https://site-recuperado-tech-10.vercel.app`
+  - `runtime-config` retornou sem backend configurado
+
+Regra operacional:
+
+- usar `tech10-portal` para qualquer validacao ou deploy canonico do tenant
+- nao promover `site-recuperado-tech-10` como origem de producao
 
 ## Como gerar preview
 
@@ -27,6 +41,7 @@ Producao so muda com validacao explicita. Esta frente de handover nao inclui pro
 
 - validar localmente primeiro
 - revisar `main` e `SITE_RECUPERADO_TECH10` como base de publicacao
+- confirmar que a pasta local esta vinculada a `tech10-portal`
 - confirmar que o fluxo publicado continua `WhatsApp Web` com draft seguro
 - publicar apenas depois de review explicito
 
