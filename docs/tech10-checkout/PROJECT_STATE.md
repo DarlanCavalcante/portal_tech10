@@ -61,10 +61,11 @@
 - o follow-up de mensagem assistida persistida foi mergeado
 - a investigacao documental do handoff para app desktop foi encerrada
 - a branch documental original `codex/tech10-checkout-whatsapp-app-handoff-20260529` foi publicada no remoto em `2026-06-06`
+- a branch `docs/tech10-checkout-project-handover` foi publicada e recebeu o PR `#131` em `2026-06-06`
 
 ## O que esta pendente
 
-- revisar e mergear a branch `docs/tech10-checkout-project-handover`
+- revisar e mergear o PR `#131` da branch `docs/tech10-checkout-project-handover`
 - reconciliar, antes de qualquer deploy, a divergencia entre o link local observado em `.vercel/project.json` desta worktree (`site-recuperado-tech-10`) e a documentacao canonica (`tech10-portal`)
 - manter o manifesto de evidencias atualizado sem versionar os arquivos locais
 

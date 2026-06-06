@@ -10,7 +10,7 @@
 | `codex/tech10-checkout-whatsapp-app-first-20260529` | experimental | rejeitada / superada | `7b556fb` -> equivalente em `a8180e3` | nao | testar preferencia pelo app desktop do WhatsApp | manter apenas como rastro historico; nao promover |
 | `codex/tech10-checkout-safe-draft-20260530` | funcional / hotfix | promovida por equivalente em `main` | `f4d54b6` -> publicado como `48fd737` | nao | restaurar o fluxo web seguro em modo draft | usar `main` / `48fd737` como verdade publicada |
 | `codex/tech10-checkout-whatsapp-app-handoff-20260529` | documental / investigacao | encerrada | `a10a766`, `d40de69`, `f03a9dc` | sim | provar se o handoff para app desktop era seguro | nenhum corretivo; preservar documentacao |
-| `docs/tech10-checkout-project-handover` | documental / handover | em andamento | `f03a9dc` + commit documental desta branch | nao | centralizar estado, branches, runbooks e validacao | revisar, pushar e abrir PR documental |
+| `docs/tech10-checkout-project-handover` | documental / handover | em review | `28c4e1e` | sim | centralizar estado, branches, runbooks e validacao | revisar e mergear o PR `#131` |
 
 ## Notas
 
