@@ -97,8 +97,18 @@ SMOKE_BASE_URL=http://127.0.0.1:4112 npm run smoke:runtime
 
 ## Como relincar a pasta ao projeto canonico
 
-Se a subpasta estiver ligada ao projeto errado, corrigir o arquivo local `.vercel/project.json`
-ou relincar pela CLI para o projeto `tech10-portal` no escopo `darlancavalcantes-projects`.
+Fluxo preferido:
+
+```bash
+vercel link --scope darlancavalcantes-projects
+```
+
+Durante o fluxo interativo, selecionar o projeto `tech10-portal`.
+
+Fallback:
+
+- se a CLI nao estiver disponivel ou o link local estiver quebrado por metadado antigo, corrigir o arquivo local `.vercel/project.json` apenas como ultimo recurso
+- depois da correcao manual, validar abrindo `vercel dev` e conferindo que o `projectName` permanece `tech10-portal`
 
 ## Como limpar cache e estado local
 
