@@ -10,10 +10,11 @@
 | `codex/tech10-checkout-whatsapp-app-first-20260529` | experimental | rejeitada / superada | `7b556fb` -> equivalente em `a8180e3` | nao | testar preferencia pelo app desktop do WhatsApp | manter apenas como rastro historico; nao promover |
 | `codex/tech10-checkout-safe-draft-20260530` | funcional / hotfix | promovida por equivalente em `main` | `f4d54b6` -> publicado como `48fd737` | nao | restaurar o fluxo web seguro em modo draft | usar `main` / `48fd737` como verdade publicada |
 | `codex/tech10-checkout-whatsapp-app-handoff-20260529` | documental / investigacao | encerrada | `a10a766`, `d40de69`, `f03a9dc` | sim | provar se o handoff para app desktop era seguro | nenhum corretivo; preservar documentacao |
-| `docs/tech10-checkout-project-handover` | documental / handover | em review | `28c4e1e`, `a0d21cf`, `d1c951d`, `166754e`, `3ad3c6c` | sim | centralizar estado, branches, runbooks e validacao | revisar e mergear o PR `#131` |
+| `docs/tech10-checkout-project-handover` | documental / handover | em review | `28c4e1e+` | sim | centralizar estado, branches, runbooks e validacao | revisar e mergear o PR `#131` |
 
 ## Notas
 
 - `Remoto?` indica se a branch com esse nome existe hoje em `origin`.
+- `+` na coluna `Commits` indica que a branch recebeu commits adicionais na mesma serie documental; usar o PR correspondente como trilha completa.
 - Algumas branches locais nao existem no remoto, mas seus efeitos ja foram absorvidos por commits equivalentes ou merges em `origin/main`.
 - O worktree local de `main` auditado em `/Users/darlancavalcante/Documents/TECH/portal_tech10` estava sujo durante o handover. Por isso esta frente foi executada em worktree separada.
