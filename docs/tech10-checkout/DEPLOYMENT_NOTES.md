@@ -23,13 +23,14 @@ Producao so muda com validacao explicita. Esta frente de handover nao inclui pro
 - `site-recuperado-tech-10`
   - projeto paralelo/legado
   - `Root Directory = .`
-  - alias observado: `https://site-recuperado-tech-10.vercel.app`
+  - alias observado antes da remocao: `https://site-recuperado-tech-10.vercel.app`
   - `runtime-config` retornou sem backend configurado
+  - removido da Vercel em `2026-06-06`
 
 Regra operacional:
 
 - usar `tech10-portal` para qualquer validacao ou deploy canonico do tenant
-- nao promover `site-recuperado-tech-10` como origem de producao
+- nao recriar nem promover `site-recuperado-tech-10` como origem de producao
 
 ## Como gerar preview
 

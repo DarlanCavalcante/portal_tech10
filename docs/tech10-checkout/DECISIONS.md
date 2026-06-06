@@ -48,3 +48,10 @@
 - decisao: registrar `site-recuperado-tech-10` como projeto Vercel legado/paralelo e nao como base canonica
 - motivo: o projeto existe no mesmo time, mas esta com `Root Directory = .` e `runtime-config` sem backend configurado
 - status: aplicado
+
+## ADR-008 - Remover `site-recuperado-tech-10` da Vercel
+
+- data: `2026-06-06`
+- decisao: remover o projeto Vercel `site-recuperado-tech-10`
+- motivo: ele duplicava o runtime da Tech10 sem ser a origem canonica, nao carregava o dominio oficial e permanecia degradado sem backend configurado
+- status: aplicado

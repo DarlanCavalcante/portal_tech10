@@ -65,20 +65,20 @@
 
 ## Estado Vercel confirmado em 2026-06-06
 
-- existe um segundo projeto Vercel chamado `site-recuperado-tech-10`
-- ele nao representa outro repositorio; aponta para a mesma base de codigo em outra configuracao de deploy
+- existia um segundo projeto Vercel chamado `site-recuperado-tech-10`
+- ele nao representava outro repositorio; apontava para a mesma base de codigo em outra configuracao de deploy
 - `tech10-portal` segue como projeto canonico
 - `tech10-portal` usa `Root Directory = SITE_RECUPERADO_TECH10`
-- `site-recuperado-tech-10` usa `Root Directory = .`
+- `site-recuperado-tech-10` usava `Root Directory = .`
 - `tech10-portal` expoe o dominio customizado `https://tech10.loja.tech10cloud.com`
-- `site-recuperado-tech-10` nao expoe o dominio customizado canonico
+- `site-recuperado-tech-10` nao expunha o dominio customizado canonico
 - `tech10-portal/api/runtime-config` retornou catalogo configurado e `browseCatalog=true`
 - `site-recuperado-tech-10/api/runtime-config` retornou sem backend configurado e `browseCatalog=false`
+- `site-recuperado-tech-10` foi removido da Vercel em `2026-06-06`
 
 ## O que esta pendente
 
 - revisar e mergear o PR `#131` da branch `docs/tech10-checkout-project-handover`
-- decidir explicitamente se o projeto Vercel legado `site-recuperado-tech-10` sera apenas mantido sem uso ou aposentado depois
 - manter o manifesto de evidencias atualizado sem versionar os arquivos locais
 
 ## O que esta proibido reativar ou alterar nesta frente
