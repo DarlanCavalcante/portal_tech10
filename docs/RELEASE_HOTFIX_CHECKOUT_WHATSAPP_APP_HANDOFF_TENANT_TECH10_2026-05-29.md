@@ -85,6 +85,8 @@ Esta frente deve terminar com uma decisão explícita:
 - abriu a conversa correta;
 - carregou o conteúdo da mensagem;
 - **não preservou a revisão manual com segurança**;
+- durante o experimento houve mensagem real de teste na conversa da Tech10 às
+  `00:40`;
 - na evidência final, a mensagem de teste aparece na linha da conversa com
   timestamp e checkmarks, caracterizando envio real;
 - o fluxo também gerou conflito de instância entre web e app, com aviso de
@@ -93,6 +95,8 @@ Esta frente deve terminar com uma decisão explícita:
 ## Decisão
 
 **App desktop rejeitado como fluxo oficial do checkout.**
+
+**WhatsApp Web aprovado como fluxo oficial do checkout.**
 
 Motivo:
 
@@ -114,8 +118,20 @@ O checkout da Tech10 deve continuar em:
 Encerrar esta frente como investigação concluída e manter a produção no fluxo
 web seguro já publicado.
 
+Nenhum corretivo pendente nesta frente. Não há promoção nova de código a fazer.
+
 ## Status final
 
 - frente encerrada: sim
+- WhatsApp Web: aprovado
+- WhatsApp app desktop: reprovado
 - alteração de produção necessária: não
 - decisão vigente em produção: `WhatsApp Web draft seguro`
+- produção deve permanecer no fluxo Web draft seguro: sim
+- `whatsapp://send` deve ser reativado: não
+- evidência de risco principal: mensagem real de teste às `00:40` + conflito de
+  instância
+- promoção nova de código: não
+- evidências locais versionadas: não
+- evidências locais permanecem fora do commit: sim
+- próximo passo corretivo: nenhum
