@@ -141,9 +141,16 @@ Com ações de recuperação:
 
 ### Fallback de publicação
 
-O alias de validação continua sendo:
+O alias de validação registrado naquele momento era:
 
 - `https://site-recuperado-tech-10.vercel.app`
+
+Nota de continuidade em `2026-06-06`:
+
+- esse alias pertencia ao projeto Vercel `site-recuperado-tech-10`
+- esse projeto foi aposentado em `2026-06-06`
+- o alias canônico atual da Tech10 e `https://tech10-portal.vercel.app`
+- o domínio canônico atual continua sendo `https://tech10.loja.tech10cloud.com/`
 
 O domínio oficial `https://tech10.loja.tech10cloud.com/` segue fora do vínculo
 acessível nesta conta. Isso preserva um fallback operacional natural, porque a
@@ -165,4 +172,4 @@ Se for preciso desfazer a rodada sem perder histórico:
 1. usar `git revert <hash-do-commit>`
 2. ou comparar com a tag `fallback/tech10-before-storefront-20260529`
 3. se o problema for só de publicação, manter a produção oficial atual e usar o
-   alias de validação como ambiente de revisão até a correção
+   alias canônico vigente do tenant como ambiente de revisão até a correção

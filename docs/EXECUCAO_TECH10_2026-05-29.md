@@ -1,5 +1,10 @@
 # Execução Tech10 - 2026-05-29
 
+> Nota de continuidade em `2026-06-06`:
+> os links `site-recuperado-tech-10*` abaixo eram os aliases usados naquele
+> momento historico. O projeto Vercel `site-recuperado-tech-10` foi aposentado
+> em `2026-06-06`. A origem canonica atual da Tech10 e `tech10-portal`.
+
 ## Resumo
 
 Este ciclo fechou o refinamento visual e comercial do site institucional da Tech10, publicou um deploy limpo no projeto Vercel acessível nesta conta e confirmou os bloqueios externos que ainda impedem o fechamento total da presença pública.
@@ -32,12 +37,15 @@ Este ciclo fechou o refinamento visual e comercial do site institucional da Tech
 
 - Preview:
   - `https://site-recuperado-tech-10-88ap4h8fs-darlancavalcantes-projects.vercel.app`
+  - status atual: alias historico / aposentado
 - Produção do projeto acessível nesta conta:
   - `https://site-recuperado-tech-10.vercel.app`
+  - status atual: projeto removido em `2026-06-06`
 
 ## Validação do horário
 
-No alias novo do projeto, o HTML já responde com o horário correto:
+No alias novo do projeto naquele momento, o HTML já respondia com o horário
+certo:
 
 - `Segunda a Sexta: 9h às 12h e 13h às 18h`
 - `Sábado: 9h às 13h`
@@ -51,7 +59,7 @@ No domínio oficial atual, o HTML público ainda responde com o horário antigo:
 
 O domínio oficial `https://tech10.loja.tech10cloud.com/` ainda está apontando para outra configuração/projeto Vercel fora do escopo acessível nesta conta.
 
-Sinais confirmados:
+Sinais confirmados naquele momento:
 
 - o domínio oficial retorna HTML antigo
 - o alias novo retorna HTML atualizado
@@ -112,6 +120,7 @@ ou quando for usado outro método viável na infraestrutura que realmente atende
 ## Próximos passos obrigatórios
 
 1. Reapontar ou religar `tech10.loja.tech10cloud.com` para o projeto Vercel correto.
+   Estado posterior confirmado em `2026-06-06`: o projeto correto e `tech10-portal`.
 2. Depois disso, validar o domínio oficial e concluir o `Search Console`.
 3. No app móvel do Instagram, trocar o link principal da bio para o site oficial.
 4. No Facebook/Meta, concluir a edição pública da Página com telefone, horário, endereço, site e descrição.
