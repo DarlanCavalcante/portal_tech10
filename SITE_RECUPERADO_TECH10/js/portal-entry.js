@@ -20,7 +20,7 @@
     return raw;
   }
 
-  function buildUrl(baseUrl, osNumber, token) {
+  function buildUrl(baseUrl, osNumber, token, extraParams) {
     const normalizedOs = normalizeOsNumber(osNumber);
     if (!normalizedOs) return null;
 
@@ -28,7 +28,64 @@
     if (token) {
       url.searchParams.set('token', token.trim());
     }
+    if (extraParams) {
+      extraParams.forEach(function (value, key) {
+        if (!value || ['mode', 'os', 'osNumber'].includes(key)) return;
+        if (key === 'token') return;
+        url.searchParams.set(key, value);
+      });
+    }
     return url.toString();
+  }
+
+  function parseLaunchContext() {
+    const url = new URL(global.location.href);
+    const parts = url.pathname.split('/').filter(Boolean);
+    const portalIndex = parts.indexOf('portal');
+    const statusIndex = parts.indexOf('status');
+    const isStatusPath = statusIndex >= 0;
+    const mode = url.searchParams.get('mode') || (isStatusPath ? 'status' : 'portal');
+    const pathIndex = isStatusPath ? statusIndex : portalIndex;
+    const rawPathSegment = pathIndex >= 0 ? parts[pathIndex + 1] || '' : '';
+    const osFromPath = rawPathSegment && !rawPathSegment.includes('.') ? rawPathSegment : '';
+    const osNumber = url.searchParams.get('os') || url.searchParams.get('osNumber') || osFromPath;
+
+    return {
+      mode: mode === 'status' ? 'status' : 'portal',
+      osNumber: normalizeOsNumber(osNumber),
+      token: String(url.searchParams.get('token') || '').trim(),
+      params: url.searchParams,
+      hasDeepLink: Boolean(osFromPath || url.searchParams.get('os') || url.searchParams.get('osNumber')),
+    };
+  }
+
+  function applyLaunchContext(runtimeConfig) {
+    const launch = parseLaunchContext();
+    const osField = document.getElementById('os-number');
+    const tokenField = document.getElementById('magic-token');
+    const accessModeField = document.getElementById('access-mode');
+
+    if (osField && launch.osNumber) {
+      osField.value = launch.osNumber;
+    }
+    if (tokenField && launch.token) {
+      tokenField.value = launch.token;
+    }
+    if (accessModeField) {
+      accessModeField.value = launch.mode;
+    }
+
+    if (!launch.hasDeepLink || !launch.osNumber) return false;
+
+    const integrations = runtimeConfig.integrations || {};
+    const portalBaseUrl = integrations.portalBaseUrl || defaults.portalBaseUrl;
+    const statusBaseUrl = integrations.statusBaseUrl || defaults.statusBaseUrl;
+    const baseUrl = launch.mode === 'status' ? statusBaseUrl : portalBaseUrl;
+    const nextUrl = buildUrl(baseUrl, launch.osNumber, launch.mode === 'portal' ? launch.token : '', launch.params);
+
+    if (!nextUrl) return false;
+    global.location.replace(nextUrl);
+    return true;
   }
 
   async function fetchRuntimeConfig() {
@@ -140,6 +197,7 @@
   async function init() {
     const runtimeConfig = await fetchRuntimeConfig();
     updateRuntimeInfo(runtimeConfig);
+    if (applyLaunchContext(runtimeConfig)) return;
     bindActions(runtimeConfig);
   }
 

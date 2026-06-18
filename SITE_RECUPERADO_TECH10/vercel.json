@@ -136,7 +136,15 @@
       "destination": "/portal/index.html"
     },
     {
+      "source": "/portal/(.*)",
+      "destination": "/portal/index.html"
+    },
+    {
       "source": "/status",
+      "destination": "/portal/index.html?mode=status"
+    },
+    {
+      "source": "/status/(.*)",
       "destination": "/portal/index.html?mode=status"
     },
     {
