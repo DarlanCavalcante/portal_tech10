@@ -239,6 +239,9 @@
       color: var(--muted);
       word-break: break-all;
     }
+    .runtime-box[hidden] {
+      display: none;
+    }
     .helper h2 {
       margin: 0;
       font-size: 24px;
@@ -377,35 +380,35 @@
       </section>
 
       <aside class="helper">
-        <span class="status-chip"><i class="fas fa-circle-check"></i> Runtime standalone do tenant</span>
-        <h2>Como este fluxo está organizado</h2>
+        <span class="status-chip"><i class="fas fa-circle-check"></i> Portal oficial Tech10</span>
+        <h2>Acompanhe seu atendimento com segurança</h2>
         <ol class="steps">
           <li>
-            <i class="fas fa-globe"></i>
+            <i class="fas fa-timeline"></i>
             <div>
-              <strong>Site e loja próprios</strong>
-              <p>O site Tech10 publica em runtime próprio, com vitrine em <code>/loja</code> e venda por atendimento assistido sempre que o checkout ainda estiver em modo <code>quote_only</code>.</p>
+              <strong>Consulta rápida</strong>
+              <p>Informe o número da O.S. para ver o andamento mais recente do atendimento.</p>
             </div>
           </li>
           <li>
-            <i class="fas fa-plug"></i>
+            <i class="fas fa-lock"></i>
             <div>
-              <strong>Portal como ponte explícita</strong>
-              <p>O <code>/portal</code> não mistura outro storefront: ele direciona o cliente para o portal oficial do ERP, mantendo ownership claro.</p>
+              <strong>Acesso completo</strong>
+              <p>Use o link recebido pela Tech10 para aprovar orçamento, acompanhar detalhes e falar com a equipe.</p>
             </div>
           </li>
           <li>
-            <i class="fas fa-shield-halved"></i>
+            <i class="fas fa-headset"></i>
             <div>
-              <strong>Configuração centralizada</strong>
-              <p>As URLs críticas de portal e status vêm do runtime config do tenant, para não ficar espalhadas no HTML.</p>
+              <strong>Ajuda humana</strong>
+              <p>Se faltar o número da O.S. ou o link de acesso, fale com a loja pelo WhatsApp.</p>
             </div>
           </li>
         </ol>
 
-        <div class="runtime-box">
-          <strong>Configuração ativa</strong>
-          <div class="runtime-note" id="runtime-note">Carregando variáveis do runtime...</div>
+        <div class="runtime-box" id="portal-debug-box" hidden aria-hidden="true">
+          <strong>Atendimento preparado</strong>
+          <div class="runtime-note" id="runtime-note">Portal pronto para orientar o cliente.</div>
         </div>
 
         <div class="support-box">
