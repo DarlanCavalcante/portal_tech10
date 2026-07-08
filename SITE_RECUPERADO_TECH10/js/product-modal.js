@@ -17,9 +17,9 @@
       return runtime.commerce;
     }
     var config = global.API_CONFIG || {};
-    var quoteOnly = (config.CHECKOUT_MODE || 'quote_only') === 'quote_only';
+    var quoteOnly = (config.CHECKOUT_MODE || 'store_backend') === 'quote_only';
     return {
-      checkoutMode: config.CHECKOUT_MODE || 'quote_only',
+      checkoutMode: config.CHECKOUT_MODE || 'store_backend',
       capabilities: {
         cart: !quoteOnly,
         checkout: !quoteOnly,

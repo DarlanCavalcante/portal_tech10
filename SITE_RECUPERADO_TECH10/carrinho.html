@@ -517,9 +517,9 @@
                 <a href="/portal" class="continue-shopping" style="font-size:14px;" data-tenant-portal-link>
                     <i class="fas fa-receipt"></i> Portal
                 </a>
-                <a href="/#contato" class="header-support" data-tenant-support-link data-support-primary="true" data-support-message="Olá! Vim pela loja da Tech10 e quero atendimento para concluir uma compra.">
+                <a href="/#contato" class="header-support" data-tenant-support-link data-support-primary="true" data-support-message="Olá! Vim pela loja da Tech10 e preciso de ajuda para concluir uma compra.">
                     <i class="fab fa-whatsapp"></i>
-                    <span><small>Compra assistida</small>Falar com a Tech10</span>
+                    <span><small>Precisa de ajuda?</small>Falar com a Tech10</span>
                 </a>
             </div>
         </div>
@@ -527,7 +527,7 @@
     
     <div class="container">
         <div class="cart-header">
-            <h1><i class="fas fa-headset"></i> Compra assistida</h1>
+            <h1 id="cart-page-title"><i class="fas fa-shopping-cart"></i> Seu carrinho</h1>
             <a href="/loja" class="continue-shopping">
                 <i class="fas fa-store"></i> Explorar catálogo
             </a>
@@ -536,7 +536,7 @@
         <div id="cart-content" style="display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start;">
             <div class="loading" style="grid-column:1/-1">
                 <i class="fas fa-spinner"></i>
-                <p style="margin-top: 15px; color: #6b7280;">Preparando o fluxo de atendimento assistido...</p>
+                <p id="cart-loading-copy" style="margin-top: 15px; color: #6b7280;">Carregando seu carrinho...</p>
             </div>
         </div>
     </div>
@@ -582,13 +582,13 @@
                 console.warn('[CARRINHO] Não foi possível carregar runtime config:', err);
                 runtimeConfigCache = {
                     commerce: {
-                        checkoutMode: 'quote_only',
+                        checkoutMode: 'store_backend',
                         capabilities: {
-                            cart: false,
-                            checkout: false,
-                            quoteOnly: true,
-                            assistedCartBridge: true,
-                            assistedCheckoutBridge: true
+                            cart: true,
+                            checkout: true,
+                            quoteOnly: false,
+                            assistedCartBridge: false,
+                            assistedCheckoutBridge: false
                         }
                     }
                 };
@@ -600,6 +600,31 @@
             const commerce = (config && config.commerce) || {};
             const capabilities = commerce.capabilities || {};
             return commerce.checkoutMode === 'quote_only' || capabilities.quoteOnly === true;
+        }
+
+        function applyCartModePresentation(config) {
+            var quoteOnly = isQuoteOnlyRuntime(config);
+            var pageTitle = document.getElementById('cart-page-title');
+            var loadingCopy = document.getElementById('cart-loading-copy');
+            var supportBadge = document.querySelector('.header-support span');
+
+            if (pageTitle) {
+                pageTitle.innerHTML = quoteOnly
+                    ? '<i class="fas fa-headset"></i> Compra assistida'
+                    : '<i class="fas fa-shopping-cart"></i> Seu carrinho';
+            }
+
+            if (loadingCopy) {
+                loadingCopy.textContent = quoteOnly
+                    ? 'Preparando o fluxo de atendimento assistido...'
+                    : 'Carregando seu carrinho...';
+            }
+
+            if (supportBadge) {
+                supportBadge.innerHTML = quoteOnly
+                    ? '<small>Compra assistida</small>Falar com a Tech10'
+                    : '<small>Precisa de ajuda?</small>Falar com a Tech10';
+            }
         }
 
         function buildSupportUrl(message) {
@@ -903,6 +928,7 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             runtimeConfigCache = await fetchRuntimeConfig();
+            applyCartModePresentation(runtimeConfigCache);
             loadCart();
             if (isQuoteOnlyRuntime(runtimeConfigCache)) {
                 console.log('[CARRINHO] Runtime em quote_only; a página exibirá a seleção e seguirá para o fechamento assistido.');

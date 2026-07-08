@@ -32,7 +32,7 @@
 
     CATALOG_SOURCE: tenantStore.catalogSource || 'erp_stock',
 
-    CHECKOUT_MODE: tenantStore.checkoutMode || 'quote_only',
+    CHECKOUT_MODE: tenantStore.checkoutMode || 'store_backend',
 
     CART_STORAGE_KEY: `${tenantRuntimeId}_storefront_cart_id`,
 

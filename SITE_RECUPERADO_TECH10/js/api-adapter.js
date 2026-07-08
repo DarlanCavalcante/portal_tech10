@@ -103,11 +103,11 @@
     }
 
     const config = global.API_CONFIG || {};
-    const quoteOnly = (config.CHECKOUT_MODE || 'quote_only') === 'quote_only';
+    const quoteOnly = (config.CHECKOUT_MODE || 'store_backend') === 'quote_only';
 
     return {
       catalogSource: config.CATALOG_SOURCE || 'erp_stock',
-      checkoutMode: config.CHECKOUT_MODE || 'quote_only',
+      checkoutMode: config.CHECKOUT_MODE || 'store_backend',
       capabilities: {
         cart: !quoteOnly,
         checkout: !quoteOnly,
@@ -466,6 +466,25 @@
     }
   }
 
+  async function getStoreConfig(storeSlug) {
+    const currentStoreSlug = storeSlug || slug();
+    if (!currentStoreSlug) {
+      throw new Error('Slug da loja pública não configurado.');
+    }
+
+    try {
+      const res = await fetch(`${base()}/lojas/${encodeURIComponent(currentStoreSlug)}/config`);
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'HTTP ' + res.status);
+      }
+      return await res.json();
+    } catch (err) {
+      console.error('[api-adapter] getStoreConfig:', err);
+      throw err;
+    }
+  }
+
   async function createCart() {
     if (await shouldUseAssistedCartBridge()) {
       const config = getApiConfig();
@@ -483,7 +502,7 @@
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       const cart = data.cart || data;
-      return { cart };
+      return { cart: normalizeCart(cart) };
     } catch (err) {
       console.error('[api-adapter] createCart:', err);
       throw err;
@@ -522,11 +541,17 @@
     const total = cart.total != null ? Number(cart.total) : subtotal;
     return {
       id: cart.id,
+      status: cart.status || 'ACTIVE',
       items,
       subtotal,
       total,
       currency_code: cart.currency_code || 'brl',
-      assisted: cart.assisted === true
+      assisted: cart.assisted === true,
+      quote_only: cart.quote_only === true,
+      sale_id: cart.sale_id || null,
+      customer: cart.customer || null,
+      shipping: cart.shipping || null,
+      notes: cart.notes || null
     };
   }
 
@@ -639,17 +664,118 @@
     }
   }
 
+  async function completeCart(cartId, payload) {
+    try {
+      const res = await fetch(`${base()}/carts/${cartId}/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'HTTP ' + res.status);
+      }
+
+      return {
+        cart: normalizeCart(data.cart),
+        sale: data.sale || null,
+        financialTransaction: data.financialTransaction || null,
+        checkoutIntent: data.checkoutIntent || null,
+        pix: data.pix || null,
+        uiStatus: data.uiStatus || null
+      };
+    } catch (err) {
+      console.error('[api-adapter] completeCart:', err);
+      throw err;
+    }
+  }
+
+  async function getCartPaymentStatus(cartId, refresh = true) {
+    try {
+      const suffix = refresh ? '?refresh=1' : '';
+      const res = await fetch(`${base()}/carts/${cartId}/payment-status${suffix}`);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'HTTP ' + res.status);
+      }
+
+      return {
+        cart: normalizeCart(data.cart),
+        sale: data.sale || null,
+        financialTransaction: data.financialTransaction || null,
+        checkoutIntent: data.checkoutIntent || null,
+        pix: data.pix || null,
+        uiStatus: data.uiStatus || null
+      };
+    } catch (err) {
+      console.error('[api-adapter] getCartPaymentStatus:', err);
+      throw err;
+    }
+  }
+
+  async function regenerateCartPix(cartId) {
+    try {
+      const res = await fetch(`${base()}/carts/${cartId}/mercadopago-pix/regenerate`, {
+        method: 'POST'
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'HTTP ' + res.status);
+      }
+
+      return {
+        cart: normalizeCart(data.cart),
+        sale: data.sale || null,
+        financialTransaction: data.financialTransaction || null,
+        checkoutIntent: data.checkoutIntent || null,
+        pix: data.pix || null,
+        uiStatus: data.uiStatus || null
+      };
+    } catch (err) {
+      console.error('[api-adapter] regenerateCartPix:', err);
+      throw err;
+    }
+  }
+
+  async function cancelPendingPayment(cartId) {
+    try {
+      const res = await fetch(`${base()}/carts/${cartId}/cancel-pending-payment`, {
+        method: 'POST'
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'HTTP ' + res.status);
+      }
+      return {
+        cart: normalizeCart(data.cart),
+        sale: data.sale || null,
+        financialTransaction: data.financialTransaction || null,
+        checkoutIntent: data.checkoutIntent || null,
+        pix: data.pix || null,
+        uiStatus: data.uiStatus || null
+      };
+    } catch (err) {
+      console.error('[api-adapter] cancelPendingPayment:', err);
+      throw err;
+    }
+  }
+
   global.MarketplaceAdapter = {
     getRuntimeConfig,
     getProducts,
     getProductById,
     getCategories,
+    getStoreConfig,
     normalizeCategory,
     normalizeCategoryHandle: slugifyCategoryValue,
     createCart,
     getCart,
     addLineItem,
     updateLineItem,
-    removeLineItem
+    removeLineItem,
+    completeCart,
+    getCartPaymentStatus,
+    regenerateCartPix,
+    cancelPendingPayment
   };
 })(typeof window !== 'undefined' ? window : this);

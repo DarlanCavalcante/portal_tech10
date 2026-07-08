@@ -99,7 +99,7 @@ function createLocalStorageMock() {
 async function runAssistedBridgeProbe(runtimeConfig, product) {
   const apiConfigSource = fs.readFileSync(path.join(runtimeRoot, 'js', 'api-config.js'), 'utf8');
   const apiAdapterSource = fs.readFileSync(path.join(runtimeRoot, 'js', 'api-adapter.js'), 'utf8');
-  const quoteOnlyMode = runtimeConfig && runtimeConfig.commerce && runtimeConfig.commerce.checkoutMode
+  const checkoutMode = runtimeConfig && runtimeConfig.commerce && runtimeConfig.commerce.checkoutMode
     ? runtimeConfig.commerce.checkoutMode
     : 'quote_only';
   const catalogSource = runtimeConfig && runtimeConfig.commerce && runtimeConfig.commerce.catalogSource
@@ -130,7 +130,7 @@ async function runAssistedBridgeProbe(runtimeConfig, product) {
       slug: 'tech10',
       baseUrl,
       provider: 'tenant-standalone',
-      checkoutMode: quoteOnlyMode,
+      checkoutMode: checkoutMode,
       catalogSource,
     },
   };
@@ -222,15 +222,30 @@ async function main() {
   const runtimeConfig = await runtimeConfigResponse.json();
 
   assert(runtimeConfig && runtimeConfig.commerce, 'runtime-config não retornou o bloco commerce');
-  assert(runtimeConfig.commerce.checkoutMode === 'quote_only', 'runtime-config não declarou checkoutMode=quote_only');
-  if (expectStoreConfigured) {
+  const expectedCheckoutMode = process.env.EXPECT_CHECKOUT_MODE
+    ? String(process.env.EXPECT_CHECKOUT_MODE).trim().toLowerCase()
+    : '';
+  if (expectedCheckoutMode) {
+    assert(runtimeConfig.commerce.checkoutMode === expectedCheckoutMode, `runtime-config não declarou checkoutMode=${expectedCheckoutMode}`);
+  } else {
+    assert(
+      runtimeConfig.commerce.checkoutMode === 'quote_only' || runtimeConfig.commerce.checkoutMode === 'store_backend',
+      'runtime-config não declarou um checkoutMode suportado'
+    );
+  }
+  if (runtimeConfig.commerce.checkoutMode === 'quote_only') {
     assert(runtimeConfig.commerce.capabilities && runtimeConfig.commerce.capabilities.assistedCartBridge === true, 'runtime-config não declarou assistedCartBridge=true');
     assert(runtimeConfig.commerce.capabilities && runtimeConfig.commerce.capabilities.assistedCheckoutBridge === true, 'runtime-config não declarou assistedCheckoutBridge=true');
+  } else if (expectedCheckoutMode === 'store_backend') {
+    assert(runtimeConfig.commerce.capabilities && runtimeConfig.commerce.capabilities.cart === true, 'runtime-config não declarou cart=true');
+    assert(runtimeConfig.commerce.capabilities && runtimeConfig.commerce.capabilities.checkout === true, 'runtime-config não declarou checkout=true');
   }
 
   const smokeProduct = await resolveSmokeProduct();
   const probeRuntimeConfig = buildProbeRuntimeConfig(runtimeConfig);
-  const assistedBridgeProbe = await runAssistedBridgeProbe(probeRuntimeConfig, smokeProduct);
+  const assistedBridgeProbe = runtimeConfig.commerce.checkoutMode === 'quote_only'
+    ? await runAssistedBridgeProbe(probeRuntimeConfig, smokeProduct)
+    : null;
 
   console.log(JSON.stringify({
     ok: true,
