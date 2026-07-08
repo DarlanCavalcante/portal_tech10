@@ -22,17 +22,23 @@
 
     /* ── Header ── */
     .pp-header {
-      background: #fff;
+      background: rgba(255,255,255,0.94);
       border-bottom: 1px solid #e5e7eb;
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 0 16px;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+      backdrop-filter: blur(12px);
+    }
+    .pp-header-shell {
+      max-width: 1380px;
+      margin: 0 auto;
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: minmax(170px, 190px) minmax(0, 1fr);
+      align-items: center;
+      gap: 18px;
     }
     .pp-logo {
       display: flex;
@@ -44,20 +50,26 @@
       font-weight: 800;
     }
     .pp-logo i { font-size: 24px; }
-    .pp-logo img { height: 36px; width: auto; object-fit: contain; }
+    .pp-logo img { height: 40px; width: auto; object-fit: contain; }
     .pp-header-right {
-      display: flex;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: auto auto auto auto minmax(260px, 320px);
+      justify-content: end;
       align-items: center;
-      gap: 12px;
-      flex-wrap: nowrap;
+      gap: 10px;
     }
     .pp-search-wrap {
       position: relative;
       display: flex;
       align-items: center;
+      width: 100%;
+      min-width: 0;
     }
     .pp-search-input {
-      width: 260px;
+      width: 100%;
+      min-width: 0;
+      height: 44px;
       padding: 9px 46px 9px 38px;
       border: 1.5px solid #e5e7eb;
       border-radius: 24px;
@@ -168,15 +180,25 @@
     }
     .pp-back-link {
       text-decoration: none;
-      color: #6b7280;
-      font-size: 14px;
-      font-weight: 500;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: color .15s;
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.18);
+      background: rgba(248,250,252,0.96);
+      transition: color .15s, border-color .15s, background .15s, transform .15s;
     }
-    .pp-back-link:hover { color: #2563eb; }
+    .pp-back-link:hover {
+      color: #2563eb;
+      border-color: rgba(37,99,235,0.18);
+      background: #eff6ff;
+      transform: translateY(-1px);
+    }
     .pp-support-pill {
       display: inline-flex;
       align-items: center;
@@ -868,11 +890,13 @@
         display: inline-flex;
       }
       .pp-header {
-        height: auto;
-        padding: 12px;
-        align-items: flex-start;
+        padding: 10px 12px;
+      }
+      .pp-header-shell {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        align-items: stretch;
         gap: 10px;
-        flex-wrap: wrap;
       }
       .pp-logo img {
         height: 32px;
@@ -1069,6 +1093,8 @@
       }
       .pp-header {
         padding: 10px 12px;
+      }
+      .pp-header-shell {
         gap: 8px;
       }
       .pp-logo img {
@@ -1370,46 +1396,48 @@
 
   <!-- Header -->
   <header class="pp-header">
-    <a href="/" class="pp-logo">
-      <img src="imagem/logo/tech10-logo-principal-pulso-hibrido.svg" alt="Tech10" height="36">
-    </a>
+    <div class="pp-header-shell">
+      <a href="/" class="pp-logo">
+        <img src="imagem/logo/tech10-logo-principal-pulso-hibrido.svg" alt="Tech10" height="36">
+      </a>
 
-    <div class="pp-header-right">
-      <a href="/" class="pp-back-link">
-        <i class="fas fa-arrow-left"></i> Início
-      </a>
-      <a href="/portal" class="pp-back-link" data-tenant-portal-link>
-        <i class="fas fa-receipt"></i> Portal
-      </a>
-      <a
-        href="/#contato"
-        class="pp-support-pill"
-        data-tenant-support-link
-        data-support-primary="true"
-        data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
-      >
-        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-        <span>
-          <small data-catalog-support-eyebrow>Precisa de ajuda?</small>
-          Falar com a Tech10
-        </span>
-      </a>
-      <a href="/carrinho" class="pp-selection-pill" aria-label="Abrir carrinho" data-catalog-cart-link>
-        <span class="pp-selection-pill__icon">
-          <i class="fas fa-shopping-cart" aria-hidden="true" data-catalog-cart-icon></i>
-        </span>
-        <span class="pp-selection-pill__copy">
-          <span class="pp-selection-pill__eyebrow" data-catalog-cart-eyebrow>Carrinho</span>
-          <span class="pp-selection-pill__title" data-catalog-cart-title>Ver carrinho</span>
-        </span>
-        <span class="pp-cart-count" id="pp-cart-count" data-cart-count>0</span>
-      </a>
-      <div class="pp-search-wrap">
-        <i class="fas fa-search pp-search-icon"></i>
-        <input type="text" class="pp-search-input" id="pp-search" placeholder="Buscar por produto, marca ou SKU...">
-        <button class="pp-search-clear" id="pp-search-clear" type="button" aria-label="Limpar busca">
-          <i class="fas fa-xmark" aria-hidden="true"></i>
-        </button>
+      <div class="pp-header-right">
+        <a href="/" class="pp-back-link">
+          <i class="fas fa-arrow-left"></i> Início
+        </a>
+        <a href="/portal" class="pp-back-link" data-tenant-portal-link>
+          <i class="fas fa-receipt"></i> Portal
+        </a>
+        <a
+          href="/#contato"
+          class="pp-support-pill"
+          data-tenant-support-link
+          data-support-primary="true"
+          data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
+        >
+          <i class="fab fa-whatsapp" aria-hidden="true"></i>
+          <span>
+            <small data-catalog-support-eyebrow>Precisa de ajuda?</small>
+            Falar com a Tech10
+          </span>
+        </a>
+        <a href="/carrinho" class="pp-selection-pill" aria-label="Abrir carrinho" data-catalog-cart-link>
+          <span class="pp-selection-pill__icon">
+            <i class="fas fa-shopping-cart" aria-hidden="true" data-catalog-cart-icon></i>
+          </span>
+          <span class="pp-selection-pill__copy">
+            <span class="pp-selection-pill__eyebrow" data-catalog-cart-eyebrow>Carrinho</span>
+            <span class="pp-selection-pill__title" data-catalog-cart-title>Ver carrinho</span>
+          </span>
+          <span class="pp-cart-count" id="pp-cart-count" data-cart-count>0</span>
+        </a>
+        <div class="pp-search-wrap">
+          <i class="fas fa-search pp-search-icon"></i>
+          <input type="text" class="pp-search-input" id="pp-search" placeholder="Buscar por produto, marca ou SKU...">
+          <button class="pp-search-clear" id="pp-search-clear" type="button" aria-label="Limpar busca">
+            <i class="fas fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
   </header>
