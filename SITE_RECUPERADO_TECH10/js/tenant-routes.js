@@ -361,9 +361,13 @@
     const cartEnabled = capabilities.cart !== false;
     const checkoutEnabled = capabilities.checkout !== false;
     const quoteOnly = capabilities.quoteOnly === true || runtimeConfig.commerce.checkoutMode === 'quote_only';
+    const assistedCartBridge = capabilities.assistedCartBridge === true;
+    const assistedCheckoutBridge = capabilities.assistedCheckoutBridge === true;
+    const keepCartSurface = quoteOnly && assistedCartBridge;
+    const keepCheckoutSurface = quoteOnly && assistedCheckoutBridge;
     const hasPrimarySupportEntry = document.querySelector('[data-tenant-support-link][data-support-primary="true"]');
 
-    if (!cartEnabled) {
+    if (!cartEnabled && !keepCartSurface) {
       document.querySelectorAll('.cart-count, .pp-cart-count').forEach(hideElement);
       document.querySelectorAll('.pp-cart-btn').forEach(function (element) {
         if (hasPrimarySupportEntry) {
@@ -414,7 +418,7 @@
       });
     }
 
-    if (!checkoutEnabled) {
+    if (!checkoutEnabled && !keepCheckoutSurface) {
       document.querySelectorAll('a[href="/checkout"], a[href="/checkout.html"]').forEach(function (link) {
         retargetLinkToSupport(
           link,
@@ -424,7 +428,7 @@
       });
     }
 
-    if (quoteOnly) {
+    if (quoteOnly && !keepCartSurface && !keepCheckoutSurface) {
       renderQuoteOnlyPage(runtimeConfig);
     }
   }
