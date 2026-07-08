@@ -920,6 +920,10 @@
         window.loadCart = loadCart;
 
         document.addEventListener('DOMContentLoaded', async function() {
+            if (document.body) {
+                document.body.classList.add('loaded');
+            }
+
             runtimeConfigCache = await fetchRuntimeConfig();
             loadCart();
             if (isQuoteOnlyRuntime(runtimeConfigCache)) {

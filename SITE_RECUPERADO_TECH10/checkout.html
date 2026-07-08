@@ -1041,6 +1041,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
+            if (document.body) {
+                document.body.classList.add('loaded');
+            }
+
             runtimeConfigCache = await fetchRuntimeConfig();
             const checkedShipping = document.querySelector('input[name="shipping_method"]:checked');
             selectShipping(checkedShipping ? checkedShipping.value : 'standard', 0, true);

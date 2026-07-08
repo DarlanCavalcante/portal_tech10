@@ -630,6 +630,10 @@
 
         // Carregar ao iniciar
         document.addEventListener('DOMContentLoaded', async () => {
+            if (document.body) {
+                document.body.classList.add('loaded');
+            }
+
             const runtimeConfig = await fetchRuntimeConfig();
             if (isQuoteOnlyRuntime(runtimeConfig)) {
                 renderQuoteOnlyState(runtimeConfig);

@@ -90,6 +90,10 @@
   // Inicialização
   // ─────────────────────────────────────────────────────────────────────────
   function init() {
+    if (document.body) {
+      document.body.classList.add('loaded');
+    }
+
     // Ler parâmetro de URL: ?category=handle
     var params = new URLSearchParams(window.location.search);
     var initCat = params.get('category') || 'all';
