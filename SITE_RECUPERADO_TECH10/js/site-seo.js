@@ -34,7 +34,7 @@
       aliases: ['/loja', '/produtos.html'],
       canonical: '/loja',
       title: 'Loja de Informática em Santa Maria/RS | Tech10 Informática e Tecnologia',
-      description: 'Loja de informática em Santa Maria/RS com acessórios, periféricos, cabos, itens de conectividade e atendimento assistido da Tech10 para escolher e comprar com segurança.',
+      description: 'Loja de informática em Santa Maria/RS com acessórios, periféricos, cabos, itens de conectividade, carrinho e checkout Pix direto da Tech10, com suporte humano quando necessário.',
       keywords: 'loja de informática santa maria, acessórios para celular santa maria, periféricos santa maria, cabos santa maria',
       kind: 'website',
       breadcrumb: 'Loja',

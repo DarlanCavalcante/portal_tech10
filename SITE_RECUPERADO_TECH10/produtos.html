@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loja de Informática em Santa Maria/RS | Tech10 Informática e Tecnologia</title>
-  <meta name="description" content="Loja de informática em Santa Maria/RS com acessórios, cabos, periféricos e atendimento assistido da Tech10 para escolher o produto certo e fechar com segurança.">
+  <meta name="description" content="Loja de informática em Santa Maria/RS com acessórios, cabos, periféricos, carrinho e checkout Pix direto da Tech10, com suporte humano quando você precisar de ajuda.">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/products-medusa.css">
@@ -1390,17 +1390,17 @@
       >
         <i class="fab fa-whatsapp" aria-hidden="true"></i>
         <span>
-          <small>Compra assistida</small>
+          <small data-catalog-support-eyebrow>Precisa de ajuda?</small>
           Falar com a Tech10
         </span>
       </a>
-      <a href="/carrinho" class="pp-selection-pill" aria-label="Abrir minha seleção assistida">
+      <a href="/carrinho" class="pp-selection-pill" aria-label="Abrir carrinho" data-catalog-cart-link>
         <span class="pp-selection-pill__icon">
-          <i class="fas fa-list-check" aria-hidden="true"></i>
+          <i class="fas fa-shopping-cart" aria-hidden="true" data-catalog-cart-icon></i>
         </span>
         <span class="pp-selection-pill__copy">
-          <span class="pp-selection-pill__eyebrow">Seleção assistida</span>
-          <span class="pp-selection-pill__title">Minha seleção</span>
+          <span class="pp-selection-pill__eyebrow" data-catalog-cart-eyebrow>Carrinho</span>
+          <span class="pp-selection-pill__title" data-catalog-cart-title>Ver carrinho</span>
         </span>
         <span class="pp-cart-count" id="pp-cart-count" data-cart-count>0</span>
       </a>
@@ -1470,7 +1470,7 @@
           <p class="pp-store-hero__desc">Explore os produtos com estoque público e, se precisar, fale com a Tech10 para confirmar compatibilidade e disponibilidade.</p>
           <div class="pp-store-hero__pills">
             <span class="pp-store-hero__pill"><i class="fas fa-box-open" aria-hidden="true"></i> Estoque público</span>
-            <span class="pp-store-hero__pill"><i class="fab fa-whatsapp" aria-hidden="true"></i> Seleção assistida</span>
+            <span class="pp-store-hero__pill"><i class="fas fa-bolt" aria-hidden="true"></i> <span data-catalog-hero-mode-pill>Carrinho e Pix direto</span></span>
           </div>
           <div class="pp-store-hero__actions">
             <a
@@ -1482,9 +1482,9 @@
               <i class="fab fa-whatsapp" aria-hidden="true"></i>
               Falar com a Tech10
             </a>
-            <a href="/carrinho" class="pp-store-hero__action pp-store-hero__action--secondary">
-              <i class="fas fa-list-check" aria-hidden="true"></i>
-              Abrir minha seleção
+            <a href="/carrinho" class="pp-store-hero__action pp-store-hero__action--secondary" data-catalog-hero-cart-link>
+              <i class="fas fa-shopping-cart" aria-hidden="true" data-catalog-hero-cart-icon></i>
+              <span data-catalog-hero-cart-label>Abrir carrinho</span>
             </a>
           </div>
         </div>
@@ -1512,10 +1512,10 @@
         <div class="pp-curation-panel__copy">
           <span class="pp-curation-panel__eyebrow" data-pp-curation-eyebrow>Destaques Tech10</span>
           <h3 class="pp-curation-panel__title" data-pp-curation-title>Vitrine editorial baseada no estoque público da Tech10.</h3>
-          <p class="pp-curation-panel__desc" data-pp-curation-desc>Carregando a leitura comercial da vitrine para destacar melhor os produtos e a seleção assistida.</p>
+          <p class="pp-curation-panel__desc" data-pp-curation-desc>Carregando a leitura comercial da vitrine para destacar melhor os produtos, o carrinho e o checkout direto.</p>
         </div>
         <div class="pp-curation-panel__chips" data-pp-curation-chips>
-          <span class="pp-curation-chip">Seleção assistida</span>
+          <span class="pp-curation-chip">Checkout direto</span>
         </div>
       </div>
 
@@ -1526,8 +1526,8 @@
           </span>
           <div>
             <span class="pp-quote-banner__eyebrow" data-pp-quote-eyebrow>Próximo passo</span>
-            <strong data-pp-quote-title>Feche com atendimento assistido da Tech10</strong>
-            <p data-pp-quote-desc>Escolha o item na vitrine e confirme pelo WhatsApp para disponibilidade, orientação técnica e fechamento seguro. Se já tem O.S., acompanhe tudo pelo portal.</p>
+            <strong data-pp-quote-title>Finalize com Pix direto da Tech10</strong>
+            <p data-pp-quote-desc>Escolha o item na vitrine, siga para o carrinho e conclua o checkout com Pix. Se tiver dúvida de compatibilidade, a Tech10 continua disponível no WhatsApp.</p>
           </div>
         </div>
         <div class="pp-quote-banner-actions">
@@ -1538,11 +1538,11 @@
             data-support-message="Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto."
           >
             <i class="fab fa-whatsapp" aria-hidden="true"></i>
-            <span data-pp-quote-primary-label>Falar com a Tech10</span>
+            <span data-pp-quote-primary-label>Tirar dúvida antes de pagar</span>
           </a>
-          <a href="/carrinho" class="pp-quote-banner-action secondary">
-            <i class="fas fa-list-check" aria-hidden="true"></i>
-            Ver minha seleção
+          <a href="/carrinho" class="pp-quote-banner-action secondary" data-catalog-quote-cart-link>
+            <i class="fas fa-shopping-cart" aria-hidden="true" data-catalog-quote-cart-icon></i>
+            <span data-catalog-quote-cart-label>Ver carrinho</span>
           </a>
         </div>
       </div>

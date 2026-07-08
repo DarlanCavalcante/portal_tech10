@@ -43,6 +43,69 @@
       || capabilities.cart === false;
   }
 
+  function applyCatalogModePresentation() {
+    if (!global.document) return;
+
+    var quoteOnly = isQuoteOnlyCatalogMode();
+    var descriptionNode = global.document.querySelector('meta[name="description"]');
+    var supportEyebrow = global.document.querySelector('[data-catalog-support-eyebrow]');
+    var cartLink = global.document.querySelector('[data-catalog-cart-link]');
+    var cartIcon = global.document.querySelector('[data-catalog-cart-icon]');
+    var cartEyebrow = global.document.querySelector('[data-catalog-cart-eyebrow]');
+    var cartTitle = global.document.querySelector('[data-catalog-cart-title]');
+    var heroModePill = global.document.querySelector('[data-catalog-hero-mode-pill]');
+    var heroCartIcon = global.document.querySelector('[data-catalog-hero-cart-icon]');
+    var heroCartLabel = global.document.querySelector('[data-catalog-hero-cart-label]');
+    var quoteCartIcon = global.document.querySelector('[data-catalog-quote-cart-icon]');
+    var quoteCartLabel = global.document.querySelector('[data-catalog-quote-cart-label]');
+
+    if (descriptionNode) {
+      descriptionNode.setAttribute('content', quoteOnly
+        ? 'Loja de informática em Santa Maria/RS com acessórios, cabos, periféricos e atendimento assistido da Tech10 para escolher o produto certo e fechar com segurança.'
+        : 'Loja de informática em Santa Maria/RS com acessórios, cabos, periféricos, carrinho e checkout Pix direto da Tech10, com suporte humano quando você precisar de ajuda.');
+    }
+
+    if (supportEyebrow) {
+      supportEyebrow.textContent = quoteOnly ? 'Compra assistida' : 'Precisa de ajuda?';
+    }
+
+    if (cartLink) {
+      cartLink.setAttribute('aria-label', quoteOnly ? 'Abrir minha seleção assistida' : 'Abrir carrinho');
+    }
+
+    if (cartIcon) {
+      cartIcon.className = quoteOnly ? 'fas fa-list-check' : 'fas fa-shopping-cart';
+    }
+
+    if (cartEyebrow) {
+      cartEyebrow.textContent = quoteOnly ? 'Seleção assistida' : 'Carrinho';
+    }
+
+    if (cartTitle) {
+      cartTitle.textContent = quoteOnly ? 'Minha seleção' : 'Ver carrinho';
+    }
+
+    if (heroModePill) {
+      heroModePill.textContent = quoteOnly ? 'Seleção assistida' : 'Carrinho e Pix direto';
+    }
+
+    if (heroCartIcon) {
+      heroCartIcon.className = quoteOnly ? 'fas fa-list-check' : 'fas fa-shopping-cart';
+    }
+
+    if (heroCartLabel) {
+      heroCartLabel.textContent = quoteOnly ? 'Abrir minha seleção' : 'Abrir carrinho';
+    }
+
+    if (quoteCartIcon) {
+      quoteCartIcon.className = quoteOnly ? 'fas fa-list-check' : 'fas fa-shopping-cart';
+    }
+
+    if (quoteCartLabel) {
+      quoteCartLabel.textContent = quoteOnly ? 'Ver minha seleção' : 'Ver carrinho';
+    }
+  }
+
   function getCatalogButtonLabel(actionMode) {
     if (actionMode === 'assisted') {
       return '<i class="fas fa-list-check"></i> Adicionar à seleção';
@@ -1181,6 +1244,7 @@
     if (adapter && adapter.getRuntimeConfig) {
       global.__tech10_runtime_config = await adapter.getRuntimeConfig();
     }
+    applyCatalogModePresentation();
     if (adapter && adapter.getProducts) {
       products = await adapter.getProducts({ limit: limit, offset: offset, category_id: category, q: search });
     } else {
@@ -1224,6 +1288,7 @@
   function renderProducts(products, containerId) {
     var container = document.getElementById(containerId || 'produtosGrid');
     if (!container) return;
+    applyCatalogModePresentation();
     var isHomeCatalogGrid = (containerId || 'produtosGrid') === 'produtosGrid'
       && !!(global.document && global.document.querySelector('[data-home-catalog-featured]'));
     var renderList = isHomeCatalogGrid && typeof global.getTech10EditorialCatalogCollections === 'function'
