@@ -68,7 +68,7 @@
       adminApiBasePath: '/api',
       healthPath: '/api/health',
       catalogSource: 'erp_stock',
-      checkoutMode: 'quote_only',
+      checkoutMode: 'store_backend',
     },
     portal: {
       entryPath: '/portal',

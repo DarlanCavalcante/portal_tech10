@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedido Confirmado - Tech10</title>
+    <title>Acompanhar pagamento - Tech10</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 28%),
+                linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,7 +25,8 @@
             padding: 40px;
             max-width: 800px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(191, 219, 254, 0.9);
         }
         .success-icon {
             width: 100px;
@@ -332,11 +335,16 @@
 
     <script src="js/tenant-config.js"></script>
     <script src="js/tenant-routes.js"></script>
+    <script src="js/api-config.js"></script>
+    <script src="js/api-adapter.js"></script>
     <script>
         const RUNTIME_CONFIG_PATH = '/api/runtime-config';
+        const PENDING_CHECKOUT_STORAGE_KEY = 'tech10_pending_store_checkout';
+        const AUTO_REFRESH_MS = 8000;
+        let autoRefreshTimer = null;
 
         function formatPrice(amount) {
-            return 'R$ ' + (amount / 100).toFixed(2).replace('.', ',');
+            return 'R$ ' + (Number(amount || 0) / 100).toFixed(2).replace('.', ',');
         }
 
         function escapeHtml(value) {
@@ -371,13 +379,13 @@
                 console.warn('[PEDIDO-CONFIRMADO] Não foi possível carregar runtime config:', err);
                 return {
                     commerce: {
-                        checkoutMode: 'quote_only',
+                        checkoutMode: 'store_backend',
                         capabilities: {
-                            cart: false,
-                            checkout: false,
-                            quoteOnly: true,
-                            assistedCartBridge: true,
-                            assistedCheckoutBridge: true
+                            cart: true,
+                            checkout: true,
+                            quoteOnly: false,
+                            assistedCartBridge: false,
+                            assistedCheckoutBridge: false
                         }
                     },
                     support: {
@@ -401,13 +409,18 @@
             const support = (runtimeConfig && runtimeConfig.support) || {};
             const company = (window.TenantRoutes && window.TenantRoutes.company) || {};
             const whatsapp = String(company.whatsapp || support.whatsapp || '55974001960').replace(/\D/g, '');
-            const text = encodeURIComponent(message || 'Olá! Vim da loja da Tech10 e quero confirmar um pedido por atendimento assistido.');
+            const text = encodeURIComponent(message || 'Olá! Vim da loja da Tech10 e preciso de ajuda com meu pedido.');
             return 'https://wa.me/' + whatsapp + '?text=' + text;
         }
 
         function formatAddress(address) {
+            if (!address) return 'Retirada na loja';
             if (typeof address === 'string') {
-                address = JSON.parse(address);
+                try {
+                    address = JSON.parse(address);
+                } catch (error) {
+                    return address;
+                }
             }
             const parts = [
                 address.street,
@@ -416,9 +429,18 @@
                 address.neighborhood,
                 address.city,
                 address.state,
-                address.zip_code?.replace(/(\d{5})(\d{3})/, '$1-$2')
+                address.zip_code && String(address.zip_code).replace(/(\d{5})(\d{3})/, '$1-$2')
             ].filter(Boolean);
             return parts.join(', ');
+        }
+
+        function humanizeFinancialStatus(status) {
+            const map = {
+                PENDING: 'Aguardando pagamento',
+                PAID: 'Pago',
+                CANCELED: 'Cancelado'
+            };
+            return map[status] || status || '-';
         }
 
         function getPaymentMethodText(method) {
@@ -439,6 +461,36 @@
             } catch (e) {
                 console.error('Erro ao parsear last_order:', e);
                 return null;
+            }
+        }
+
+        function readPendingStoreCheckout() {
+            try {
+                const rawValue = localStorage.getItem(PENDING_CHECKOUT_STORAGE_KEY);
+                if (!rawValue) return null;
+                const parsedValue = JSON.parse(rawValue);
+                return parsedValue && typeof parsedValue === 'object' ? parsedValue : null;
+            } catch (error) {
+                console.warn('[PEDIDO-CONFIRMADO] Não foi possível ler o checkout pendente salvo:', error);
+                return null;
+            }
+        }
+
+        function persistPendingStoreCheckout(payload) {
+            if (!payload) {
+                localStorage.removeItem(PENDING_CHECKOUT_STORAGE_KEY);
+                return;
+            }
+            localStorage.setItem(PENDING_CHECKOUT_STORAGE_KEY, JSON.stringify(payload));
+        }
+
+        function clearDirectCheckoutState() {
+            persistPendingStoreCheckout(null);
+            if (window.API_CONFIG && typeof window.API_CONFIG.persistStoredCartId === 'function') {
+                window.API_CONFIG.persistStoredCartId(null);
+            } else {
+                localStorage.removeItem('tech10_storefront_cart_id');
+                localStorage.removeItem('vivacommerce_cart_id');
             }
         }
 
@@ -492,63 +544,20 @@
                     <div class="info-grid">
                         <div class="info-section">
                             <h3><i class="fas fa-user"></i> Dados enviados</h3>
-                            <div class="info-item">
-                                <strong>Nome:</strong>
-                                <span>${order ? (order.customer_name || '-') : 'Será confirmado com você no atendimento.'}</span>
-                            </div>
-                            <div class="info-item">
-                                <strong>Email:</strong>
-                                <span>${order ? (order.customer_email || '-') : 'Será confirmado com você no atendimento.'}</span>
-                            </div>
-                            <div class="info-item">
-                                <strong>Telefone:</strong>
-                                <span>${order ? (order.customer_phone || '-') : 'Será confirmado com você no atendimento.'}</span>
-                            </div>
+                            <div class="info-item"><strong>Nome:</strong><span>${order ? (order.customer_name || '-') : 'Será confirmado com você no atendimento.'}</span></div>
+                            <div class="info-item"><strong>Email:</strong><span>${order ? (order.customer_email || '-') : 'Será confirmado com você no atendimento.'}</span></div>
+                            <div class="info-item"><strong>Telefone:</strong><span>${order ? (order.customer_phone || '-') : 'Será confirmado com você no atendimento.'}</span></div>
                         </div>
                         <div class="info-section">
                             <h3><i class="fas fa-truck"></i> Entrega e pagamento</h3>
-                            <div class="info-item">
-                                <strong>Entrega:</strong>
-                                <span>${shippingSummary}</span>
-                            </div>
-                            <div class="info-item">
-                                <strong>Pagamento:</strong>
-                                <span>${paymentText}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="info-grid">
-                        <div class="info-section">
-                            <h3><i class="fas fa-store"></i> Como seguir agora</h3>
-                            <div class="info-item">
-                                <span>${order ? 'Se o WhatsApp não abriu em outra aba, use o botão abaixo para continuar com a Tech10 levando essa referência e sua seleção.' : 'Escolha o produto na loja pública, confirme a necessidade pelo WhatsApp e deixe a equipe fechar estoque, entrega e pagamento com você.'}</span>
-                            </div>
-                        </div>
-                        <div class="info-section">
-                            <h3><i class="fas fa-shield-halved"></i> Motivo do atendimento</h3>
-                            <div class="info-item">
-                                <span>Assim a Tech10 garante disponibilidade real, orientação técnica e fechamento seguro enquanto o checkout da loja permanece em <strong>quote_only</strong>.</span>
-                            </div>
+                            <div class="info-item"><strong>Entrega:</strong><span>${shippingSummary}</span></div>
+                            <div class="info-item"><strong>Pagamento:</strong><span>${paymentText}</span></div>
                         </div>
                     </div>
                     ${order ? `
                         <div class="order-items">
                             <h3 style="margin-bottom: 15px; color: #1f2937;">Resumo da seleção enviada</h3>
                             <div id="assisted-order-items-list">${renderAssistedItems(order.items)}</div>
-                        </div>
-                        <div class="order-summary">
-                            <div class="summary-row">
-                                <span>Subtotal estimado:</span>
-                                <span>${formatPrice(order.subtotal || 0)}</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Entrega:</span>
-                                <span>A confirmar no atendimento</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Total final:</span>
-                                <span>A confirmar com a Tech10</span>
-                            </div>
                         </div>
                     ` : ''}
                 </div>
@@ -567,68 +576,340 @@
             container.style.display = 'block';
         }
 
-        // Carregar dados do pedido
-        function loadOrder(runtimeConfig) {
-            // Tentar pegar da URL
+        function getDirectCartId() {
             const urlParams = new URLSearchParams(window.location.search);
-            const orderNumber = urlParams.get('order');
+            const cartFromUrl = urlParams.get('cart');
+            if (cartFromUrl) return cartFromUrl;
+            const pendingCheckout = readPendingStoreCheckout();
+            if (pendingCheckout && pendingCheckout.cartId) return pendingCheckout.cartId;
+            if (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function') {
+                return window.API_CONFIG.readStoredCartId();
+            }
+            return null;
+        }
 
-            // Tentar pegar do localStorage
-            let order = getStoredOrder();
-
-            if (!order && orderNumber) {
-                // Se tiver orderNumber mas não tiver order no localStorage, mostrar erro
-                showError('Pedido não encontrado. Por favor, verifique o número do pedido.');
-                return;
+        async function fetchDirectCheckoutStatus(cartId, refresh) {
+            const adapter = window.MarketplaceAdapter;
+            if (adapter && typeof adapter.getCartPaymentStatus === 'function') {
+                return await adapter.getCartPaymentStatus(cartId, refresh !== false);
             }
 
-            if (!order) {
-                showError('Pedido não encontrado. Volte à loja ou fale com a Tech10 para retomar seu fechamento.');
-                return;
+            const suffix = refresh === false ? '' : '?refresh=1';
+            const response = await fetch('/api/store/carts/' + encodeURIComponent(cartId) + '/payment-status' + suffix);
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(payload.error || 'Não foi possível consultar o pagamento deste pedido.');
+            }
+            return payload;
+        }
+
+        function getStatusPresentation(snapshot) {
+            const code = snapshot && snapshot.uiStatus && snapshot.uiStatus.code ? snapshot.uiStatus.code : 'AWAITING_PAYMENT';
+            if (code === 'PAID') {
+                return {
+                    title: 'Pagamento confirmado',
+                    subtitle: 'Recebemos o Pix deste pedido. A compra já entrou como paga na loja.',
+                    icon: 'fa-check',
+                    color: '#10b981',
+                    panelBackground: '#ecfdf5',
+                    panelBorder: '#86efac'
+                };
+            }
+            if (code === 'EXPIRED') {
+                return {
+                    title: 'Pix expirado',
+                    subtitle: 'O pedido continua aberto, mas este Pix venceu. Gere um novo código para seguir.',
+                    icon: 'fa-clock',
+                    color: '#d97706',
+                    panelBackground: '#fff7ed',
+                    panelBorder: '#fdba74'
+                };
+            }
+            if (code === 'FAILED') {
+                return {
+                    title: 'Falha no pagamento',
+                    subtitle: 'O pedido ainda não foi concluído. Gere um novo Pix ou fale com a Tech10 para seguir.',
+                    icon: 'fa-triangle-exclamation',
+                    color: '#dc2626',
+                    panelBackground: '#fef2f2',
+                    panelBorder: '#fca5a5'
+                };
+            }
+            if (code === 'CANCELLED') {
+                return {
+                    title: 'Compra cancelada',
+                    subtitle: 'Este pedido pendente foi cancelado e não vai mais gerar cobrança.',
+                    icon: 'fa-ban',
+                    color: '#6b7280',
+                    panelBackground: '#f8fafc',
+                    panelBorder: '#cbd5e1'
+                };
+            }
+            return {
+                title: 'Aguardando pagamento',
+                subtitle: 'Seu pedido já foi criado. Pague o Pix abaixo para confirmar a compra.',
+                icon: 'fa-qrcode',
+                color: '#2563eb',
+                panelBackground: '#eff6ff',
+                panelBorder: '#93c5fd'
+            };
+        }
+
+        function buildDirectItems(items) {
+            if (!Array.isArray(items) || items.length === 0) {
+                return '<div class="info-item"><span>Nenhum item encontrado neste pedido.</span></div>';
             }
 
-            // Renderizar dados do pedido
-            document.getElementById('order-number').textContent = order.order_number;
-            document.getElementById('customer-name').textContent = order.customer_name;
-            document.getElementById('customer-email').textContent = order.customer_email;
-            document.getElementById('customer-phone').textContent = order.customer_phone;
-            document.getElementById('shipping-address').textContent = formatAddress(order.shipping_address);
-            document.getElementById('subtotal').textContent = formatPrice(order.subtotal);
-            document.getElementById('shipping-cost').textContent = formatPrice(order.shipping_cost || 0);
-            document.getElementById('total').textContent = formatPrice(order.total);
-            document.getElementById('payment-method').textContent = getPaymentMethodText(order.payment_method);
+            return items.map(item => `
+                <div class="order-item">
+                    <img src="${item.thumbnail || ''}"
+                         alt="${escapeHtml(item.title || 'Produto')}"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect fill=%22%23e5e7eb%22 width=%2280%22 height=%2280%22/%3E%3C/svg%3E'">
+                    <div class="order-item-info">
+                        <h4>${escapeHtml(item.title || 'Produto')}</h4>
+                        <p>Quantidade: ${item.quantity || 1} x ${formatPrice(item.unit_price || 0)}</p>
+                        ${renderItemContextHtml({
+                            brand: item.metadata && item.metadata.brand,
+                            sku: item.metadata && item.metadata.sku
+                        })}
+                    </div>
+                    <div class="order-item-price">${formatPrice(item.subtotal || 0)}</div>
+                </div>
+            `).join('');
+        }
 
-            // Renderizar itens
-            if (order.items && order.items.length > 0) {
-                const itemsHtml = order.items.map(item => `
-                    <div class="order-item">
-                        <img src="${item.product_image || ''}" 
-                             alt="${item.product_name}"
-                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22%3E%3Crect fill=%22%23e5e7eb%22 width=%2260%22 height=%2260%22/%3E%3C/svg%3E'">
-                        <div class="order-item-info">
-                            <h4>${item.product_name}</h4>
-                            <p>Quantidade: ${item.quantity} x ${formatPrice(item.unit_price)}</p>
+        function buildDirectPaymentPanel(snapshot, runtimeConfig) {
+            const code = snapshot && snapshot.uiStatus && snapshot.uiStatus.code ? snapshot.uiStatus.code : 'AWAITING_PAYMENT';
+            const pix = snapshot && snapshot.pix ? snapshot.pix : null;
+            const canRegenerate = code === 'EXPIRED' || code === 'FAILED';
+            const canCancel = code === 'AWAITING_PAYMENT' || code === 'EXPIRED' || code === 'FAILED';
+            const supportUrl = buildSupportUrl(runtimeConfig, 'Olá! Vim da loja da Tech10 e preciso de ajuda com meu pedido pendente.');
+
+            return `
+                <div class="payment-info" style="background:${code === 'PAID' ? '#ecfdf5' : '#eff6ff'};border-left-color:${code === 'PAID' ? '#10b981' : '#2563eb'};">
+                    <h3><i class="fas ${code === 'PAID' ? 'fa-circle-check' : 'fa-qrcode'}"></i> Pagamento via Pix</h3>
+                    <p>${code === 'PAID'
+                        ? 'O Pix foi confirmado e o pedido já está pago.'
+                        : 'Use o QR Code ou o código Pix abaixo. O pedido só entra como pago depois da confirmação automática do Mercado Pago.'}</p>
+                    ${pix && pix.qrCodeBase64 && code !== 'PAID' ? `
+                        <div style="display:flex;justify-content:center;margin:18px 0;">
+                            <img src="data:image/png;base64,${pix.qrCodeBase64}" alt="QR Code Pix" style="width:min(100%,280px);background:#fff;padding:12px;border-radius:16px;border:1px solid #dbeafe;">
                         </div>
-                        <div class="order-item-price">
-                            ${formatPrice(item.subtotal)}
+                    ` : ''}
+                    ${pix && pix.copyPaste && code !== 'PAID' ? `
+                        <div style="margin-top:16px;">
+                            <strong style="display:block;margin-bottom:8px;color:#1f2937;">Copia e cola</strong>
+                            <textarea id="pix-copy-paste" readonly style="width:100%;min-height:90px;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:13px;color:#0f172a;">${pix.copyPaste}</textarea>
+                            <button type="button" id="copy-pix-button" class="btn btn-secondary" style="margin-top:12px;flex:unset;">
+                                <i class="fas fa-copy"></i> Copiar código Pix
+                            </button>
+                        </div>
+                    ` : ''}
+                    ${pix && pix.ticketUrl && code !== 'PAID' ? `
+                        <div style="margin-top:14px;">
+                            <a href="${pix.ticketUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="flex:unset;">
+                                <i class="fas fa-arrow-up-right-from-square"></i> Abrir cobrança do Mercado Pago
+                            </a>
+                        </div>
+                    ` : ''}
+                    ${pix && pix.expiresAt && code !== 'PAID' ? `
+                        <p style="margin-top:16px;"><strong>Validade:</strong> ${new Date(pix.expiresAt).toLocaleString('pt-BR')}</p>
+                    ` : ''}
+                </div>
+                <div class="actions">
+                    <button type="button" id="refresh-payment-status" class="btn btn-primary">
+                        <i class="fas fa-rotate-right"></i> Atualizar status
+                    </button>
+                    ${canRegenerate ? `
+                        <button type="button" id="regenerate-pix" class="btn btn-secondary">
+                            <i class="fas fa-qrcode"></i> Gerar novo Pix
+                        </button>
+                    ` : ''}
+                    ${canCancel ? `
+                        <button type="button" id="cancel-pending-order" class="btn btn-secondary">
+                            <i class="fas fa-ban"></i> Cancelar compra pendente
+                        </button>
+                    ` : ''}
+                    <a href="${supportUrl}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-whatsapp"></i> Falar com a Tech10
+                    </a>
+                    <a href="/loja" class="btn btn-secondary">
+                        <i class="fas fa-store"></i> Voltar para a loja
+                    </a>
+                </div>
+            `;
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshTimer) {
+                clearTimeout(autoRefreshTimer);
+                autoRefreshTimer = null;
+            }
+        }
+
+        function scheduleAutoRefresh(cartId) {
+            stopAutoRefresh();
+            autoRefreshTimer = window.setTimeout(function() {
+                refreshDirectCheckoutState(cartId, true).catch(function(error) {
+                    console.warn('[PEDIDO-CONFIRMADO] Falha no auto-refresh do pagamento:', error);
+                });
+            }, AUTO_REFRESH_MS);
+        }
+
+        function bindDirectActions(cartId, runtimeConfig) {
+            const adapter = window.MarketplaceAdapter;
+            const copyButton = document.getElementById('copy-pix-button');
+            const refreshButton = document.getElementById('refresh-payment-status');
+            const regenerateButton = document.getElementById('regenerate-pix');
+            const cancelButton = document.getElementById('cancel-pending-order');
+
+            if (copyButton) {
+                copyButton.addEventListener('click', async function() {
+                    const input = document.getElementById('pix-copy-paste');
+                    const value = input ? input.value : '';
+                    if (!value) return;
+                    try {
+                        await navigator.clipboard.writeText(value);
+                        copyButton.innerHTML = '<i class="fas fa-check"></i> Código Pix copiado';
+                    } catch (error) {
+                        console.warn('[PEDIDO-CONFIRMADO] Não foi possível copiar o código Pix:', error);
+                    }
+                });
+            }
+
+            if (refreshButton) {
+                refreshButton.addEventListener('click', function() {
+                    refreshDirectCheckoutState(cartId, true).catch(function(error) {
+                        showError(error.message || 'Não foi possível atualizar o status do pagamento.');
+                    });
+                });
+            }
+
+            if (regenerateButton) {
+                regenerateButton.addEventListener('click', async function() {
+                    regenerateButton.disabled = true;
+                    regenerateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando novo Pix...';
+                    try {
+                        if (adapter && typeof adapter.regenerateCartPix === 'function') {
+                            await adapter.regenerateCartPix(cartId);
+                        } else {
+                            const response = await fetch('/api/store/carts/' + encodeURIComponent(cartId) + '/mercadopago-pix/regenerate', { method: 'POST' });
+                            const payload = await response.json().catch(() => ({}));
+                            if (!response.ok) throw new Error(payload.error || 'Não foi possível gerar um novo Pix.');
+                        }
+                        await refreshDirectCheckoutState(cartId, false);
+                    } catch (error) {
+                        showError(error.message || 'Não foi possível gerar um novo Pix agora.');
+                    }
+                });
+            }
+
+            if (cancelButton) {
+                cancelButton.addEventListener('click', async function() {
+                    cancelButton.disabled = true;
+                    cancelButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelando...';
+                    try {
+                        if (adapter && typeof adapter.cancelPendingPayment === 'function') {
+                            await adapter.cancelPendingPayment(cartId);
+                        } else {
+                            const response = await fetch('/api/store/carts/' + encodeURIComponent(cartId) + '/cancel-pending-payment', { method: 'POST' });
+                            const payload = await response.json().catch(() => ({}));
+                            if (!response.ok) throw new Error(payload.error || 'Não foi possível cancelar o pedido.');
+                        }
+                        clearDirectCheckoutState();
+                        await refreshDirectCheckoutState(cartId, false);
+                    } catch (error) {
+                        showError(error.message || 'Não foi possível cancelar a compra pendente.');
+                    }
+                });
+            }
+        }
+
+        function renderDirectCheckoutState(snapshot, runtimeConfig) {
+            const presentation = getStatusPresentation(snapshot);
+            const cart = snapshot.cart || {};
+            const customer = cart.customer || {};
+            const shipping = cart.shipping || {};
+            const sale = snapshot.sale || {};
+            const financialTransaction = snapshot.financialTransaction || {};
+            const orderNumber = sale.number || sale.id || cart.sale_id || cart.id;
+
+            if ((snapshot.uiStatus && snapshot.uiStatus.code === 'PAID') || (snapshot.uiStatus && snapshot.uiStatus.code === 'CANCELLED')) {
+                clearDirectCheckoutState();
+            } else {
+                persistPendingStoreCheckout({
+                    cartId: cart.id,
+                    saleId: sale.id || null,
+                    status: snapshot.uiStatus && snapshot.uiStatus.code ? snapshot.uiStatus.code : 'AWAITING_PAYMENT',
+                    updatedAt: new Date().toISOString()
+                });
+            }
+
+            document.title = presentation.title + ' - Tech10';
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+
+            const container = document.getElementById('confirmation-content');
+            container.innerHTML = `
+                <div class="success-icon" style="background:${presentation.color};">
+                    <i class="fas ${presentation.icon}"></i>
+                </div>
+                <h1>${presentation.title}</h1>
+                <p class="subtitle">${presentation.subtitle}</p>
+                <div class="order-info" style="background:${presentation.panelBackground};border:1px solid ${presentation.panelBorder};">
+                    <div class="order-number">
+                        <i class="fas fa-receipt"></i> Pedido #${escapeHtml(orderNumber)}
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-section">
+                            <h3><i class="fas fa-user"></i> Dados do pedido</h3>
+                            <div class="info-item"><strong>Nome:</strong><span>${escapeHtml(customer.name || customer.trade_name || '-')}</span></div>
+                            <div class="info-item"><strong>Email:</strong><span>${escapeHtml(customer.email || '-')}</span></div>
+                            <div class="info-item"><strong>Telefone:</strong><span>${escapeHtml(customer.phone || '-')}</span></div>
+                        </div>
+                        <div class="info-section">
+                            <h3><i class="fas fa-truck"></i> Entrega ou retirada</h3>
+                            <div class="info-item"><strong>Modalidade:</strong><span>${escapeHtml(shipping.label || (shipping.method === 'pickup' ? 'Retirada na loja' : 'Entrega local'))}</span></div>
+                            <div class="info-item"><strong>Destino:</strong><span>${escapeHtml(shipping.method === 'pickup' ? 'Retirada com a equipe da Tech10.' : formatAddress(shipping.address || shipping))}</span></div>
+                            <div class="info-item"><strong>Financeiro:</strong><span>${escapeHtml(humanizeFinancialStatus(financialTransaction.status))}</span></div>
                         </div>
                     </div>
-                `).join('');
-                document.getElementById('order-items-list').innerHTML = itemsHtml;
-            }
+                    <div class="order-items">
+                        <h3 style="margin-bottom: 15px; color: #1f2937;">Itens do pedido</h3>
+                        <div id="order-items-list">${buildDirectItems(cart.items)}</div>
+                    </div>
+                    <div class="order-summary">
+                        <div class="summary-row"><span>Subtotal:</span><span>${formatPrice(cart.subtotal || 0)}</span></div>
+                        <div class="summary-row"><span>Entrega:</span><span>${formatPrice((cart.total || 0) - (cart.subtotal || 0))}</span></div>
+                        <div class="summary-row"><span>Total:</span><span>${formatPrice(cart.total || 0)}</span></div>
+                    </div>
+                    ${buildDirectPaymentPanel(snapshot, runtimeConfig)}
+                </div>
+            `;
+            container.style.display = 'block';
 
-            // Mostrar conteúdo
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('confirmation-content').style.display = 'block';
+            bindDirectActions(cart.id, runtimeConfig);
+
+            if (snapshot.uiStatus && snapshot.uiStatus.code === 'AWAITING_PAYMENT') {
+                scheduleAutoRefresh(cart.id);
+            } else {
+                stopAutoRefresh();
+            }
+        }
+
+        async function refreshDirectCheckoutState(cartId, refresh) {
+            const runtimeConfig = await fetchRuntimeConfig();
+            const snapshot = await fetchDirectCheckoutStatus(cartId, refresh !== false);
+            renderDirectCheckoutState(snapshot, runtimeConfig);
         }
 
         function showError(message) {
+            stopAutoRefresh();
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'block';
             document.getElementById('error-message').textContent = message;
         }
 
-        // Carregar ao iniciar
         document.addEventListener('DOMContentLoaded', async () => {
             const runtimeConfig = await fetchRuntimeConfig();
             if (isQuoteOnlyRuntime(runtimeConfig)) {
@@ -636,7 +917,17 @@
                 return;
             }
 
-            setTimeout(() => loadOrder(runtimeConfig), 500); // Pequeno delay para animação
+            const cartId = getDirectCartId();
+            if (!cartId) {
+                showError('Não encontramos um pedido pendente para acompanhar. Volte à loja e gere um novo Pix.');
+                return;
+            }
+
+            try {
+                await refreshDirectCheckoutState(cartId, true);
+            } catch (error) {
+                showError(error.message || 'Não foi possível carregar o status deste pedido agora.');
+            }
         });
     </script>
 </body>

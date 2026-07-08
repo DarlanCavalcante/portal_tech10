@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fechamento Assistido - Tech10</title>
+    <title>Checkout Direto - Tech10</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/medusa-cart.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
@@ -328,17 +328,17 @@
 
     <div class="checkout-shell">
         <div class="checkout-hero">
-            <h1><i class="fas fa-headset"></i> Fechamento assistido</h1>
-            <p>Compartilhe seus dados para a Tech10 continuar o atendimento da sua seleção com estoque, entrega e pagamento alinhados com você.</p>
+            <h1 id="checkout-hero-title"><i class="fas fa-lock"></i> Checkout seguro</h1>
+            <p id="checkout-hero-copy">Revise seus dados, escolha entrega ou retirada e conclua seu pedido direto pela loja.</p>
             <div class="checkout-links">
                 <a href="/loja"><i class="fas fa-store"></i> Voltar para a loja</a>
                 <a href="/portal" data-tenant-portal-link><i class="fas fa-receipt"></i> Portal do cliente</a>
-                <a href="/#contato" class="support-link" data-tenant-support-link data-support-primary="true" data-support-message="Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido."><i class="fab fa-whatsapp"></i> Falar com a Tech10</a>
+                <a href="/#contato" id="checkout-support-link" class="support-link" data-tenant-support-link data-support-primary="true" data-support-message="Olá! Vim pela loja da Tech10 e preciso de ajuda para concluir meu pedido."><i class="fab fa-whatsapp"></i> Falar com a Tech10</a>
             </div>
             <div class="checkout-trust">
-                <span><i class="fas fa-comments"></i> Atendimento guiado</span>
-                <span><i class="fas fa-shield-alt"></i> Confirmação de estoque</span>
-                <span><i class="fas fa-credit-card"></i> Pagamento alinhado com a Tech10</span>
+                <span id="checkout-trust-primary"><i class="fas fa-lock"></i> Checkout direto</span>
+                <span id="checkout-trust-secondary"><i class="fas fa-shield-alt"></i> Dados protegidos</span>
+                <span id="checkout-trust-tertiary"><i class="fas fa-credit-card"></i> Pagamento informado no pedido</span>
             </div>
         </div>
 
@@ -349,7 +349,7 @@
             <div class="checkout-form">
                 <form id="checkout-form">
                     <!-- Dados do Cliente -->
-                    <h2 class="section-title">Seus dados para o atendimento</h2>
+                    <h2 id="checkout-customer-title" class="section-title">Seus dados do pedido</h2>
                     <div class="form-group">
                         <label>Nome Completo <span class="required">*</span></label>
                         <input type="text" name="customer_name" required>
@@ -420,22 +420,10 @@
                     <div class="form-group">
                         <label>Como deseja receber? <span class="required">*</span></label>
                         <div id="shipping-options" style="display: flex; flex-direction: column; gap: 15px;">
-                            <label style="display:flex;align-items:center;gap:12px;padding:14px;border:2px solid #2563eb;border-radius:8px;cursor:pointer;background:#eff6ff;">
-                                <input type="radio" name="shipping_method" value="standard" checked onchange="selectShipping('standard',0,false)">
-                                <div>
-                                    <strong>Entrega Padrão</strong>
-                                    <span style="margin-left:8px;color:#10b981;font-weight:600;">Grátis</span>
-                                    <p style="font-size:12px;color:#6b7280;margin:2px 0 0;">Combinado com o lojista</p>
-                                </div>
-                            </label>
-                            <label style="display:flex;align-items:center;gap:12px;padding:14px;border:2px solid #e5e7eb;border-radius:8px;cursor:pointer;">
-                                <input type="radio" name="shipping_method" value="pickup" onchange="selectShipping('pickup',0,true)">
-                                <div>
-                                    <strong>Retirada na Loja</strong>
-                                    <span style="margin-left:8px;color:#10b981;font-weight:600;">Grátis</span>
-                                    <p style="font-size:12px;color:#6b7280;margin:2px 0 0;">Av. Nossa Sra. Medianeira, Santa Maria/RS</p>
-                                </div>
-                            </label>
+                            <div class="loading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Carregando opções de entrega e retirada...</p>
+                            </div>
                         </div>
                     </div>
 
@@ -443,29 +431,31 @@
                     <h2 class="section-title" style="margin-top: 30px;">Preferência de pagamento</h2>
                     <div class="form-group">
                         <label>Forma de Pagamento <span class="required">*</span></label>
-                        <select name="payment_method" required>
-                            <option value="pix">PIX (Pagamento Instantâneo)</option>
-                            <option value="credit_card">Cartão de Crédito</option>
-                            <option value="debit_card">Cartão de Débito</option>
-                            <option value="boleto">Boleto Bancário</option>
-                        </select>
+                        <input type="hidden" name="payment_method" value="pix">
+                        <div style="display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border:2px solid #2563eb;border-radius:14px;background:#eff6ff;color:#1e3a8a;">
+                            <i class="fas fa-qrcode" style="font-size:20px;margin-top:2px;"></i>
+                            <div>
+                                <strong style="display:block;margin-bottom:4px;">Pix Mercado Pago</strong>
+                                <p style="margin:0;font-size:14px;color:#334155;">O pedido fica aguardando pagamento até o Pix ser confirmado. Só depois disso a compra entra como paga.</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Observações -->
                     <div class="form-group">
                         <label>Observações para a equipe (opcional)</label>
-                        <textarea name="notes" rows="3" placeholder="Alguma observação sobre sua seleção, entrega ou atendimento?"></textarea>
+                        <textarea id="checkout-notes-input" name="notes" rows="3" placeholder="Alguma observação sobre seu pedido, entrega ou retirada?"></textarea>
                     </div>
 
                     <button type="submit" class="btn-submit" id="submit-btn">
-                        <i class="fas fa-headset"></i> Enviar para atendimento
+                        <i class="fas fa-qrcode"></i> Gerar Pix do pedido
                     </button>
                 </form>
             </div>
 
             <!-- Resumo do Pedido -->
             <div class="checkout-summary">
-                <h2 class="section-title">Sua seleção</h2>
+                <h2 id="checkout-summary-title" class="section-title">Resumo do pedido</h2>
                 <div id="cart-summary">
                     <div class="loading">
                         <i class="fas fa-spinner fa-spin"></i>
@@ -487,8 +477,10 @@
             : localStorage.getItem((window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id')
                 || localStorage.getItem((window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id');
         let cart = null;
-        let selectedShippingOption = { method: 'standard', cost: 0, is_free: true, zone: null };
+        let storefrontConfig = null;
+        let selectedShippingOption = null;
         let runtimeConfigCache = null;
+        const PENDING_CHECKOUT_STORAGE_KEY = 'tech10_pending_store_checkout';
 
         async function fetchRuntimeConfig() {
             if (runtimeConfigCache) return runtimeConfigCache;
@@ -504,13 +496,13 @@
                 console.warn('[CHECKOUT] Não foi possível carregar runtime config:', err);
                 runtimeConfigCache = {
                     commerce: {
-                        checkoutMode: 'quote_only',
+                        checkoutMode: 'store_backend',
                         capabilities: {
-                            cart: false,
-                            checkout: false,
-                            quoteOnly: true,
-                            assistedCartBridge: true,
-                            assistedCheckoutBridge: true
+                            cart: true,
+                            checkout: true,
+                            quoteOnly: false,
+                            assistedCartBridge: false,
+                            assistedCheckoutBridge: false
                         }
                     }
                 };
@@ -531,12 +523,12 @@
             }
             const company = (window.TenantRoutes && window.TenantRoutes.company) || {};
             const whatsapp = company.whatsapp || '55974001960';
-            const text = encodeURIComponent(message || 'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.');
+            const text = encodeURIComponent(message || 'Olá! Vim pela loja da Tech10 e preciso de ajuda para concluir meu pedido.');
             return 'https://wa.me/' + whatsapp + '?text=' + text;
         }
 
         function buildSafeSupportDraftUrl(message) {
-            const supportMessage = message || 'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.';
+            const supportMessage = message || 'Olá! Vim pela loja da Tech10 e preciso de ajuda para concluir meu pedido.';
             const tenantRoutes = window.TenantRoutes || {};
             const company = tenantRoutes.company || {};
             const whatsapp = String(company.whatsapp || '55974001960').replace(/\D/g, '');
@@ -545,10 +537,13 @@
         }
 
         function getStoredCartId() {
-            return (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function')
+            const persistedCartId = (window.API_CONFIG && typeof window.API_CONFIG.readStoredCartId === 'function')
                 ? window.API_CONFIG.readStoredCartId()
                 : localStorage.getItem((window.API_CONFIG && window.API_CONFIG.CART_STORAGE_KEY) || 'tech10_storefront_cart_id')
                     || localStorage.getItem((window.API_CONFIG && window.API_CONFIG.LEGACY_CART_STORAGE_KEY) || 'vivacommerce_cart_id');
+            if (persistedCartId) return persistedCartId;
+            const pendingCheckout = readPendingStoreCheckout();
+            return pendingCheckout && pendingCheckout.cartId ? pendingCheckout.cartId : null;
         }
 
         function readPersistedAssistedCart() {
@@ -577,10 +572,98 @@
             }
         }
 
+        function readPendingStoreCheckout() {
+            try {
+                const rawValue = localStorage.getItem(PENDING_CHECKOUT_STORAGE_KEY);
+                if (!rawValue) return null;
+                const parsedValue = JSON.parse(rawValue);
+                return parsedValue && typeof parsedValue === 'object' ? parsedValue : null;
+            } catch (error) {
+                console.warn('[CHECKOUT] Não foi possível ler o checkout pendente salvo:', error);
+                return null;
+            }
+        }
+
+        function persistPendingStoreCheckout(payload) {
+            if (!payload) {
+                localStorage.removeItem(PENDING_CHECKOUT_STORAGE_KEY);
+                return;
+            }
+            localStorage.setItem(PENDING_CHECKOUT_STORAGE_KEY, JSON.stringify(payload));
+        }
+
         function getSubmitButtonHtml() {
             return isQuoteOnlyRuntime(runtimeConfigCache)
                 ? '<i class="fas fa-headset"></i> Enviar para atendimento'
-                : '<i class="fas fa-lock"></i> Finalizar Pedido';
+                : '<i class="fas fa-qrcode"></i> Gerar Pix do pedido';
+        }
+
+        function applyCheckoutModePresentation(config) {
+            const quoteOnly = isQuoteOnlyRuntime(config);
+            const heroTitle = document.getElementById('checkout-hero-title');
+            const heroCopy = document.getElementById('checkout-hero-copy');
+            const supportLink = document.getElementById('checkout-support-link');
+            const trustPrimary = document.getElementById('checkout-trust-primary');
+            const trustSecondary = document.getElementById('checkout-trust-secondary');
+            const trustTertiary = document.getElementById('checkout-trust-tertiary');
+            const customerTitle = document.getElementById('checkout-customer-title');
+            const summaryTitle = document.getElementById('checkout-summary-title');
+            const notesInput = document.getElementById('checkout-notes-input');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (heroTitle) {
+                heroTitle.innerHTML = quoteOnly
+                    ? '<i class="fas fa-headset"></i> Fechamento assistido'
+                    : '<i class="fas fa-qrcode"></i> Checkout direto via Pix';
+            }
+
+            if (heroCopy) {
+                heroCopy.textContent = quoteOnly
+                    ? 'Compartilhe seus dados para a Tech10 continuar o atendimento da sua seleção com estoque, entrega e pagamento alinhados com você.'
+                    : 'Revise seus dados, escolha entrega ou retirada e conclua seu pedido direto pela loja.';
+            }
+
+            if (supportLink) {
+                supportLink.innerHTML = quoteOnly
+                    ? '<i class="fab fa-whatsapp"></i> Falar com a Tech10'
+                    : '<i class="fab fa-whatsapp"></i> Precisa de ajuda?';
+            }
+
+            if (trustPrimary) {
+                trustPrimary.innerHTML = quoteOnly
+                    ? '<i class="fas fa-comments"></i> Atendimento guiado'
+                    : '<i class="fas fa-qrcode"></i> Pix no pedido';
+            }
+
+            if (trustSecondary) {
+                trustSecondary.innerHTML = quoteOnly
+                    ? '<i class="fas fa-shield-alt"></i> Confirmação de estoque'
+                    : '<i class="fas fa-shield-alt"></i> Dados protegidos';
+            }
+
+            if (trustTertiary) {
+                trustTertiary.innerHTML = quoteOnly
+                    ? '<i class="fas fa-credit-card"></i> Pagamento alinhado com a Tech10'
+                    : '<i class="fas fa-box-open"></i> Estoque só baixa após confirmação';
+            }
+
+            if (customerTitle) {
+                customerTitle.textContent = quoteOnly ? 'Seus dados para o atendimento' : 'Seus dados do pedido';
+            }
+
+            if (summaryTitle) {
+                summaryTitle.textContent = quoteOnly ? 'Sua seleção' : 'Resumo do pedido';
+            }
+
+            if (notesInput) {
+                notesInput.placeholder = quoteOnly
+                    ? 'Alguma observação sobre sua seleção, entrega ou atendimento?'
+                    : 'Alguma observação sobre seu pedido, entrega ou retirada?';
+            }
+
+            if (submitBtn) {
+                submitBtn.innerHTML = getSubmitButtonHtml();
+            }
         }
 
         function formatCurrencyForMessage(valueInMinorUnits) {
@@ -608,7 +691,7 @@
                 : readPersistedAssistedCart();
             const items = extractCartItemsForSupport(sourceCart);
             if (!items.length) {
-                return 'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.';
+                return 'Olá! Vim pela loja da Tech10 e preciso de ajuda para concluir meu pedido.';
             }
 
             const subtotal = sourceCart && sourceCart.subtotal
@@ -618,7 +701,7 @@
                 }, 0);
 
             const lines = [
-                'Olá! Vim pela loja da Tech10 e quero finalizar meu pedido com atendimento assistido.',
+                'Olá! Vim pela loja da Tech10 e preciso de ajuda para concluir meu pedido.',
                 '',
                 '*Seleção atual*'
             ];
@@ -779,6 +862,124 @@
             window.location.href = '/pedido-confirmado?order=' + encodeURIComponent(order.order_number || '');
         }
 
+        async function loadStorefrontConfig() {
+            const adapter = window.MarketplaceAdapter;
+            const storeSlug = (window.API_CONFIG && window.API_CONFIG.STORE_SLUG) || 'tech10';
+
+            if (adapter && typeof adapter.getStoreConfig === 'function') {
+                storefrontConfig = await adapter.getStoreConfig(storeSlug);
+                return storefrontConfig;
+            }
+
+            const response = await fetch(getStoreAPI() + '/lojas/' + encodeURIComponent(storeSlug) + '/config');
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(payload.error || 'Não foi possível carregar a política pública da loja.');
+            }
+            storefrontConfig = payload;
+            return storefrontConfig;
+        }
+
+        function getDeliveryPolicy() {
+            const policy = storefrontConfig && storefrontConfig.storefront && storefrontConfig.storefront.deliveryPolicy;
+            if (policy && typeof policy === 'object') {
+                return policy;
+            }
+            return {
+                enabled: true,
+                pickup: {
+                    label: 'Retirada na loja',
+                    priceCents: 0
+                },
+                zones: []
+            };
+        }
+
+        function formatMinorCurrency(amount) {
+            const value = Number(amount || 0) / 100;
+            return 'R$ ' + value.toFixed(2).replace('.', ',');
+        }
+
+        function buildShippingOptions(policy) {
+            const options = [];
+            const pickup = policy && policy.pickup ? policy.pickup : {};
+            options.push({
+                key: 'pickup',
+                method: 'pickup',
+                label: pickup.label || 'Retirada na loja',
+                cost: Number(pickup.priceCents || 0),
+                description: 'Retire o pedido com a equipe da Tech10.',
+                zoneId: null,
+                zoneLabel: null,
+                isFree: Number(pickup.priceCents || 0) <= 0
+            });
+
+            const zones = Array.isArray(policy && policy.zones) ? policy.zones : [];
+            zones.forEach(function(zone, index) {
+                options.push({
+                    key: 'delivery-' + (zone.id || index + 1),
+                    method: 'local_delivery',
+                    label: zone.label || 'Entrega local',
+                    cost: Number(zone.priceCents || 0),
+                    description: zone.maxKm
+                        ? 'Entrega local até ' + zone.maxKm + ' km.'
+                        : 'Entrega local manual da loja.',
+                    zoneId: zone.id || null,
+                    zoneLabel: zone.label || null,
+                    isFree: Number(zone.priceCents || 0) <= 0
+                });
+            });
+
+            return options;
+        }
+
+        function renderShippingOptions() {
+            const container = document.getElementById('shipping-options');
+            if (!container) return;
+
+            const options = buildShippingOptions(getDeliveryPolicy());
+            if (!options.length) {
+                container.innerHTML = '<div class="error"><p>Não foi possível carregar as opções de entrega. Fale com a Tech10 para concluir o pedido.</p></div>';
+                return;
+            }
+
+            if (!selectedShippingOption) {
+                selectedShippingOption = options[0];
+            } else {
+                const matchedOption = options.find(function(option) {
+                    return option.key === selectedShippingOption.key;
+                });
+                selectedShippingOption = matchedOption || options[0];
+            }
+
+            container.innerHTML = options.map(function(option) {
+                const isSelected = selectedShippingOption && selectedShippingOption.key === option.key;
+                return `
+                    <label style="display:flex;align-items:center;gap:12px;padding:14px;border:2px solid ${isSelected ? '#2563eb' : '#e5e7eb'};border-radius:8px;cursor:pointer;background:${isSelected ? '#eff6ff' : '#fff'};">
+                        <input type="radio" name="shipping_method" value="${option.key}" ${isSelected ? 'checked' : ''}>
+                        <div>
+                            <strong>${option.label}</strong>
+                            <span style="margin-left:8px;color:${option.isFree ? '#10b981' : '#2563eb'};font-weight:600;">${option.isFree ? 'Grátis' : formatMinorCurrency(option.cost)}</span>
+                            <p style="font-size:12px;color:#6b7280;margin:2px 0 0;">${option.description}</p>
+                        </div>
+                    </label>
+                `;
+            }).join('');
+
+            container.querySelectorAll('input[name="shipping_method"]').forEach(function(input) {
+                input.addEventListener('change', function(event) {
+                    const value = event.target && event.target.value ? String(event.target.value) : '';
+                    const nextOption = options.find(function(option) {
+                        return option.key === value;
+                    });
+                    if (nextOption) {
+                        selectShipping(nextOption);
+                        renderShippingOptions();
+                    }
+                });
+            });
+        }
+
         function toggleDeliveryAddressFields(method) {
             const addressFields = document.getElementById('delivery-address-fields');
             const pickupHelp = document.getElementById('pickup-help');
@@ -798,15 +999,15 @@
             }
         }
 
-        function selectShipping(method, cost, isFree) {
-            selectedShippingOption = { method, cost, is_free: isFree, zone: null };
-            const requiresAddress = method !== 'pickup';
+        function selectShipping(option) {
+            selectedShippingOption = option;
+            const requiresAddress = option && option.method !== 'pickup';
             ['zip_code', 'street', 'number', 'neighborhood', 'city', 'state'].forEach(function(fieldId) {
                 const input = document.getElementById(fieldId);
                 if (!input) return;
                 input.required = requiresAddress;
             });
-            toggleDeliveryAddressFields(method);
+            toggleDeliveryAddressFields(requiresAddress ? 'local_delivery' : 'pickup');
             renderCartSummary();
         }
 
@@ -918,11 +1119,11 @@
             const total = subtotal + shippingCost;
             const shippingLabel = selectedShippingOption && selectedShippingOption.method === 'pickup'
                 ? 'Retirada'
-                : 'Entrega';
+                : (selectedShippingOption && selectedShippingOption.label) || 'Entrega';
             const shippingValue = selectedShippingOption
                 ? (selectedShippingOption.method === 'pickup'
-                    ? 'Retirada na loja'
-                    : (selectedShippingOption.is_free ? 'Grátis' : 'R$ ' + formatPrice(shippingCost)))
+                    ? selectedShippingOption.label
+                    : (selectedShippingOption.isFree ? 'Grátis' : 'R$ ' + formatPrice(shippingCost)))
                 : 'R$ 0,00';
 
             summaryEl.innerHTML = `
@@ -962,11 +1163,21 @@
                     syncSupportLinks();
                     return;
                 }
+                if (!isQuoteOnlyRuntime(runtimeConfigCache) && cart.status && cart.status !== 'ACTIVE' && cart.sale_id) {
+                    persistPendingStoreCheckout({
+                        cartId: cart.id,
+                        saleId: cart.sale_id,
+                        status: cart.status,
+                        updatedAt: new Date().toISOString()
+                    });
+                    window.location.href = '/pedido-confirmado?cart=' + encodeURIComponent(cart.id);
+                    return;
+                }
                 renderCartSummary();
             } catch (err) {
                 console.error('[CHECKOUT] Erro ao carregar carrinho:', err);
-                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Não foi possível carregar sua seleção atual. <a href="/loja">Voltar ao catálogo</a> ou <a href="' + buildSupportUrl('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu fechamento assistido.') + '" target="_blank" rel="noopener noreferrer">falar com a Tech10</a>.</p></div>';
-                syncSupportLinks('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu fechamento assistido.');
+                if (summaryEl) summaryEl.innerHTML = '<div class="error"><p>Não foi possível carregar sua seleção atual. <a href="/loja">Voltar ao catálogo</a> ou <a href="' + buildSupportUrl('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu pedido.') + '" target="_blank" rel="noopener noreferrer">falar com a Tech10</a>.</p></div>';
+                syncSupportLinks('Olá! Vim pela loja da Tech10 e preciso de ajuda para retomar meu pedido.');
             }
         }
 
@@ -1008,43 +1219,38 @@
                 const customerEmail = String(formData.get('customer_email') || '').trim();
                 const customerPhone = String(formData.get('customer_phone') || '').trim();
                 const customerCpf = String(formData.get('customer_cpf') || '').trim();
-                const nameParts = customerName.split(' ');
-                const firstName = nameParts[0] || '';
-                const lastName = nameParts.slice(1).join(' ') || '';
                 const zipCode = String(formData.get('zip_code') || '').replace(/\D/g, '');
                 const paymentMethod = String(formData.get('payment_method') || 'pix');
                 const notes = String(formData.get('notes') || '').trim();
-
-                const checkoutPayload = {
-                    email: customerEmail,
-                    customer: { firstName, lastName, phone: customerPhone },
-                    delivery_type: 'STANDARD',
-                    shipping_address: {
-                        street: String(formData.get('street') || ''),
-                        number: String(formData.get('number') || ''),
-                        complement: String(formData.get('complement') || '') || undefined,
-                        neighborhood: String(formData.get('neighborhood') || ''),
-                        city: String(formData.get('city') || ''),
-                        state: String(formData.get('state') || ''),
-                        zipCode: zipCode
-                    }
+                const shippingMethod = selectedShippingOption && selectedShippingOption.method === 'local_delivery'
+                    ? 'local_delivery'
+                    : 'pickup';
+                const shippingAddressFields = {
+                    street: String(formData.get('street') || '').trim(),
+                    number: String(formData.get('number') || '').trim(),
+                    complement: String(formData.get('complement') || '').trim(),
+                    neighborhood: String(formData.get('neighborhood') || '').trim(),
+                    city: String(formData.get('city') || '').trim(),
+                    state: String(formData.get('state') || '').trim().toUpperCase(),
+                    zip_code: zipCode
                 };
+                const shippingAddressText = shippingMethod === 'pickup'
+                    ? 'Retirada presencial na loja Tech10.'
+                    : [
+                        shippingAddressFields.street,
+                        shippingAddressFields.number,
+                        shippingAddressFields.complement,
+                        shippingAddressFields.neighborhood,
+                        shippingAddressFields.city,
+                        shippingAddressFields.state,
+                        zipCode && ('CEP ' + zipCode.replace(/(\d{5})(\d{3})/, '$1-$2'))
+                    ].filter(Boolean).join(', ');
 
                 try {
                     if (isQuoteOnlyRuntime(runtimeConfigCache)) {
-                        const shippingMethod = String(formData.get('shipping_method') || 'standard');
-                        const shippingLabel = shippingMethod === 'pickup' ? 'Retirada na loja' : 'Entrega padrão';
-                        const shippingAddress = shippingMethod === 'pickup'
-                            ? 'Retirada presencial na loja Tech10.'
-                            : [
-                                checkoutPayload.shipping_address.street,
-                                checkoutPayload.shipping_address.number,
-                                checkoutPayload.shipping_address.complement,
-                                checkoutPayload.shipping_address.neighborhood,
-                                checkoutPayload.shipping_address.city,
-                                checkoutPayload.shipping_address.state,
-                                zipCode && ('CEP ' + zipCode.replace(/(\d{5})(\d{3})/, '$1-$2'))
-                            ].filter(Boolean).join(', ');
+                        const shippingLabel = shippingMethod === 'pickup'
+                            ? 'Retirada na loja'
+                            : (selectedShippingOption && selectedShippingOption.label) || 'Entrega local';
                         const paymentLabelMap = {
                             pix: 'PIX',
                             credit_card: 'Cartão de crédito',
@@ -1063,7 +1269,7 @@
                             customerPhone,
                             customerCpf,
                             shippingLabel,
-                            shippingAddress,
+                            shippingAddress: shippingAddressText,
                             paymentLabel: paymentLabelMap[paymentMethod] || paymentMethod,
                             notes,
                             items,
@@ -1077,14 +1283,14 @@
                             customerCpf,
                             shippingMethod,
                             shippingLabel,
-                            shippingAddressText: shippingAddress,
+                            shippingAddressText,
                             shippingAddressFields: {
-                                street: checkoutPayload.shipping_address.street,
-                                number: checkoutPayload.shipping_address.number,
-                                complement: checkoutPayload.shipping_address.complement || '',
-                                neighborhood: checkoutPayload.shipping_address.neighborhood,
-                                city: checkoutPayload.shipping_address.city,
-                                state: checkoutPayload.shipping_address.state,
+                                street: shippingAddressFields.street,
+                                number: shippingAddressFields.number,
+                                complement: shippingAddressFields.complement || '',
+                                neighborhood: shippingAddressFields.neighborhood,
+                                city: shippingAddressFields.city,
+                                state: shippingAddressFields.state,
                                 zipCode: zipCode
                             },
                             paymentMethod,
@@ -1110,48 +1316,58 @@
                         return;
                     }
 
-                    const res = await fetch(getStoreAPI() + '/carts/' + cartId + '/complete', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(checkoutPayload)
-                    });
-                    const data = await res.json();
-                    if (!res.ok) throw new Error(data.error || data.message || 'Erro ao processar pedido');
+                    if (!selectedShippingOption) {
+                        throw new Error('Escolha entrega local ou retirada antes de gerar o Pix.');
+                    }
 
-                    const order = data.data || data.order || {};
-                    const shippingCost = selectedShippingOption ? selectedShippingOption.cost : 0;
-                    const lastOrder = {
-                        order_number: order.display_id || order.id || '',
-                        customer_name: customerName,
-                        customer_email: customerEmail,
-                        customer_phone: customerPhone,
-                        shipping_address: {
-                            street: checkoutPayload.shipping_address.street,
-                            number: checkoutPayload.shipping_address.number,
-                            complement: checkoutPayload.shipping_address.complement || '',
-                            neighborhood: checkoutPayload.shipping_address.neighborhood,
-                            city: checkoutPayload.shipping_address.city,
-                            state: checkoutPayload.shipping_address.state,
-                            zip_code: zipCode
+                    const adapter = window.MarketplaceAdapter;
+                    const payload = {
+                        customer: {
+                            kind: 'individual',
+                            name: customerName,
+                            email: customerEmail || undefined,
+                            phone: customerPhone || undefined,
+                            document_type: customerCpf ? 'CPF' : undefined,
+                            document: customerCpf || undefined
                         },
-                        subtotal: order.subtotal || 0,
-                        shipping_cost: shippingCost,
-                        total: order.total || 0,
-                        payment_method: paymentMethod,
-                        items: (order.items || []).map(function(item) {
-                            return {
-                                product_name: item.title || 'Produto',
-                                product_image: item.thumbnail || null,
-                                quantity: item.quantity || 1,
-                                unit_price: item.unit_price || 0,
-                                subtotal: (item.unit_price || 0) * (item.quantity || 1)
-                            };
-                        })
+                        shipping: {
+                            method: shippingMethod,
+                            label: selectedShippingOption.label,
+                            unit_amount: Number(selectedShippingOption.cost || 0),
+                            zone_id: selectedShippingOption.zoneId || undefined,
+                            zone_label: selectedShippingOption.zoneLabel || undefined,
+                            address: shippingMethod === 'local_delivery'
+                                ? shippingAddressFields
+                                : undefined
+                        },
+                        payment_method: 'pix',
+                        notes: notes || undefined
                     };
 
-                    localStorage.setItem('last_order', JSON.stringify(lastOrder));
-                    clearStoredSelection();
-                    window.location.href = '/pedido-confirmado?order=' + (lastOrder.order_number || '');
+                    const result = adapter && typeof adapter.completeCart === 'function'
+                        ? await adapter.completeCart(cartId, payload)
+                        : await (async function() {
+                            const res = await fetch(getStoreAPI() + '/carts/' + cartId + '/complete', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+                            const data = await res.json().catch(() => ({}));
+                            if (!res.ok) throw new Error(data.error || data.message || 'Erro ao processar pedido');
+                            return data;
+                        })();
+
+                    persistPendingStoreCheckout({
+                        cartId,
+                        saleId: result.sale && result.sale.id ? result.sale.id : null,
+                        status: result.uiStatus && result.uiStatus.code ? result.uiStatus.code : 'AWAITING_PAYMENT',
+                        customerName,
+                        shippingMethod,
+                        shippingLabel: selectedShippingOption.label,
+                        updatedAt: new Date().toISOString()
+                    });
+
+                    window.location.href = '/pedido-confirmado?cart=' + encodeURIComponent(cartId);
                 } catch (err) {
                     console.error('[CHECKOUT] Erro ao finalizar:', err);
                     showError(err.message || 'Erro ao processar pedido. Tente novamente.');
@@ -1163,8 +1379,17 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             runtimeConfigCache = await fetchRuntimeConfig();
-            const checkedShipping = document.querySelector('input[name="shipping_method"]:checked');
-            selectShipping(checkedShipping ? checkedShipping.value : 'standard', 0, true);
+            applyCheckoutModePresentation(runtimeConfigCache);
+            try {
+                await loadStorefrontConfig();
+                renderShippingOptions();
+                if (selectedShippingOption) {
+                    selectShipping(selectedShippingOption);
+                }
+            } catch (error) {
+                console.error('[CHECKOUT] Erro ao carregar configuração da loja:', error);
+                showError(error.message || 'Não foi possível carregar as opções de entrega desta loja agora.');
+            }
             syncSupportLinks();
             bindSupportLinkInteractions();
             bindCheckoutForm();

@@ -98,7 +98,7 @@ if (fs.existsSync(tenantConfigPath)) {
   assert(tenantConfig.includes("portalPath: '/portal'"), 'tenant-config.js não declara portalPath canônico');
   assert(tenantConfig.includes("apiBasePath: '/api/store'"), 'tenant-config.js não aponta para /api/store');
   assert(tenantConfig.includes("catalogSource: 'erp_stock'"), 'tenant-config.js não declara o catálogo canônico');
-  assert(tenantConfig.includes("checkoutMode: 'quote_only'"), 'tenant-config.js não declara o modo de checkout canônico');
+  assert(tenantConfig.includes("checkoutMode: 'store_backend'"), 'tenant-config.js não declara o modo de checkout canônico direto');
 }
 
 if (failures.length > 0) {
