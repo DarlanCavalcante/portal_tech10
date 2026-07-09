@@ -450,6 +450,12 @@
     }
   }
 
+  function markBodyLoaded() {
+    if (document.body) {
+      document.body.classList.add('loaded');
+    }
+  }
+
   function apply() {
     document.querySelectorAll('a[href]').forEach(rewriteHref);
     document.querySelectorAll('[onclick]').forEach(rewriteOnclick);
@@ -459,6 +465,9 @@
 
     fetchRuntimeConfig().then(function (runtimeConfig) {
       applyCommerceRuntime(runtimeConfig);
+      markBodyLoaded();
+    }).catch(function () {
+      markBodyLoaded();
     });
   }
 
