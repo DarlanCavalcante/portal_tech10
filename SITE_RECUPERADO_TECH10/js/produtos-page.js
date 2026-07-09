@@ -44,6 +44,19 @@
     return _normalizeSearchText(_getCurrentSearchDisplayTerm());
   }
 
+  function _isQuoteOnlyMode() {
+    var runtime = global.__tech10_runtime_config || {};
+    var commerce = runtime.commerce || {};
+    var capabilities = commerce.capabilities || {};
+    var checkoutMode = commerce.checkoutMode
+      || (global.API_CONFIG && global.API_CONFIG.CHECKOUT_MODE)
+      || 'store_backend';
+
+    return checkoutMode === 'quote_only'
+      || capabilities.quoteOnly === true
+      || capabilities.checkout === false;
+  }
+
   function _updateSearchControls() {
     var clearBtn = _getSearchClearButton();
     if (clearBtn) {
@@ -569,12 +582,15 @@
       .map(function (entry) { return entry && entry.product && entry.product.title; })
       .filter(Boolean)
       .slice(0, 2);
+    var quoteOnly = _isQuoteOnlyMode();
 
     var panelState = {
       eyebrow: 'Destaques Tech10',
       title: 'Vitrine editorial baseada no estoque público da Tech10.',
-      desc: 'Abrimos a loja com uma leitura mais diversa do catálogo real para reduzir repetição na primeira dobra e facilitar a triagem comercial.',
-      chips: [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories)
+      desc: quoteOnly
+        ? 'Abrimos a loja com uma leitura mais diversa do catálogo real para reduzir repetição na primeira dobra e facilitar a triagem comercial.'
+        : 'Abrimos a loja com uma leitura mais diversa do catálogo real para facilitar a escolha, levar ao carrinho e concluir com Pix direto.',
+      chips: [_formatProductCount(currentCount), quoteOnly ? 'Seleção assistida' : 'Checkout direto'].concat(topCategories)
     };
 
     if (currentCount === 0) {
@@ -582,38 +598,50 @@
       panelState.title = searchTerm
         ? 'Nenhum item público encontrado para "' + searchTerm + '".'
         : 'Nenhum item público encontrado nesta combinação de filtros.';
-      panelState.desc = 'A Tech10 continua atendendo de forma assistida. Ajuste a busca, volte para outra categoria ou fale com a equipe para confirmar alternativas.';
-      panelState.chips = ['Seleção assistida', 'Atendimento Tech10'];
+      panelState.desc = quoteOnly
+        ? 'A Tech10 continua atendendo de forma assistida. Ajuste a busca, volte para outra categoria ou fale com a equipe para confirmar alternativas.'
+        : 'Ajuste a busca, volte para outra categoria ou fale com a Tech10 se precisar confirmar compatibilidade antes de seguir para o carrinho.';
+      panelState.chips = quoteOnly
+        ? ['Seleção assistida', 'Atendimento Tech10']
+        : ['Checkout direto', 'Suporte opcional'];
       return panelState;
     }
 
     if (searchTerm) {
       panelState.eyebrow = 'Busca ativa';
       panelState.title = 'Resultado para "' + searchDisplayTerm + '" no catálogo público.';
-      panelState.desc = 'Exibindo ' + _formatProductCount(currentCount) + ' com confirmação assistida da Tech10 para disponibilidade, orientação e fechamento seguro.';
-      panelState.chips = [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories);
+      panelState.desc = quoteOnly
+        ? 'Exibindo ' + _formatProductCount(currentCount) + ' com confirmação assistida da Tech10 para disponibilidade, orientação e fechamento seguro.'
+        : 'Exibindo ' + _formatProductCount(currentCount) + ' para seguir com carrinho e Pix direto, sem perder o apoio da Tech10 quando necessário.';
+      panelState.chips = [_formatProductCount(currentCount), quoteOnly ? 'Seleção assistida' : 'Checkout direto'].concat(topCategories);
       return panelState;
     }
 
     if (_activeHandle && _activeHandle !== 'all') {
       panelState.eyebrow = 'Categoria em foco';
       panelState.title = _activeLabel + ' com estoque público agora.';
-      panelState.desc = 'Esta leitura mantém a seleção assistida da Tech10 e prioriza os itens mais claros comercialmente dentro da categoria ativa.';
-      panelState.chips = [_formatProductCount(currentCount), 'Seleção assistida'].concat(topCategories);
+      panelState.desc = quoteOnly
+        ? 'Esta leitura mantém a seleção assistida da Tech10 e prioriza os itens mais claros comercialmente dentro da categoria ativa.'
+        : 'Esta leitura prioriza os itens mais claros comercialmente dentro da categoria ativa para acelerar carrinho, Pix e decisão de compra.';
+      panelState.chips = [_formatProductCount(currentCount), quoteOnly ? 'Seleção assistida' : 'Checkout direto'].concat(topCategories);
       return panelState;
     }
 
     if (_sortValue === 'price-asc') {
       panelState.eyebrow = 'Menor preço';
       panelState.title = 'Vitrine ordenada do menor para o maior preço.';
-      panelState.desc = 'Boa para triagem rápida por orçamento, mantendo o mesmo estoque público e o atendimento assistido da Tech10.';
+      panelState.desc = quoteOnly
+        ? 'Boa para triagem rápida por orçamento, mantendo o mesmo estoque público e o atendimento assistido da Tech10.'
+        : 'Boa para triagem rápida por orçamento, mantendo o mesmo estoque público e o caminho curto até o carrinho.';
       return panelState;
     }
 
     if (_sortValue === 'price-desc') {
       panelState.eyebrow = 'Maior preço';
       panelState.title = 'Vitrine ordenada do maior para o menor preço.';
-      panelState.desc = 'Boa para puxar primeiro os itens de ticket mais alto, sem perder a confirmação assistida no fechamento.';
+      panelState.desc = quoteOnly
+        ? 'Boa para puxar primeiro os itens de ticket mais alto, sem perder a confirmação assistida no fechamento.'
+        : 'Boa para puxar primeiro os itens de ticket mais alto, com checkout direto preservado para fechar rápido.';
       return panelState;
     }
 
@@ -636,36 +664,61 @@
     var searchDisplayTerm = searchInput ? String(searchInput.value || '').trim() : '';
     var searchTerm = searchDisplayTerm.toLowerCase();
     var currentCount = _currentProducts.length;
-    var state = {
-      eyebrow: 'Próximo passo',
-      title: 'Feche com atendimento assistido da Tech10',
-      desc: 'Escolha o item na vitrine e confirme pelo WhatsApp para disponibilidade, orientação técnica e fechamento seguro. Se já tem O.S., acompanhe tudo pelo portal.',
-      primaryLabel: 'Falar com a Tech10',
-      supportMessage: 'Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto.'
-    };
+    var quoteOnly = _isQuoteOnlyMode();
+    var state = quoteOnly
+      ? {
+          eyebrow: 'Próximo passo',
+          title: 'Feche com atendimento assistido da Tech10',
+          desc: 'Escolha o item na vitrine e confirme pelo WhatsApp para disponibilidade, orientação técnica e fechamento seguro. Se já tem O.S., acompanhe tudo pelo portal.',
+          primaryLabel: 'Falar com a Tech10',
+          supportMessage: 'Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um produto.'
+        }
+      : {
+          eyebrow: 'Próximo passo',
+          title: 'Siga para o carrinho e pague por Pix',
+          desc: 'Escolha o item na vitrine, siga para o carrinho e conclua o checkout direto. A Tech10 continua disponível no WhatsApp se você quiser validar compatibilidade antes de pagar.',
+          primaryLabel: 'Tirar dúvida antes de pagar',
+          supportMessage: 'Olá! Vim pela loja da Tech10 e quero tirar uma dúvida antes de concluir a compra direta.'
+        };
 
     if (searchTerm) {
-      state.eyebrow = 'Resultado em atendimento';
+      state.eyebrow = quoteOnly ? 'Resultado em atendimento' : 'Atalho comercial';
       state.title = currentCount === 1
-        ? 'Confirme este item com a Tech10'
-        : 'Confirme estes resultados com a Tech10';
-      state.desc = 'Use o WhatsApp para validar disponibilidade, orientação técnica e fechamento assistido'
-        + (searchDisplayTerm ? ' para "' + searchDisplayTerm + '"' : '')
-        + (currentCount ? ', com ' + _formatProductCount(currentCount) + ' visíveis na vitrine.' : '.');
-      state.primaryLabel = currentCount === 1 ? 'Falar sobre este item' : 'Falar sobre estes itens';
-      state.supportMessage = 'Olá! Vim pela loja da Tech10 e quero ajuda para confirmar'
-        + (searchDisplayTerm ? ' "' + searchDisplayTerm + '"' : ' um item da vitrine')
-        + ' com atendimento assistido.';
+        ? (quoteOnly ? 'Confirme este item com a Tech10' : 'Leve este item para o carrinho')
+        : (quoteOnly ? 'Confirme estes resultados com a Tech10' : 'Leve estes itens para o carrinho');
+      state.desc = quoteOnly
+        ? 'Use o WhatsApp para validar disponibilidade, orientação técnica e fechamento assistido'
+          + (searchDisplayTerm ? ' para "' + searchDisplayTerm + '"' : '')
+          + (currentCount ? ', com ' + _formatProductCount(currentCount) + ' visíveis na vitrine.' : '.')
+        : 'Você pode seguir direto com carrinho e Pix'
+          + (searchDisplayTerm ? ' para "' + searchDisplayTerm + '"' : '')
+          + (currentCount ? ', com ' + _formatProductCount(currentCount) + ' visíveis na vitrine.' : '.');
+      state.primaryLabel = currentCount === 1
+        ? (quoteOnly ? 'Falar sobre este item' : 'Tirar dúvida sobre este item')
+        : (quoteOnly ? 'Falar sobre estes itens' : 'Tirar dúvida sobre estes itens');
+      state.supportMessage = quoteOnly
+        ? 'Olá! Vim pela loja da Tech10 e quero ajuda para confirmar'
+          + (searchDisplayTerm ? ' "' + searchDisplayTerm + '"' : ' um item da vitrine')
+          + ' com atendimento assistido.'
+        : 'Olá! Vim pela loja da Tech10 e quero tirar uma dúvida antes de concluir a compra de'
+          + (searchDisplayTerm ? ' "' + searchDisplayTerm + '"' : ' um item da vitrine') + '.';
       return state;
     }
 
     if (_activeHandle && _activeHandle !== 'all') {
       state.eyebrow = 'Categoria ativa';
-      state.title = 'Feche ' + _activeLabel + ' com a Tech10';
-      state.desc = 'A categoria ' + _activeLabel + ' está em foco com ' + _formatProductCount(currentCount)
-        + ' visíveis. Use o WhatsApp para confirmar disponibilidade, orientação técnica e fechamento assistido.';
-      state.primaryLabel = 'Falar sobre ' + _activeLabel;
-      state.supportMessage = 'Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um item de ' + _activeLabel + '.';
+      state.title = quoteOnly
+        ? 'Feche ' + _activeLabel + ' com a Tech10'
+        : 'Revise ' + _activeLabel + ' e siga para o carrinho';
+      state.desc = quoteOnly
+        ? 'A categoria ' + _activeLabel + ' está em foco com ' + _formatProductCount(currentCount)
+          + ' visíveis. Use o WhatsApp para confirmar disponibilidade, orientação técnica e fechamento assistido.'
+        : 'A categoria ' + _activeLabel + ' está em foco com ' + _formatProductCount(currentCount)
+          + ' visíveis. Você pode seguir com checkout direto ou falar com a Tech10 antes de pagar.';
+      state.primaryLabel = quoteOnly ? 'Falar sobre ' + _activeLabel : 'Tirar dúvida sobre ' + _activeLabel;
+      state.supportMessage = quoteOnly
+        ? 'Olá! Vim pela loja da Tech10 e quero ajuda para escolher e fechar um item de ' + _activeLabel + '.'
+        : 'Olá! Vim pela loja da Tech10 e quero tirar uma dúvida antes de comprar um item de ' + _activeLabel + '.';
     }
 
     return state;
