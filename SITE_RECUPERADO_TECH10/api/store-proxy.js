@@ -49,6 +49,16 @@ function buildUpstreamHeaders(req, operation, env) {
   headers.set('x-tenant-id', env.tenantId);
   headers.set('x-store-slug', env.storeSlug);
 
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  const forwardedHost = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim();
+  const publicOrigin = forwardedHost
+    ? `${forwardedProto || 'https'}://${forwardedHost}`
+    : '';
+
+  if (publicOrigin) {
+    headers.set('x-public-storefront-origin', publicOrigin);
+  }
+
   return headers;
 }
 
