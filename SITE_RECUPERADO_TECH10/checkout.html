@@ -431,13 +431,23 @@
                     <h2 class="section-title" style="margin-top: 30px;">Preferência de pagamento</h2>
                     <div class="form-group">
                         <label>Forma de Pagamento <span class="required">*</span></label>
-                        <input type="hidden" name="payment_method" value="pix">
-                        <div style="display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border:2px solid #2563eb;border-radius:14px;background:#eff6ff;color:#1e3a8a;">
-                            <i class="fas fa-qrcode" style="font-size:20px;margin-top:2px;"></i>
-                            <div>
-                                <strong style="display:block;margin-bottom:4px;">Pix Mercado Pago</strong>
-                                <p style="margin:0;font-size:14px;color:#334155;">O pedido fica aguardando pagamento até o Pix ser confirmado. Só depois disso a compra entra como paga.</p>
-                            </div>
+                        <div id="payment-method-options" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+                            <label class="payment-method-card" style="display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border:2px solid #2563eb;border-radius:14px;background:#eff6ff;color:#1e3a8a;cursor:pointer;">
+                                <input type="radio" name="payment_method" value="pix" checked style="margin-top:4px;">
+                                <i class="fas fa-qrcode" style="font-size:20px;margin-top:2px;"></i>
+                                <div>
+                                    <strong style="display:block;margin-bottom:4px;">Pix Mercado Pago</strong>
+                                    <p style="margin:0;font-size:14px;color:#334155;">Gere o QR Code agora. O pedido só entra como pago após confirmação automática.</p>
+                                </div>
+                            </label>
+                            <label class="payment-method-card" style="display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border:1px solid #cbd5e1;border-radius:14px;background:#ffffff;color:#1e293b;cursor:pointer;">
+                                <input type="radio" name="payment_method" value="card" style="margin-top:4px;">
+                                <i class="fas fa-credit-card" style="font-size:20px;margin-top:2px;color:#2563eb;"></i>
+                                <div>
+                                    <strong style="display:block;margin-bottom:4px;">Cartão online Mercado Pago</strong>
+                                    <p style="margin:0;font-size:14px;color:#475569;">Você paga no ambiente seguro do Mercado Pago. A loja não coleta dados do cartão.</p>
+                                </div>
+                            </label>
                         </div>
                     </div>
 
@@ -593,9 +603,32 @@
         }
 
         function getSubmitButtonHtml() {
+            const selectedPaymentMethod = getSelectedPaymentMethod();
             return isQuoteOnlyRuntime(runtimeConfigCache)
                 ? '<i class="fas fa-headset"></i> Enviar para atendimento'
-                : '<i class="fas fa-qrcode"></i> Gerar Pix do pedido';
+                : selectedPaymentMethod === 'card'
+                    ? '<i class="fas fa-credit-card"></i> Ir para pagamento com cartão'
+                    : '<i class="fas fa-qrcode"></i> Gerar Pix do pedido';
+        }
+
+        function getSelectedPaymentMethod() {
+            const selected = document.querySelector('input[name="payment_method"]:checked');
+            return selected && selected.value === 'card' ? 'card' : 'pix';
+        }
+
+        function bindPaymentMethodCards() {
+            document.querySelectorAll('.payment-method-card input[name="payment_method"]').forEach(function(input) {
+                input.addEventListener('change', function() {
+                    document.querySelectorAll('.payment-method-card').forEach(function(card) {
+                        const checked = card.querySelector('input[name="payment_method"]')?.checked;
+                        card.style.borderColor = checked ? '#2563eb' : '#cbd5e1';
+                        card.style.background = checked ? '#eff6ff' : '#ffffff';
+                        card.style.color = checked ? '#1e3a8a' : '#1e293b';
+                    });
+                    const submitBtn = document.getElementById('submit-btn');
+                    if (submitBtn && !submitBtn.disabled) submitBtn.innerHTML = getSubmitButtonHtml();
+                });
+            });
         }
 
         function applyCheckoutModePresentation(config) {
@@ -1201,7 +1234,9 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = isQuoteOnlyRuntime(runtimeConfigCache)
                     ? '<i class="fas fa-spinner fa-spin"></i> Preparando atendimento...'
-                    : '<i class="fas fa-spinner fa-spin"></i> Processando...';
+                    : getSelectedPaymentMethod() === 'card'
+                        ? '<i class="fas fa-spinner fa-spin"></i> Abrindo Mercado Pago...'
+                        : '<i class="fas fa-spinner fa-spin"></i> Gerando Pix...';
                 if (errorDiv) errorDiv.style.display = 'none';
 
                 cartId = getStoredCartId();
@@ -1317,7 +1352,7 @@
                     }
 
                     if (!selectedShippingOption) {
-                        throw new Error('Escolha entrega local ou retirada antes de gerar o Pix.');
+                        throw new Error('Escolha entrega local ou retirada antes de gerar o pagamento.');
                     }
 
                     const adapter = window.MarketplaceAdapter;
@@ -1340,7 +1375,7 @@
                                 ? shippingAddressFields
                                 : undefined
                         },
-                        payment_method: 'pix',
+                        payment_method: paymentMethod === 'card' ? 'card' : 'pix',
                         notes: notes || undefined
                     };
 
@@ -1367,6 +1402,16 @@
                         updatedAt: new Date().toISOString()
                     });
 
+                    if (paymentMethod === 'card') {
+                        const checkoutPro = result.checkoutPro || {};
+                        const redirectUrl = checkoutPro.sandboxInitPoint || checkoutPro.initPoint || checkoutPro.ticketUrl;
+                        if (!redirectUrl) {
+                            throw new Error('O Mercado Pago não retornou a URL do pagamento com cartão.');
+                        }
+                        window.location.href = redirectUrl;
+                        return;
+                    }
+
                     window.location.href = '/pedido-confirmado?cart=' + encodeURIComponent(cartId);
                 } catch (err) {
                     console.error('[CHECKOUT] Erro ao finalizar:', err);
@@ -1380,6 +1425,7 @@
         document.addEventListener('DOMContentLoaded', async function() {
             runtimeConfigCache = await fetchRuntimeConfig();
             applyCheckoutModePresentation(runtimeConfigCache);
+            bindPaymentMethodCards();
             try {
                 await loadStorefrontConfig();
                 renderShippingOptions();
