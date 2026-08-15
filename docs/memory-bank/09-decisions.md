@@ -45,3 +45,6 @@ Ao investigar o ERP para "criar o endpoint de telemetria", descobrimos que ele *
 
 ## 2026-08-15 — Linhagem git: memory-bank estava órfão fora da `main`
 O memory-bank (branch local `docs/memory-bank-obsidian-20260814`, baseada no `d85d4cd` antigo) **nunca foi para `origin/main`**, que seguiu outra linhagem (`46bdb3e…`). **Decisão:** trazer `docs/memory-bank/` para a `main` canônica (via PR) para virar fonte de verdade única. A `main` local antiga (`d85d4cd`) estava atrás do `origin/main` — sempre usar `origin/main` como canônico.
+
+## 2026-08-15 — Frente 2 CONCLUÍDA: painel do funil já existia; faltavam eventos de entrada
+Ao investigar "construir o painel", descobrimos que o ERP **já tinha tudo**: `GET /api/reports/portal-funnel` (autenticado, por empresa) → `getPortalFunnelWithFilters` (lê `PortalAnalyticsEvent`), a tela `(app)/relatorios/page.tsx`, e o portal `portal/[osNumber]/page.tsx` emitindo os eventos `portal_*` do meio/fim do funil. **Decisão:** não reconstruir; só instrumentar a peça que faltava — os eventos de ENTRADA (`portal_entry_viewed`, `portal_entry_started`) no `portal-entry.js` (portal_tech10). Verificado (`202`). Funil completo (entrada → O.S. → aprovação). (PR #145).
