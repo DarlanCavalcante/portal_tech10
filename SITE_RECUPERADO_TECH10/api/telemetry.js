@@ -84,13 +84,16 @@ module.exports = async function handler(req, res) {
 
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 3000);
-      await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers,
         body: JSON.stringify(ingestion),
         signal: controller.signal,
-      }).catch(() => {});
+      }).catch(() => null);
       clearTimeout(timeout);
+      if (logMode) {
+        console.log('[telemetry-forward] ' + (res ? res.status : 'error') + ' ' + ingestion.events[0].eventName);
+      }
     } catch (_e) {
       // Telemetria nunca deve impactar o cliente.
     }
