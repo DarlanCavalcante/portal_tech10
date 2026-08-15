@@ -701,6 +701,26 @@
             }
         }
 
+        // O backend recusa alterar um carrinho fora do estado ACTIVE (ja virou
+        // pedido/pagamento pendente ou expirou) com HTTP 409 "nao pode mais ser
+        // alterado". Detectamos isso para nao deixar o cliente preso.
+        function isCartLockedError(err) {
+            var m = String((err && err.message) || '').toLowerCase();
+            return m.indexOf('409') !== -1
+                || m.indexOf('nao pode mais ser alterado') !== -1
+                || m.indexOf('não pode mais ser alterado') !== -1
+                || m.indexOf('ja esta sendo processado') !== -1
+                || m.indexOf('já está sendo processado') !== -1;
+        }
+
+        // Recuperacao: descarta a referencia do carrinho travado e comeca limpo,
+        // para o cliente conseguir seguir comprando em vez de ficar preso no erro.
+        function recoverFromLockedCart() {
+            clearStoredSelection();
+            showEmptyCart();
+            alert('Este carrinho ja avancou para um pedido (aguardando pagamento) e nao pode mais ser alterado. Iniciamos um carrinho novo para voce.');
+        }
+
         function getStoreAPI() {
             return (window.API_CONFIG && window.API_CONFIG.STORE_API) || '/api/store';
         }
@@ -922,6 +942,7 @@
                 await loadCart();
             } catch (err) {
                 console.error('[CARRINHO] Erro ao atualizar:', err);
+                if (isCartLockedError(err)) { recoverFromLockedCart(); return; }
                 alert('Erro ao atualizar quantidade: ' + (err.message || ''));
             }
         }
@@ -943,6 +964,7 @@
                 await loadCart();
             } catch (err) {
                 console.error('[CARRINHO] Erro ao remover:', err);
+                if (isCartLockedError(err)) { recoverFromLockedCart(); return; }
                 alert('Erro ao remover item: ' + (err.message || ''));
             }
         }
