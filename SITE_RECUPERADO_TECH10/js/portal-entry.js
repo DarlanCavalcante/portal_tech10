@@ -125,6 +125,17 @@
         return;
       }
 
+      // Telemetria do funil (Frente 2): o cliente iniciou a jornada da O.S.
+      // sendBeacon (dentro do track) sobrevive à navegação seguinte.
+      if (global.Tech10Telemetry) {
+        try {
+          global.Tech10Telemetry.track('portal_entry_started', {
+            osNumber: normalizeOsNumber(osNumber),
+            mode: mode,
+          });
+        } catch (_e) { /* nunca bloqueia a navegação */ }
+      }
+
       global.location.href = nextUrl;
     }
 
@@ -153,6 +164,10 @@
   }
 
   async function init() {
+    // Telemetria do funil (Frente 2): visualização da tela de entrada do portal.
+    if (global.Tech10Telemetry) {
+      try { global.Tech10Telemetry.track('portal_entry_viewed', {}); } catch (_e) {}
+    }
     const runtimeConfig = await fetchRuntimeConfig();
     updateRuntimeInfo(runtimeConfig);
     bindActions(runtimeConfig);
