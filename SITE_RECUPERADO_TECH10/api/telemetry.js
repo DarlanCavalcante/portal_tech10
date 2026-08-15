@@ -32,10 +32,27 @@ module.exports = async function handler(req, res) {
   }
 
   const endpoint = (process.env.TECH10_ERP_TELEMETRY_URL || '').trim();
+  const logMode = /^(1|true|on|yes)$/i.test(String(process.env.TECH10_TELEMETRY_LOG || '').trim());
 
   // Responder cedo mantém o beacon rápido; o forward é best-effort.
   let event = null;
   try { event = await readBody(req); } catch (_e) { event = null; }
+
+  // Modo de log (ativação MVP): imprime o evento nos logs da função (Vercel),
+  // visível via `vercel logs`. Uma linha compacta por evento do funil.
+  if (logMode && event) {
+    try {
+      const c = event.context || {};
+      console.log('[telemetry] ' + JSON.stringify({
+        event: event.event,
+        stage: c.stage,
+        path: c.path,
+        session: event.sessionId,
+        at: event.occurredAt,
+        props: event.props || {}
+      }));
+    } catch (_e) { /* nunca impacta o cliente */ }
+  }
 
   if (endpoint && event) {
     try {
