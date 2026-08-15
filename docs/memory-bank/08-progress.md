@@ -9,15 +9,14 @@ _Atualizado: 2026-08-15. Loja/carrinho/checkout/portal re-testados ao vivo em pr
 - ✅ **Loja funcional ponta-a-ponta** (raio-x 15/08): catálogo puxa ~28 produtos reais do ERP (imagem/preço/estoque/categorias), modal de produto, carrinho, checkout Pix (Retirada/Entrega + Pix Mercado Pago) e portal do cliente. Sem erros de console.
 - ✅ **Carrinho: recuperação de estado travado (409)** — carrinho não-ACTIVE não prende mais o cliente (`carrinho.html`, PR #137).
 - ✅ **Carrinho consolidado** — 5 módulos mortos removidos; `js/api-adapter.js` canônico (PR #138).
-- ✅ **Telemetria do funil (Frente 1 — base MVP)** — `js/telemetry.js` + `api/telemetry.js`; **ativa em modo log** (`TECH10_TELEMETRY_LOG=1`), eventos visíveis via `vercel logs`. Inerte/segura por padrão (PRs #139/#140).
+- ✅ **Telemetria do funil (Frente 1 — CONCLUÍDA)** — `js/telemetry.js` + `api/telemetry.js`; eventos do funil **persistem no ERP** via `POST https://core.tech10cloud.com/api/portal-analytics/events` (público, já existente → `PortalAnalyticsEvent`). Verificado end-to-end (`[telemetry-forward] 202`). Ativado com `TECH10_ERP_TELEMETRY_URL` no Vercel; modo log opcional (`TECH10_TELEMETRY_LOG`). (PRs #139/#140/#142/#143).
 - ✅ Contrato de ambiente multi-tenant (`.env.example`) + scripts de validação/smoke.
 - ✅ PWA (`sw.js`, `manifest.json`); entrada pública do portal do cliente com deep links; logo canônica SVG.
 - ✅ Projeto Vercel dedicado `tech10-portal` com root `SITE_RECUPERADO_TECH10` (confirmado no ar).
 
 ## Em aberto / a fazer ⏳
 - ⏳ **Verificar o checkout de fato** — no teste paramos antes de "Gerar Pix" (não criamos pedido no ERP). Falta confirmar que o pedido é criado + Pix emitido + webhook marca como pago ponta-a-ponta.
-- ⏳ **Telemetria — persistência** (ponte para Frente 2): criar rota de telemetria no ERP e setar `TECH10_ERP_TELEMETRY_URL` (+ token, segredo) para sair do modo log e ter dados consultáveis.
-- ⏳ **Painel interno** para a equipe (Frente 2).
+- ⏳ **Painel interno** para a equipe (Frente 2) — dados já persistem em `PortalAnalyticsEvent`; falta a **rota/serviço de leitura** no ERP (`portalAnalytics.controller` só tem `POST /events`) + a **tela**.
 - ⏳ **Jornada pós-aprovação da O.S.** (Frente 3).
 - ⏳ **Transparência financeira básica** (Frente 4).
 - ⏳ Dados de produto pobres (abas Especificações/Descrição vazias — "Nenhuma característica listada").

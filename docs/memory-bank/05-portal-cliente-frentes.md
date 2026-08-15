@@ -8,9 +8,9 @@ Fonte: `docs/PROXIMAS_FRENTES_PORTAL_CLIENTE_TECH10_2026-05-13.md`. Atualizado e
 - **Loja + carrinho + checkout Pix funcionais** (raio-x 15/08).
 
 ## Quatro frentes (ordem recomendada)
-1. **Telemetria do funil** — 🟡 **base MVP entregue** (15/08): `js/telemetry.js` + `api/telemetry.js`, **modo log** ativo (`TECH10_TELEMETRY_LOG=1`), eventos no `vercel logs`. Mede page_view (por estágio), add_to_cart, begin_checkout, order_submit, help_click, checkout_abandon.
-   - **Falta**: persistir os eventos → criar rota de telemetria no ERP (`core.tech10cloud.com`) e setar `TECH10_ERP_TELEMETRY_URL` (+ `TECH10_ERP_TELEMETRY_TOKEN`, segredo). O coletor já encaminha quando a URL existe.
-2. **Painel interno** — visão para a equipe (quem abriu e não respondeu, pediu ajuda, aprovou e aguarda, links não abertos). **Depende da persistência da Frente 1.**
+1. **Telemetria do funil** — ✅ **CONCLUÍDA** (15/08). `js/telemetry.js` + `api/telemetry.js` medem o funil (page_view por estágio, add_to_cart, begin_checkout, order_submit, help_click, checkout_abandon) e **persistem no ERP**: o coletor encaminha (shape reformatado) para `POST https://core.tech10cloud.com/api/portal-analytics/events` (endpoint **público, já existente**, sem token), gravando em `PortalAnalyticsEvent`. Verificado end-to-end (`[telemetry-forward] 202`). Modo log (`TECH10_TELEMETRY_LOG=1`) segue disponível para observabilidade.
+   - Descoberta-chave: **não foi preciso mexer no ERP** — o pipeline `portalAnalytics.controller` + model `PortalAnalyticsEvent` já existiam.
+2. **Painel interno** — 🟢 **DESBLOQUEADA** (dados já persistem). Visão para a equipe (funil por tenant/O.S.: quem abriu e não respondeu, pediu ajuda, aprovou e aguarda). Ler de `PortalAnalyticsEvent`; o `portalAnalytics.controller` do ERP só tem `POST /events` hoje — falta a rota/serviço de leitura + a tela.
 3. **Pós-aprovação** — jornada por etapa da O.S. (aguardando peça / em execução / pronto p/ retirada / entregue).
 4. **Financeiro básico** — valor aprovado, saldo pendente, situação de pagamento.
 
