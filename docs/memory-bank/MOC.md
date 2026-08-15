@@ -14,7 +14,7 @@ Ponto de entrada. Leia [[README]] para o protocolo.
 - [[09-decisions]] — log append-only de decisões.
 
 ## Iniciativas
-- [[05-portal-cliente-frentes]] — próximas frentes do Portal do Cliente (telemetria 🟡 base entregue → painel → pós-aprovação → financeiro).
+- [[05-portal-cliente-frentes]] — próximas frentes do Portal do Cliente (telemetria ✅ concluída (persiste no ERP) → painel → pós-aprovação → financeiro).
 
 ---
-Última revisão: 2026-08-15 — reativado; entregues (PRs #137–#140): fix do carrinho 409, consolidação do carrinho, telemetria do funil (Frente 1 MVP, modo log). Ver [[07-active-context]].
+Última revisão: 2026-08-15 — reativado; entregues (PRs #137–#143): fix do carrinho 409, consolidação, e Frente 1 (telemetria) concluída — eventos persistem no ERP (PortalAnalyticsEvent). Ver [[07-active-context]].
