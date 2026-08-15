@@ -16,6 +16,7 @@
 
   var ENDPOINT = '/api/telemetry';
   var SESSION_KEY = 'tech10_telemetry_session';
+  var VISITOR_KEY = 'tech10_telemetry_visitor';
 
   function safe(fn) { try { return fn(); } catch (_e) { return undefined; } }
 
@@ -29,7 +30,22 @@
         sessionStorage.setItem(SESSION_KEY, id);
       }
       return id;
-    }) || 'anon';
+    }) || 'anon-session';
+  }
+
+  // Identificador persistente do visitante (localStorage) — distingue visitantes
+  // recorrentes de sessões. Min. 8 chars (exigência do coletor do ERP).
+  function visitorId() {
+    return safe(function () {
+      var id = localStorage.getItem(VISITOR_KEY);
+      if (!id) {
+        id = (global.crypto && global.crypto.randomUUID)
+          ? global.crypto.randomUUID()
+          : 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem(VISITOR_KEY, id);
+      }
+      return id;
+    }) || 'anon-visitor';
   }
 
   // Deriva o estágio do funil a partir do caminho da URL.
@@ -62,6 +78,7 @@
         event: String(event),
         occurredAt: new Date().toISOString(),
         sessionId: sessionId(),
+        visitorId: visitorId(),
         context: runtimeContext(),
         props: props || {}
       };

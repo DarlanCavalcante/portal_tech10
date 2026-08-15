@@ -59,14 +59,35 @@ module.exports = async function handler(req, res) {
       const headers = { 'content-type': 'application/json' };
       const token = (process.env.TECH10_ERP_TELEMETRY_TOKEN || '').trim();
       if (token) headers.authorization = `Bearer ${token}`;
-      headers['x-tenant-id'] = String((event.context && event.context.tenantId) || 'tech10');
+      const c = event.context || {};
+      headers['x-tenant-id'] = String(c.tenantId || 'tech10');
+      const stage = c.stage || 'store';
+      const p = event.props || {};
+      const osNumber = p.osNumber != null ? p.osNumber : (p.os != null ? p.os : undefined);
+
+      // Shape esperado pelo ERP: POST /api/portal-analytics/events { events: [...] }
+      // (schema: eventName, occurredAt ISO, sessionId/visitorId >=8, surface enum).
+      const ingestion = {
+        events: [{
+          eventName: String(event.event || 'unknown').slice(0, 120),
+          occurredAt: event.occurredAt || new Date().toISOString(),
+          tenantSlug: String(c.tenantId || 'tech10').slice(0, 120),
+          sessionId: String(event.sessionId || '').slice(0, 120),
+          visitorId: String(event.visitorId || event.sessionId || '').slice(0, 120),
+          source: String(stage).slice(0, 60),
+          surface: 'tenant_portal',
+          mode: stage === 'portal' ? 'portal' : (stage === 'status' ? 'status' : undefined),
+          osNumber: osNumber != null ? osNumber : undefined,
+          metadata: Object.assign({ stage: stage, path: c.path || null, referrer: c.referrer || null }, p)
+        }]
+      };
 
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 3000);
       await fetch(endpoint, {
         method: 'POST',
         headers,
-        body: JSON.stringify(event),
+        body: JSON.stringify(ingestion),
         signal: controller.signal,
       }).catch(() => {});
       clearTimeout(timeout);
