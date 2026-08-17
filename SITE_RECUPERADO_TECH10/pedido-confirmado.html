@@ -589,12 +589,18 @@
         }
 
         async function fetchDirectCheckoutStatus(cartId, refresh) {
+            const providerParams = getMercadoPagoReturnParams();
             const adapter = window.MarketplaceAdapter;
             if (adapter && typeof adapter.getCartPaymentStatus === 'function') {
-                return await adapter.getCartPaymentStatus(cartId, refresh !== false);
+                return await adapter.getCartPaymentStatus(cartId, refresh !== false, providerParams);
             }
 
-            const suffix = refresh === false ? '' : '?refresh=1';
+            const params = new URLSearchParams();
+            if (refresh !== false) params.set('refresh', '1');
+            if (providerParams.payment_id) params.set('payment_id', providerParams.payment_id);
+            if (providerParams.collection_id) params.set('collection_id', providerParams.collection_id);
+            if (providerParams.merchant_order_id) params.set('merchant_order_id', providerParams.merchant_order_id);
+            const suffix = params.toString() ? '?' + params.toString() : '';
             const response = await fetch('/api/store/carts/' + encodeURIComponent(cartId) + '/payment-status' + suffix);
             const payload = await response.json().catch(() => ({}));
             if (!response.ok) {
@@ -603,12 +609,21 @@
             return payload;
         }
 
+        function getMercadoPagoReturnParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                payment_id: params.get('payment_id') || params.get('collection_id') || '',
+                collection_id: params.get('collection_id') || '',
+                merchant_order_id: params.get('merchant_order_id') || ''
+            };
+        }
+
         function getStatusPresentation(snapshot) {
             const code = snapshot && snapshot.uiStatus && snapshot.uiStatus.code ? snapshot.uiStatus.code : 'AWAITING_PAYMENT';
             if (code === 'PAID') {
                 return {
                     title: 'Pagamento confirmado',
-                    subtitle: 'Recebemos o Pix deste pedido. A compra já entrou como paga na loja.',
+                    subtitle: 'Recebemos o pagamento deste pedido. A compra já entrou como paga na loja.',
                     icon: 'fa-check',
                     color: '#10b981',
                     panelBackground: '#ecfdf5',
@@ -617,8 +632,8 @@
             }
             if (code === 'EXPIRED') {
                 return {
-                    title: 'Pix expirado',
-                    subtitle: 'O pedido continua aberto, mas este Pix venceu. Gere um novo código para seguir.',
+                    title: 'Pagamento expirado',
+                    subtitle: 'O pedido continua aberto, mas este pagamento venceu. Gere uma nova cobrança ou fale com a Tech10 para seguir.',
                     icon: 'fa-clock',
                     color: '#d97706',
                     panelBackground: '#fff7ed',
@@ -681,16 +696,23 @@
         function buildDirectPaymentPanel(snapshot, runtimeConfig) {
             const code = snapshot && snapshot.uiStatus && snapshot.uiStatus.code ? snapshot.uiStatus.code : 'AWAITING_PAYMENT';
             const pix = snapshot && snapshot.pix ? snapshot.pix : null;
-            const canRegenerate = code === 'EXPIRED' || code === 'FAILED';
+            const checkoutPro = snapshot && snapshot.checkoutPro ? snapshot.checkoutPro : null;
+            const isCheckoutPro = !!checkoutPro && !pix;
+            const checkoutProUrl = checkoutPro
+                ? (checkoutPro.sandboxInitPoint || checkoutPro.initPoint || checkoutPro.ticketUrl || '')
+                : '';
+            const canRegenerate = !!pix && (code === 'EXPIRED' || code === 'FAILED');
             const canCancel = code === 'AWAITING_PAYMENT' || code === 'EXPIRED' || code === 'FAILED';
             const supportUrl = buildSupportUrl(runtimeConfig, 'Olá! Vim da loja da Tech10 e preciso de ajuda com meu pedido pendente.');
 
             return `
                 <div class="payment-info" style="background:${code === 'PAID' ? '#ecfdf5' : '#eff6ff'};border-left-color:${code === 'PAID' ? '#10b981' : '#2563eb'};">
-                    <h3><i class="fas ${code === 'PAID' ? 'fa-circle-check' : 'fa-qrcode'}"></i> Pagamento via Pix</h3>
+                    <h3><i class="fas ${code === 'PAID' ? 'fa-circle-check' : (isCheckoutPro ? 'fa-credit-card' : 'fa-qrcode')}"></i> ${isCheckoutPro ? 'Pagamento com cartão online' : 'Pagamento via Pix'}</h3>
                     <p>${code === 'PAID'
-                        ? 'O Pix foi confirmado e o pedido já está pago.'
-                        : 'Use o QR Code ou o código Pix abaixo. O pedido só entra como pago depois da confirmação automática do Mercado Pago.'}</p>
+                        ? 'O Mercado Pago confirmou este pedido e a loja já recebeu a baixa automática.'
+                        : isCheckoutPro
+                            ? 'Finalize o pagamento no ambiente seguro do Mercado Pago. A loja não coleta nem armazena dados do cartão.'
+                            : 'Use o QR Code ou o código Pix abaixo. O pedido só entra como pago depois da confirmação automática do Mercado Pago.'}</p>
                     ${pix && pix.qrCodeBase64 && code !== 'PAID' ? `
                         <div style="display:flex;justify-content:center;margin:18px 0;">
                             <img src="data:image/png;base64,${pix.qrCodeBase64}" alt="QR Code Pix" style="width:min(100%,280px);background:#fff;padding:12px;border-radius:16px;border:1px solid #dbeafe;">
@@ -709,6 +731,13 @@
                         <div style="margin-top:14px;">
                             <a href="${pix.ticketUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="flex:unset;">
                                 <i class="fas fa-arrow-up-right-from-square"></i> Abrir cobrança do Mercado Pago
+                            </a>
+                        </div>
+                    ` : ''}
+                    ${checkoutProUrl && code !== 'PAID' ? `
+                        <div style="margin-top:14px;">
+                            <a href="${checkoutProUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex:unset;">
+                                <i class="fas fa-credit-card"></i> Abrir pagamento Mercado Pago
                             </a>
                         </div>
                     ` : ''}
@@ -919,7 +948,7 @@
 
             const cartId = getDirectCartId();
             if (!cartId) {
-                showError('Não encontramos um pedido pendente para acompanhar. Volte à loja e gere um novo Pix.');
+                showError('Não encontramos um pedido pendente para acompanhar. Volte à loja e gere um novo pagamento.');
                 return;
             }
 

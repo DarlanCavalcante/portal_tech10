@@ -682,6 +682,7 @@
         financialTransaction: data.financialTransaction || null,
         checkoutIntent: data.checkoutIntent || null,
         pix: data.pix || null,
+        checkoutPro: data.checkoutPro || null,
         uiStatus: data.uiStatus || null
       };
     } catch (err) {
@@ -690,9 +691,14 @@
     }
   }
 
-  async function getCartPaymentStatus(cartId, refresh = true) {
+  async function getCartPaymentStatus(cartId, refresh = true, providerParams = {}) {
     try {
-      const suffix = refresh ? '?refresh=1' : '';
+      const params = new URLSearchParams();
+      if (refresh) params.set('refresh', '1');
+      if (providerParams.payment_id) params.set('payment_id', providerParams.payment_id);
+      if (providerParams.collection_id) params.set('collection_id', providerParams.collection_id);
+      if (providerParams.merchant_order_id) params.set('merchant_order_id', providerParams.merchant_order_id);
+      const suffix = params.toString() ? '?' + params.toString() : '';
       const res = await fetch(`${base()}/carts/${cartId}/payment-status${suffix}`);
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -705,6 +711,7 @@
         financialTransaction: data.financialTransaction || null,
         checkoutIntent: data.checkoutIntent || null,
         pix: data.pix || null,
+        checkoutPro: data.checkoutPro || null,
         uiStatus: data.uiStatus || null
       };
     } catch (err) {
@@ -729,6 +736,7 @@
         financialTransaction: data.financialTransaction || null,
         checkoutIntent: data.checkoutIntent || null,
         pix: data.pix || null,
+        checkoutPro: data.checkoutPro || null,
         uiStatus: data.uiStatus || null
       };
     } catch (err) {
@@ -752,6 +760,7 @@
         financialTransaction: data.financialTransaction || null,
         checkoutIntent: data.checkoutIntent || null,
         pix: data.pix || null,
+        checkoutPro: data.checkoutPro || null,
         uiStatus: data.uiStatus || null
       };
     } catch (err) {
